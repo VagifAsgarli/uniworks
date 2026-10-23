@@ -341,7 +341,14 @@ function write_analysis(m)
     bps        = get(m.res_fused, :blocks_per_sm, nothing)
     r_zero     = m.t_zero / m.t_uniform
     r_letters  = m.t_letters / m.t_uniform
+    r_mix      = m.t_fused_big / m.t_uniform   # realistic (test-file) data against uniform bytes
     amdahl(f, s) = 1 / ((1 - f) + f / s)
+    degenerate_txt = r_zero >= 1.3 ?
+        "Contention does appear on degenerate input: on all-0x00 bytes, where all 256 threads of a " *
+        "block update one bin, the kernel is $(f2(r_zero))× slower than on uniform bytes, which matters " *
+        "for zero-filled regions (unallocated space, padding) but not for the test-file mix." :
+        "Even all-0x00 input, where all 256 threads of a block update one bin, takes only " *
+        "$(f2(r_zero))× the uniform time."
     f_cont     = max(0.0, 1 - m.t_uniform / m.t_fused_big)   # contended share of the mix run time
     f_zero     = max(0.0, 1 - m.t_uniform / m.t_zero)
 
@@ -387,7 +394,8 @@ function write_analysis(m)
     - Basic route on the same input: counting kernel alone $(ms(m.t_hist_big)) ms, whole scan (kernel +
       array step) $(ms(m.t_basic_big)) ms, so writing the count matrix and reading it back costs
       $(ms(count_matrix_cost)) ms ($(pct(count_matrix_cost / m.t_basic_big)) of the basic scan); the fused kernel, which
-      removes that step, takes $(ms(m.t_fused_big)) ms.
+      removes that step, takes $(ms(m.t_fused_big)) ms.$(m.t_hist_big > m.t_fused_big ?
+      " The counting kernel alone was slower than the complete fused kernel although its only extra work is writing the 1 KB count column per window ($(f1(m.big_bytes / 4 / 1e6)) MB in total, coalesced, ≈ $(ms(m.big_bytes / 4 / (m.copy_bw * 1e9))) ms at copy bandwidth); this ordering is reported as measured and was not investigated with a profiler." : "")
     - Divergence is ruled out as the limiter: the only data-dependent branches are the bounds
       check (false only in a partial last window), the `c > 0` test on one value per thread and
       the reduction's `t <= s`, which is warp-uniform for s ≥ 32; the work per thread is identical.
@@ -399,8 +407,7 @@ function write_analysis(m)
         efficient.**  The kernel reaches $(pct(frac_copy)) of what a pure copy achieves on the
         test-file mix and its loads are fully coalesced (each warp reads 32 consecutive bytes per
         step), so neither the shared-memory atomics nor the arithmetic are what bounds it there.
-        $(r_zero >= 1.3 ? "Only on degenerate input does contention take over: on all-0x00 bytes, where all 256 threads of a block update one bin, it is $(f2(r_zero))× slower than on uniform bytes." :
-                          "The time also changes only by a factor $(f2(r_zero)) between the most and least contended inputs (all-0x00 against uniform bytes).")
+        $degenerate_txt
         """
         optimisation = """
         **Overlap the host-to-device transfer with the scan (CUDA streams, pinned memory).**  The
@@ -413,14 +420,14 @@ function write_analysis(m)
         end-to-end speedup (more if pinned memory also raises the copy rate).  The estimate is based
         on the two measured times above.
         """
-    elseif r_zero >= 1.3
+    elseif r_mix >= 1.3
         limiter = """
         **The limiter is instruction throughput of the shared-memory atomics, serialised on
         contended bins.**  The kernel reaches only $(pct(frac_copy)) of copy bandwidth although its
         loads are coalesced and its intensity puts it on the memory roof, and its run time depends
-        on the *content* of the data, which a bandwidth-bound kernel's would not: when all 256
-        threads of a block hit one bin (all-0x00 input) it is $(f2(r_zero))× slower than on uniform
-        bytes, and with only 26 distinct values (letters) $(f2(r_letters))× slower.  Atomic updates of
+        on the *content* of the data, which a bandwidth-bound kernel's would not: the test-file mix
+        takes $(f2(r_mix))× the uniform-data time, letters (26 distinct values) $(f2(r_letters))× and all-0x00
+        bytes, where all 256 threads of a block hit one bin, $(f2(r_zero))×.  Atomic updates of
         the same shared-memory word are executed one after another, so for low-entropy windows the
         atomic unit, not DRAM, sets the pace.  Occupancy ($(occ === nothing ? "n/a" : pct(occ))) is not the
         problem: there are enough resident warps, they are just waiting on each other's atomics.
@@ -445,15 +452,17 @@ function write_analysis(m)
             **The limiter is occupancy.**  Only $(pct(occ)) of the SM's warp slots can be filled
             ($(fmt_opt(regs, string)) registers per thread, $(fmt_opt(shmem, string)) bytes of shared memory
             per block), so there are too few warps in flight to hide the DRAM latency: the kernel
-            reaches only $(pct(frac_copy)) of copy bandwidth while its run time barely depends on the
-            data ($(f2(r_zero))× between all-0x00 and uniform bytes), which excludes atomic contention.
+            reaches only $(pct(frac_copy)) of copy bandwidth while on realistic data its run time hardly
+            depends on the content (test-file mix $(f2(r_mix))×, letters $(f2(r_letters))× the uniform-data time),
+            which excludes atomic contention there.  $degenerate_txt
             """
         else
             """
             **The limiter is instruction throughput / memory-level parallelism.**  The kernel reaches
             only $(pct(frac_copy)) of copy bandwidth, yet occupancy is adequate ($(occ === nothing ? "n/a" : pct(occ)))
-            and the time barely depends on the data ($(f2(r_zero))× between all-0x00 and uniform
-            bytes), which excludes atomic contention.  What remains is the instruction mix: every
+            and on realistic data the time hardly depends on the content: the test-file mix takes
+            $(f2(r_mix))× and letters (26 distinct values) $(f2(r_letters))× the uniform-data time, so atomic
+            contention is not what limits it there.  $degenerate_txt  What remains is the instruction mix: every
             input byte costs one 1-byte load, one shared-memory atomic and the index arithmetic, and
             a warp's load fetches only 32 bytes, so the SMs issue many instructions per byte and keep
             few bytes in flight; each block also does only 16 loop iterations before it pays for
