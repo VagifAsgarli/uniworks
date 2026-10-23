@@ -213,7 +213,7 @@ end
 "Common preamble for a results section: who, where, and how it was measured."
 function run_info_md()
     return """
-    Student: $STUDENT_NAME ($STUDENT_ID), N = $N, seed = $SEED.
+    Student: $STUDENT_NAME ($STUDENT_CARD), N = $N, seed = $SEED.
     Device: $(CUDA.name(CUDA.device())) (compute capability $(CUDA.capability(CUDA.device()))).
     Timing: one warm-up launch + `CUDA.synchronize()`, then `CUDA.@elapsed` over $REPS launches
     (CUDA events, GPU time); the tables report the mean time per launch.

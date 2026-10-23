@@ -1,6 +1,6 @@
 # DE0831 Project 1: GPU Programming Fundamentals in Julia
 
-Student: Vagif Asgarli, ID: 123456 *(replace with your student card number, see "Before running")*
+Student: Vagif Asgarli, ID: 251ADM047 (individualised problem: N = 1152, seed = 51047, α = 7)
 
 Four CUDA.jl exercises: a grid-stride SAXPY, a naive and a shared-memory tiled matrix
 transpose, a naive and a privatised byte histogram, and a sliding-window Shannon entropy
@@ -15,14 +15,18 @@ describes the GPU the results in `results/` were measured on.
 *Not measured yet: run the scripts on the GPU (see below).*
 <!-- END device -->
 
-## Before running
+## Individualisation
 
-The problem size and RNG seed come from the student ID, which is set at the top of **every**
-script (`const STUDENT_ID = ...`).  Replace the placeholder in all four files at once:
+The header block from the brief is at the top of every script.  The student card number
+`251ADM047` contains letters, so the formulas `STUDENT_ID % 37` and `STUDENT_ID % 100_000` use its
+digits, `STUDENT_ID = 251047`; the full card number is what the scripts print and record:
 
-```sh
-sed -i 's/^const STUDENT_ID   = 123456 /const STUDENT_ID   = <your ID> /' src/p1_ex*.jl
+```julia
+const STUDENT_CARD = "251ADM047"
+const STUDENT_ID   = parse(Int, filter(isdigit, STUDENT_CARD))   # 251047
 ```
+
+This gives N = 1024 + (251047 mod 37) · 64 = 1152, SEED = 51047 and α = 1 + (251047 mod 7) = 7.
 
 ## How to run
 
@@ -108,7 +112,10 @@ measurement pattern given in the project brief.
 ## Submission
 
 ```sh
-# from the directory that contains DE0831_P1, with your last name and ID:
-cp -r DE0831_P1 DE0831_P1_Asgarli_<ID>
-zip -r DE0831_P1_Asgarli_<ID>.zip DE0831_P1_Asgarli_<ID> -x '*/testfile.bin' '*/.gitignore'
+# from the directory that contains DE0831_P1:
+cp -r DE0831_P1 DE0831_P1_Asgarli_251ADM047
+zip -r DE0831_P1_Asgarli_251ADM047.zip DE0831_P1_Asgarli_251ADM047 -x '*/testfile.bin' '*/.gitignore'
 ```
+
+The Colab notebook `DE0831_P1_colab.ipynb` (next to this folder in the repository) does all
+of the above on a free Colab T4 GPU and downloads the finished archive.

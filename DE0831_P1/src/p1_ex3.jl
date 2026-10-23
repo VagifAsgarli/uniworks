@@ -1,4 +1,5 @@
-const STUDENT_ID   = 123456          # <- your student card number
+const STUDENT_CARD = "251ADM047"                               # <- your student card number
+const STUDENT_ID   = parse(Int, filter(isdigit, STUDENT_CARD))  # 251047: its digits, for N and SEED
 const STUDENT_NAME = "Vagif Asgarli"
 
 const N_BASE = 1024
@@ -8,7 +9,7 @@ const SEED   = STUDENT_ID % 100_000                 # unique RNG seed
 using CUDA, Random
 Random.seed!(SEED)
 
-println("Student: $STUDENT_NAME, ID: $STUDENT_ID")
+println("Student: $STUDENT_NAME, ID: $STUDENT_CARD (digits $STUDENT_ID used for N and SEED)")
 println("Device: ", CUDA.name(CUDA.device()))
 println("Compute capability: ", CUDA.capability(CUDA.device()))
 println("Problem size N = $N, seed = $SEED")

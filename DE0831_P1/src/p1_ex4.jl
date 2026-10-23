@@ -1,4 +1,5 @@
-const STUDENT_ID   = 123456          # <- your student card number
+const STUDENT_CARD = "251ADM047"                               # <- your student card number
+const STUDENT_ID   = parse(Int, filter(isdigit, STUDENT_CARD))  # 251047: its digits, for N and SEED
 const STUDENT_NAME = "Vagif Asgarli"
 
 const N_BASE = 1024
@@ -8,7 +9,7 @@ const SEED   = STUDENT_ID % 100_000                 # unique RNG seed
 using CUDA, Random
 Random.seed!(SEED)
 
-println("Student: $STUDENT_NAME, ID: $STUDENT_ID")
+println("Student: $STUDENT_NAME, ID: $STUDENT_CARD (digits $STUDENT_ID used for N and SEED)")
 println("Device: ", CUDA.name(CUDA.device()))
 println("Compute capability: ", CUDA.capability(CUDA.device()))
 println("Problem size N = $N, seed = $SEED")
@@ -232,7 +233,7 @@ let j = 1:length(H)
     plt = plot(j, H; label = "H_j, GPU (fused kernel)", lw = 1.5, marker = :circle, ms = 2,
                xlabel = "window index j (W = 4096 bytes)", ylabel = "H_j (bits per byte)",
                ylims = (0, 8.6), legend = :bottomright, size = (1000, 480), dpi = 120,
-               title = "Shannon entropy of testfile.bin: $STUDENT_NAME ($STUDENT_ID)",
+               title = "Shannon entropy of testfile.bin: $STUDENT_NAME ($STUDENT_CARD)",
                titlefontsize = 11, left_margin = 5 * Plots.mm, bottom_margin = 5 * Plots.mm)
     vspan!(plt, [first(HIGH_WINDOWS) - 0.5, last(HIGH_WINDOWS) + 0.5]; alpha = 0.15, color = :red,
            label = "known high-entropy section (bytes 512 KiB - 768 KiB)")
