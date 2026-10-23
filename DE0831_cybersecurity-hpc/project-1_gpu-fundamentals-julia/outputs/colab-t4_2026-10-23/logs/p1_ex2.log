@@ -1,0 +1,10 @@
+Student: Vagif Asgarli, ID: 251ADM047 (digits 251047 used for N and SEED)
+Device: Tesla T4
+Compute capability: 7.5.0
+Problem size N = 1152, seed = 51047
+Naive and tiled transposes match Array(A)' for TILE ∈ (8, 16, 32), including ragged and rectangular sizes
+Correct!
+  TILE = 8: naive 132.5 GB/s, tiled 159.6 GB/s, no padding 164.4 GB/s, copy 186.7 GB/s
+  TILE = 16: naive 101.8 GB/s, tiled 163.0 GB/s, no padding 133.2 GB/s, copy 193.3 GB/s
+  TILE = 32: naive 41.4 GB/s, tiled 130.9 GB/s, no padding 63.6 GB/s, copy 154.8 GB/s
+Results written to /content/DE0831_P1/results/benchmarks.md

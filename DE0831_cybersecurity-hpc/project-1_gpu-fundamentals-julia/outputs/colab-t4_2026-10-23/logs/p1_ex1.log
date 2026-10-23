@@ -1,0 +1,22 @@
+Student: Vagif Asgarli, ID: 251ADM047 (digits 251047 used for N and SEED)
+Device: Tesla T4
+Compute capability: 7.5.0
+Problem size N = 1152, seed = 51047
+α = 7.0
+Boundary tests passed: N ∈ (1, 31, 32, 33, 255, 256, 257), blocks ∈ (1, 16, 64, 256, 1024)
+Correct!
+
+Benchmark at N = 1152
+  n = 1152, blocks = 1: 10.76 µs, 1.3 GB/s
+  n = 1152, blocks = 16: 12.25 µs, 1.1 GB/s
+  n = 1152, blocks = 64: 12.50 µs, 1.1 GB/s
+  n = 1152, blocks = 256: 12.17 µs, 1.1 GB/s
+  n = 1152, blocks = 1024: 14.28 µs, 1.0 GB/s
+Benchmark at N_large = 4718592
+  n = 4718592, blocks = 1: 7497.13 µs, 7.6 GB/s
+  n = 4718592, blocks = 16: 561.09 µs, 100.9 GB/s
+  n = 4718592, blocks = 64: 275.32 µs, 205.7 GB/s
+  n = 4718592, blocks = 256: 252.39 µs, 224.4 GB/s
+  n = 4718592, blocks = 1024: 240.54 µs, 235.4 GB/s
+Device-to-device copy: 233.3 GB/s
+Results written to /content/DE0831_P1/results/benchmarks.md

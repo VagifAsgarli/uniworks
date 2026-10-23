@@ -1,0 +1,6 @@
+name = "CUDA"
+uuid = "7c5e6a52-3b1f-4f0e-9d4b-6c1f2e8a9b10"
+version = "0.0.1"
+
+[deps]
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"

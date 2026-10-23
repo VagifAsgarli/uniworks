@@ -1,0 +1,199 @@
+    Updating registry at `~/.julia/registries/General.toml`
+   Installed Libmount_jll ────────────── v2.42.4+0
+   Installed CUDATools ───────────────── v6.4.2
+   Installed PlotUtils ───────────────── v1.5.1
+   Installed CUPTI ───────────────────── v6.4.2
+   Installed Preferences ─────────────── v1.6.1
+   Installed StaticArrays ────────────── v1.9.24
+   Installed cuFFT ───────────────────── v6.4.2
+   Installed Xorg_xkbcomp_jll ────────── v1.5.0+0
+   Installed Cairo_jll ───────────────── v1.18.8+1
+   Installed cuSPARSE ────────────────── v6.4.2
+   Installed libva_jll ───────────────── v2.24.1+0
+   Installed Fontconfig_jll ──────────── v2.18.3+0
+   Installed CUDA_Runtime_jll ────────── v0.25.0+3
+   Installed cuRAND ──────────────────── v6.4.2
+   Installed GPUArrays ───────────────── v11.5.16
+   Installed IrrationalConstants ─────── v0.2.7
+   Installed cuSOLVER ────────────────── v6.4.2
+   Installed HarfBuzz_jll ────────────── v100.14006.0+0
+   Installed NaNMath ─────────────────── v1.1.5
+   Installed JSON ────────────────────── v1.12.2
+   Installed CUDA_Compiler_jll ───────── v0.6.3+2
+   Installed MSVCRuntime_jll ─────────── v14.51.36247+0
+   Installed CUDACore ────────────────── v6.4.2
+   Installed LLVM ────────────────────── v10.4.0
+   Installed LMDB_jll ────────────────── v1.0.3+0
+   Installed FreeType2_jll ───────────── v2.15.0+0
+   Installed libpng_jll ──────────────── v1.6.59+1
+   Installed libaom_jll ──────────────── v3.15.2+0
+   Installed FriBidi_jll ─────────────── v1.0.18+0
+   Installed Expat_jll ───────────────── v2.9.0+0
+   Installed NVML ────────────────────── v6.4.2
+   Installed Colors ──────────────────── v0.13.3
+   Installed ColorTypes ──────────────── v0.12.4
+   Installed OrderedCollections ──────── v2.0.3
+   Installed LLVMExtra_jll ───────────── v0.0.56+0
+   Installed Xorg_libXrender_jll ─────── v0.9.13+0
+   Installed NVPTX_LLVM_Backend_jll ──── v23.1.2+1
+   Installed Xorg_libXi_jll ──────────── v1.8.5+0
+   Installed UnsafeAtomics ───────────── v0.4.0
+   Installed LogExpFunctions ─────────── v1.0.3
+   Installed KernelAbstractions ──────── v0.9.45
+   Installed Libuuid_jll ─────────────── v2.42.4+0
+   Installed Xorg_xkeyboard_config_jll ─ v2.48.0+0
+   Installed FFMPEG_jll ──────────────── v9.0.2+0
+   Installed Adapt ───────────────────── v4.7.4
+   Installed Atomix ──────────────────── v1.5.0
+   Installed GPUToolbox ──────────────── v3.4.3
+   Installed DocStringExtensions ─────── v0.10.2
+   Installed Glib_jll ────────────────── v2.90.1+0
+   Installed Xorg_libX11_jll ─────────── v1.8.14+0
+   Installed StructUtils ─────────────── v2.11.1
+   Installed GPUCompiler ─────────────── v2.16.0
+   Installed cuBLAS ──────────────────── v6.4.2
+   Installed CUDA ────────────────────── v6.4.2
+Precompiling packages...
+    672.6 ms  ✓ Preferences
+    567.7 ms  ✓ JLLWrappers
+   1446.6 ms  ✓ CUDA_Driver_jll
+  3 dependencies successfully precompiled in 3 seconds. 4 already precompiled.
+  3 dependencies precompiled but different versions are currently loaded (Dates, Printf and TOML). Restart julia to access the new versions. Otherwise, 3 dependents of these packages may trigger further precompilation to work with the unexpected versions.
+  Installing 21 artifacts
+   Installed artifact Expat                    306.8 KiB
+   Installed artifact Xorg_xkbcomp             275.1 KiB
+   Installed artifact Cairo                    925.8 KiB
+   Installed artifact Xorg_libXi               1.6 MiB
+   Installed artifact Xorg_xkeyboard_config    1.1 MiB
+   Installed artifact LMDB                     909.4 KiB
+   Installed artifact HarfBuzz                 2.1 MiB
+   Installed artifact libva                    237.5 KiB
+   Installed artifact libpng                   329.5 KiB
+   Installed artifact FriBidi                  82.3 KiB
+   Installed artifact Xorg_libXrender          436.0 KiB
+   Installed artifact libaom                   6.6 MiB
+   Installed artifact NVPTX_LLVM_Backend       11.0 MiB
+   Installed artifact Libmount                 7.0 MiB
+   Installed artifact Xorg_libX11              4.8 MiB
+   Installed artifact FFMPEG                   12.0 MiB
+   Installed artifact FreeType2                1.5 MiB
+   Installed artifact Fontconfig               1.1 MiB
+   Installed artifact Libuuid                  4.0 MiB
+   Installed artifact LLVMExtra                5.1 MiB
+   Installed artifact Glib                     8.0 MiB
+Precompiling packages...
+    983.1 ms  ✓ LLVMLoopInfo
+   1485.3 ms  ✓ AbstractFFTs
+    957.8 ms  ✓ LaTeXStrings
+    848.6 ms  ✓ IteratorInterfaceExtensions
+   1521.4 ms  ✓ ExprTools
+   1635.2 ms  ✓ Statistics
+   5291.6 ms  ✓ GPUToolbox
+   4618.2 ms  ✓ CEnum
+   2991.9 ms  ✓ RandomNumbers
+   1113.6 ms  ✓ DataValueInterfaces
+    962.0 ms  ✓ Reexport
+   4845.8 ms  ✓ OrderedCollections
+   1089.1 ms  ✓ HashArrayMappedTries
+   1304.0 ms  ✓ Adapt
+    888.7 ms  ✓ DataAPI
+  11936.0 ms  ✓ MacroTools
+   6804.1 ms  ✓ CUDA_Runtime_Discovery
+   1191.5 ms  ✓ StaticArraysCore
+   2475.5 ms  ✓ Requires
+    936.0 ms  ✓ Scratch
+   1705.6 ms  ✓ Preferences
+   7060.9 ms  ✓ Crayons
+   5263.9 ms  ✓ BFloat16s
+    922.3 ms  ✓ TableTraits
+   1155.9 ms  ✓ ScopedValues
+   1816.6 ms  ✓ Statistics → SparseArraysExt
+   2548.6 ms  ✓ Random123
+   1495.2 ms  ✓ Adapt → AdaptSparseArraysExt
+   1495.0 ms  ✓ GPUArraysCore
+   1206.5 ms  ✓ PrecompileTools
+   1499.2 ms  ✓ JLLWrappers
+   6892.5 ms  ✓ Tables
+   7884.8 ms  ✓ CUDA_Driver_jll
+   1866.0 ms  ✓ tree_sitter_spirv_jll
+   1434.6 ms  ✓ MSVCRuntime_jll
+  18092.4 ms  ✓ StringManipulation
+   1498.0 ms  ✓ NVTX_jll
+   2007.9 ms  ✓ LibTracyClient_jll
+   1736.2 ms  ✓ tree_sitter_gcn_jll
+   1762.4 ms  ✓ demumble_jll
+   1834.2 ms  ✓ LLVMExtra_jll
+   1786.1 ms  ✓ NVPTX_LLVM_Backend_jll
+   2127.8 ms  ✓ LMDB_jll
+   1849.7 ms  ✓ JuliaNVTXCallbacks_jll
+   1633.5 ms  ✓ tree_sitter_llvm_jll
+   1830.3 ms  ✓ tree_sitter_ptx_jll
+  29863.7 ms  ✓ StaticArrays
+   2086.3 ms  ✓ Tracy
+   7245.9 ms  ✓ CUDA_Compiler_jll
+   2521.7 ms  ✓ LMDB
+   2721.9 ms  ✓ NVTX
+   1621.1 ms  ✓ StaticArrays → StaticArraysStatisticsExt
+   1511.9 ms  ✓ Adapt → AdaptStaticArraysExt
+   7375.2 ms  ✓ CUDA_Runtime_jll
+   2339.5 ms  ✓ CompilerCaching
+  56314.4 ms  ✓ LLVM
+   1652.1 ms  ✓ LLVM → BFloat16sExt
+   8105.5 ms  ✓ UnsafeAtomics
+   1801.7 ms  ✓ Atomix
+  16034.4 ms  ✓ KernelAbstractions
+   3086.5 ms  ✓ KernelAbstractions → SparseArraysExt
+  90846.5 ms  ✓ PrettyTables
+   2020.5 ms  ✓ KernelAbstractions → LinearAlgebraExt
+  10238.7 ms  ✓ GPUArrays
+ 141722.1 ms  ✓ GPUCompiler
+   1177.8 ms  ✓ UnsafeAtomics → UnsafeAtomicsGPUCompilerExt
+ 151989.6 ms  ✓ CUDACore
+   4759.1 ms  ✓ Atomix → AtomixCUDACoreExt
+  17006.2 ms  ✓ cuRAND
+  18308.6 ms  ✓ NVML
+  22852.9 ms  ✓ CUPTI
+  13927.6 ms  ✓ cuFFT
+  25215.7 ms  ✓ cuSPARSE
+  35754.0 ms  ✓ cuBLAS
+  43052.5 ms  ✓ CUDATools
+  16987.1 ms  ✓ cuSOLVER
+   7132.2 ms  ✓ CUDA
+  77 dependencies successfully precompiled in 500 seconds. 33 already precompiled.
+  24 dependencies precompiled but different versions are currently loaded (ArgTools, Base64, Dates, Downloads, JuliaSyntaxHighlighting, LibCURL, LibCURL_jll, LibGit2, LibGit2_jll, LibSSH2_jll, Logging, Markdown, MozillaCACerts_jll, NetworkOptions, OpenSSL_jll, Pkg, Printf, StyledStrings, TOML, Tar, UUIDs, Zlib_jll, nghttp2_jll and p7zip_jll). Restart julia to access the new versions. Otherwise, 56 dependents of these packages may trigger further precompilation to work with the unexpected versions.
+CUDA toolchain: 
+- runtime 13.0.0, local installation
+- driver 580.82.7 for CUDA 13.3, forward-compatible
+- compiler 13.0.88, local installation
+
+CUDA libraries: 
+- cuBLAS: 13.1.1
+- cuSPARSE: 12.6.3
+- cuSOLVER: 12.0.4
+- cuFFT: 12.0.0
+- cuRAND: 10.4.0
+- CUPTI: 2025.3.1 (API 13.0.1)
+- NVML: 13.0.0+580.82.7
+
+Julia packages: 
+- CUDACore: 6.4.2
+- GPUArrays: 11.5.16
+- GPUCompiler: 2.16.0
+- KernelAbstractions: 0.9.45
+- CUDA_Driver_jll: 13.3.5+0
+- CUDA_Compiler_jll: 0.6.3+2
+- CUDA_Runtime_jll: 0.25.0+3
+- CUDA_Runtime_Discovery: 2.1.1
+- NVPTX_LLVM_Backend_jll: 23.1.2+1
+
+Toolchain:
+- Julia: 1.12.7
+- LLVM: 18.1.7
+
+Preferences:
+- CUDA_Runtime_jll.version: 13.0.3
+- CUDA_Runtime_jll.local: true
+
+1 device:
+  0: Tesla T4 (sm_75, 14.560 GiB / 15.000 GiB available)
+     compiles to sm_75 / PTX 9.0

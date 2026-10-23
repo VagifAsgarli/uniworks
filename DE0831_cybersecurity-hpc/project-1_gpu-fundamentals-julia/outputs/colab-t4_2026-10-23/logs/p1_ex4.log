@@ -1,0 +1,20 @@
+Student: Vagif Asgarli, ID: 251ADM047 (digits 251047 used for N and SEED)
+Device: Tesla T4
+Compute capability: 7.5.0
+Problem size N = 1152, seed = 51047
+testfile.bin: 1310720 bytes, 320 windows, high-entropy windows 129-192
+  mean H: low 4.696, high 7.954, mid 4.696 bits/byte
+  windows above 6.5 bits/byte: 129-192 (matches the known section)
+Known-answer windows passed: H = 0, 1, 8 bits/byte
+Boundary tests passed: N ∈ (1, 31, 32, 33, 255, 256, 257) as windows and as bytes
+Correct!
+Entropy profile written to /content/DE0831_P1/results/entropy_profile.csv
+P1_NO_PLOTS=1: plot not drawn by Julia; draw it from /content/DE0831_P1/results/entropy_profile.csv
+
+Benchmark: testfile.bin (1310720 B) and the test file repeated 72 times (94371840 B)
+  fused kernel on all 0x00: 3.664 ms
+  fused kernel on letters a-z: 1.637 ms
+  fused kernel on uniform random: 1.658 ms
+  testfile.bin: basic 82.98 µs (15795.6 MB/s), fused 48.97 µs (26767.0 MB/s)
+  test file × 72: basic 2751.14 µs (34302.8 MB/s), fused 1682.95 µs (56075.4 MB/s)
+Results written to /content/DE0831_P1/results/benchmarks.md and /content/DE0831_P1/results/analysis.md

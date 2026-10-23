@@ -1,0 +1,11 @@
+Student: Vagif Asgarli, ID: 251ADM047 (digits 251047 used for N and SEED)
+Device: Tesla T4
+Compute capability: 7.5.0
+Problem size N = 1152, seed = 51047
+Input length = N · 10000 = 11520000 bytes, grid = 640 × 256 threads
+  uniform: 0x00 fraction = 0.004, both kernels match the CPU
+  skewed (90 % 0x00): 0x00 fraction = 0.900, both kernels match the CPU
+Correct!
+  uniform: naive 2.963 ms, privatised 0.227 ms, speedup 13.06×
+  skewed (90 % 0x00): naive 8.893 ms, privatised 0.442 ms, speedup 20.10×
+Results written to /content/DE0831_P1/results/benchmarks.md
