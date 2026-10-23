@@ -341,10 +341,11 @@ function write_analysis(m)
     if frac_copy >= 0.7
         limiter = """
         **The limiter is memory access, i.e. DRAM bandwidth, and the access pattern is already
-        efficient.**  The kernel reaches $(pct(frac_copy)) of what a pure copy achieves, its
-        loads are fully coalesced (each warp reads 32 consecutive bytes per step), and the time
-        changes only by a factor $(f2(r_zero)) between the most and least contended inputs, so
-        neither the shared-memory atomics nor the arithmetic are what bounds it.
+        efficient.**  The kernel reaches $(pct(frac_copy)) of what a pure copy achieves on the
+        test-file mix and its loads are fully coalesced (each warp reads 32 consecutive bytes per
+        step), so neither the shared-memory atomics nor the arithmetic are what bounds it there.
+        $(r_zero >= 1.3 ? "Only on degenerate input does contention take over: on all-0x00 bytes, where all 256 threads of a block update one bin, it is $(f2(r_zero))× slower than on uniform bytes." :
+                          "The time also changes only by a factor $(f2(r_zero)) between the most and least contended inputs (all-0x00 against uniform bytes).")
         """
         optimisation = """
         **Overlap the host-to-device transfer with the scan (CUDA streams, pinned memory).**  The
@@ -378,8 +379,9 @@ function write_analysis(m)
         addresses; low-entropy windows should therefore move from up to $(f2(r_zero))× to close to 1×
         the uniform time, i.e. up to **$(f2(r_zero))× faster on constant data, $(f2(r_letters))× on text-like
         data and $(f2(m.t_fused_big / m.t_uniform))× on the test-file mix** ($(ms(m.t_fused_big)) ms → about
-        $(ms(m.t_uniform)) ms), minus a small cost for zeroing and merging the copies (8 shared reads per
-        bin per window, < 1 % of the 4096 atomics).  The estimate is based on the measured content
+        $(ms(m.t_uniform)) ms), minus the cost of zeroing and merging the copies: 8 extra shared-memory
+        writes and 8 reads per thread against its 16 atomics, but uncontended and bank-conflict-free
+        (thread t touches bin t of each copy).  The estimate is based on the measured content
         dependence above.
         """
     else
@@ -415,26 +417,51 @@ function write_analysis(m)
     end
 
     tb = 1e12
-    hours(bytes, bw_bytes_per_s) = bytes / bw_bytes_per_s / 3600
+    duration(s) = s < 120 ? "$(f1(s)) s" : s < 7200 ? "$(f1(s / 60)) min" : "$(f1(s / 3600)) h"
     kernel_bps = m.big_bytes / m.t_fused_big
     e2e_bps    = m.big_bytes / (m.t_h2d + m.t_fused_big)
+    h2d_bps    = m.h2d_bw * 1e9
+    io_point = if kernel_bps > h2d_bps
+        """
+        - **The GPU is not the bottleneck; data movement is.**  The kernel ($(f1(kernel_bps / 1e9)) GB/s)
+          is faster than the host-to-device copy ($(f1(m.h2d_bw)) GB/s) and than typical storage (a fast
+          NVMe SSD reads a few GB/s, a network share or HDD far less), so a GPU entropy scan can run
+          *inline* with acquisition or ingestion instead of as a separate pass, and the effort should
+          go into overlapping transfer and compute rather than into the kernel.
+        """
+    else
+        """
+        - **On this GPU the kernel is the slowest stage.**  It scans at $(f1(kernel_bps / 1e9)) GB/s, below
+          the host-to-device copy ($(f1(m.h2d_bw)) GB/s), so optimising the kernel (section 3) pays off
+          directly in end-to-end triage time; it is still far faster than the CPU reference.
+        """
+    end
+    batch_point = if m.mbps_tf < 0.5 * kernel_bps / 1e6
+        """
+        - **Batch small files.**  A single 1.25 MiB file (320 windows) takes $(us(m.t_fused_tf)) µs, only
+          $(f1(m.mbps_tf)) MB/s ($(pct(m.mbps_tf / (kernel_bps / 1e6))) of the large-input rate), because 320
+          blocks cannot fill the GPU and the fixed launch cost dominates.  Triaging a file system file
+          by file would waste most of the GPU; files should be packed into large buffers and scanned
+          with one launch.
+        """
+    else
+        """
+        - **Small files are cheap too.**  A single 1.25 MiB file (320 windows) takes $(us(m.t_fused_tf)) µs
+          ($(f1(m.mbps_tf)) MB/s, $(pct(m.mbps_tf / (kernel_bps / 1e6))) of the large-input rate), so on this GPU
+          even per-file launches keep most of the throughput.
+        """
+    end
     security = """
     The scanner is a triage tool, so what matters is how fast it can answer *where in this data
     is something encrypted, compressed or packed?*  Measured on this GPU, the fused kernel scans
     at **$(f1(kernel_bps / 1e6)) MB/s** on a $(f1(m.big_bytes / 1e6)) MB input, versus **$(f1(m.cpu_mbps)) MB/s**
     for the single-threaded CPU reference ($(f1(kernel_bps / 1e6 / m.cpu_mbps))× faster); including the
     pageable host-to-device copy ($(f1(m.h2d_bw)) GB/s) the end-to-end rate is $(f1(e2e_bps / 1e6)) MB/s.
-    For a 1 TB disk image that is $(f2(hours(tb, kernel_bps))) h of kernel time, $(f2(hours(tb, e2e_bps))) h end to
-    end, and $(f2(hours(tb, m.cpu_mbps * 1e6))) h on one CPU core.  Consequences for practice:
+    For a 1 TB disk image that is $(duration(tb / kernel_bps)) of kernel time, $(duration(tb / e2e_bps)) end
+    to end, and $(duration(tb / (m.cpu_mbps * 1e6))) on one CPU core.  Consequences for practice:
 
-    - **The GPU is not the bottleneck; I/O is.**  The kernel is faster than the PCIe copy and
-      faster than typical storage (a fast NVMe SSD reads a few GB/s, a network share or HDD far
-      less), so a GPU entropy scan can run *inline* with acquisition or ingestion instead of as
-      a separate pass, and the effort should go into overlapping transfer and compute.
-    - **Batch small files.**  A single 1.25 MiB file (320 windows) takes $(us(m.t_fused_tf)) µs, only
-      $(f1(m.mbps_tf)) MB/s, because 320 blocks cannot fill the GPU and launch overhead dominates.
-      Triaging a file system file by file would waste most of the GPU; files should be packed
-      into large buffers and scanned with one launch.
+    $(rstrip(io_point))
+    $(rstrip(batch_point))
     - **Resolution and statistics.**  With W = 4096 (one page) the scanner localises a
       high-entropy region to 4 KiB, as the plot shows (windows $(first(HIGH_WINDOWS))-$(last(HIGH_WINDOWS))
       above $(THRESHOLD) bits/byte), but 4096 samples of 256 symbols bias the estimate down by
@@ -443,7 +470,7 @@ function write_analysis(m)
       bytes, so every window of an encrypted volume or of the output of a GPU encryption kernel
       should read ≈ 7.95 bits/byte at W = 4096; a run of low-entropy windows inside it points to
       unencrypted sectors, padding, or a broken cipher mode (e.g. ECB on repetitive data), which
-      is a vulnerability that a scan at this rate finds across a whole disk in minutes.
+      is a vulnerability the scan finds without decrypting anything.
     - **Entropy is a signal, not a verdict.**  High entropy flags encrypted containers, ransomware
       output, packed or encrypted malware sections and exfiltration archives, but also every
       ordinary JPEG, ZIP or video, so it ranks data for deeper analysis rather than detecting
