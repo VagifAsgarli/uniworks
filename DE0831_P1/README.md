@@ -52,7 +52,9 @@ benchmarks and writes its section of `results/benchmarks.md`.  `p1_ex4.jl` also 
 
 Environment variables: `P1_QUICK=1` runs only the correctness checks (the default in
 `test/runtests.jl`; use `P1_QUICK=0` there to include the benchmarks), `P1_REPS=<n>` changes the
-number of timed launches (default 100, as in the brief).
+number of timed launches (default 100, as in the brief), `P1_NO_PLOTS=1` makes `p1_ex4.jl` skip
+Plots.jl and write only `results/entropy_profile.csv` (for machines where the GR backend cannot
+load; the exercise also continues without the plot if Plots.jl fails).
 
 ## Files
 
@@ -67,6 +69,7 @@ number of timed launches (default 100, as in the brief).
 | `results/benchmarks.md` | all timing tables (generated) |
 | `results/analysis.md` | the exercise 4 performance analysis (generated from the measurements) |
 | `results/entropy_plot.png` | H_j against j for `testfile.bin` |
+| `results/entropy_profile.csv` | the plotted data: H_j from the GPU fused kernel and the CPU reference, per window |
 
 ## Methodology
 

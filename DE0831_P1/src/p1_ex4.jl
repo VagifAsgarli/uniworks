@@ -20,10 +20,7 @@ println("Problem size N = $N, seed = $SEED")
 # reduction of -p log2 p inside one kernel).
 include("p1_common.jl")
 
-ENV["GKSwstype"] = "100"          # headless GR backend for Plots
-using Plots
-
-const W          = 4096           # window size in bytes
+const W         = 4096           # window size in bytes
 const NBINS      = 256            # one thread per bin
 const PER_THREAD = W ÷ NBINS      # every thread counts 16 bytes of its window
 
@@ -234,23 +231,55 @@ check_scanner(zeros(UInt8, 2W), "constant bytes (H = 0)")
 println("Boundary tests passed: N ∈ $(BOUNDARY_N) as windows and as bytes")
 println("Correct!")
 
-# --- Plot ---------------------------------------------------------------------
+# --- Entropy profile and plot ---------------------------------------------------
+# The profile of testfile.bin (GPU fused-kernel H_j next to the CPU reference) is
+# always written as CSV.  Plots.jl is loaded only for drawing, inside a
+# try/catch, so a machine whose graphics backend (GR) cannot load still runs the
+# whole exercise; P1_NO_PLOTS=1 skips Plots.jl altogether and leaves the drawing
+# to another tool reading the CSV (the Colab notebook uses matplotlib).
 mkpath(RESULTS_DIR)
-const PLOT_FILE = joinpath(RESULTS_DIR, "entropy_plot.png")
-let j = 1:length(H)
-    plt = plot(j, H; label = "H_j, GPU (fused kernel)", lw = 1.5, marker = :circle, ms = 2,
-               xlabel = "window index j (W = 4096 bytes)", ylabel = "H_j (bits per byte)",
-               ylims = (0, 8.6), legend = :bottomright, size = (1000, 480), dpi = 120,
-               title = "Shannon entropy of testfile.bin: $STUDENT_NAME ($STUDENT_CARD)",
-               titlefontsize = 11, left_margin = 5 * Plots.mm, bottom_margin = 5 * Plots.mm)
-    vspan!(plt, [first(HIGH_WINDOWS) - 0.5, last(HIGH_WINDOWS) + 0.5]; alpha = 0.15, color = :red,
-           label = "known high-entropy section (bytes 512 KiB - 768 KiB)")
-    hline!(plt, [8.0]; ls = :dash, color = :gray, label = "8 bits/byte (uniform random bytes)")
-    hline!(plt, [log2(26)]; ls = :dot, color = :gray, label = "log2(26) = 4.70 (letters a-z)")
-    hline!(plt, [THRESHOLD]; ls = :dashdot, color = :black, lw = 0.8, label = "detection threshold $THRESHOLD")
-    savefig(plt, PLOT_FILE)
+const PROFILE_FILE = joinpath(RESULTS_DIR, "entropy_profile.csv")
+const PLOT_FILE    = joinpath(RESULTS_DIR, "entropy_plot.png")
+let H_ref = entropy_cpu(testdata)
+    open(PROFILE_FILE, "w") do io
+        println(io, "window,first_byte,last_byte,H_gpu_fused,H_cpu_reference,known_high")
+        for j in eachindex(H)
+            println(io, j, ",", (j - 1) * W + 1, ",", min(j * W, length(testdata)), ",",
+                    H[j], ",", H_ref[j], ",", Int(j in HIGH_WINDOWS))
+        end
+    end
 end
-println("Plot written to $PLOT_FILE")
+println("Entropy profile written to $PROFILE_FILE")
+
+function draw_entropy_plot(H, path)
+    j = 1:length(H)
+    plt = Plots.plot(j, H; label = "H_j, GPU (fused kernel)", lw = 1.5, marker = :circle, ms = 2,
+                     xlabel = "window index j (W = 4096 bytes)", ylabel = "H_j (bits per byte)",
+                     ylims = (0, 8.6), legend = :bottomright, size = (1000, 480), dpi = 120,
+                     title = "Shannon entropy of testfile.bin: $STUDENT_NAME ($STUDENT_CARD)",
+                     titlefontsize = 11, left_margin = 5 * Plots.mm, bottom_margin = 5 * Plots.mm)
+    Plots.vspan!(plt, [first(HIGH_WINDOWS) - 0.5, last(HIGH_WINDOWS) + 0.5]; alpha = 0.15, color = :red,
+                 label = "known high-entropy section (bytes 512 KiB - 768 KiB)")
+    Plots.hline!(plt, [8.0]; ls = :dash, color = :gray, label = "8 bits/byte (uniform random bytes)")
+    Plots.hline!(plt, [log2(26)]; ls = :dot, color = :gray, label = "log2(26) = 4.70 (letters a-z)")
+    Plots.hline!(plt, [THRESHOLD]; ls = :dashdot, color = :black, lw = 0.8, label = "detection threshold $THRESHOLD")
+    Plots.savefig(plt, path)
+    return nothing
+end
+
+if get(ENV, "P1_NO_PLOTS", "0") == "1"
+    println("P1_NO_PLOTS=1: plot not drawn by Julia; draw it from $PROFILE_FILE")
+else
+    try
+        ENV["GKSwstype"] = "100"          # headless GR backend
+        @eval using Plots
+        Base.invokelatest(draw_entropy_plot, H, PLOT_FILE)
+        println("Plot written to $PLOT_FILE")
+    catch err
+        println("Plots.jl could not draw the plot (", first(sprint(showerror, err), 300),
+                "); draw it from $PROFILE_FILE")
+    end
+end
 
 # ---------------------------------------------------------------------------
 # Benchmark and performance analysis
