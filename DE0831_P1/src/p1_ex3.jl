@@ -99,11 +99,10 @@ end
 "Uniform random bytes."
 uniform_bytes(n) = rand(UInt8, n)
 
-"Skewed bytes: each byte is 0x00 with probability 0.9, otherwise uniform random."
+"Skewed bytes: exactly 90 % (rounded) are 0x00, the rest are random non-zero bytes, shuffled with the seeded RNG."
 function skewed_bytes(n)
-    data = rand(UInt8, n)
-    data[rand(Float32, n) .< 0.9f0] .= 0x00
-    return data
+    nzero = round(Int, 0.9 * n)
+    return shuffle!(vcat(zeros(UInt8, nzero), rand(0x01:0xff, n - nzero)))
 end
 
 function run_hist(kernel, data_d; threads = THREADS, blocks = BLOCKS)
@@ -111,6 +110,14 @@ function run_hist(kernel, data_d; threads = THREADS, blocks = BLOCKS)
     @cuda threads=threads blocks=blocks kernel(hist, data_d)
     CUDA.synchronize()
     return Array(hist)
+end
+
+# Known-answer example from the step-by-step guide: UInt8[0, 0, 1, 255] gives
+# bin 1 (byte 0) = 2, bin 2 (byte 1) = 1, bin 256 (byte 255) = 1, all others 0.
+let expected = zeros(UInt32, NBINS), small_d = CuArray(UInt8[0, 0, 1, 255])
+    expected[1], expected[2], expected[256] = 2, 1, 1
+    require(run_hist(hist_naive!, small_d) == expected, "known-answer histogram (naive)")
+    require(run_hist(hist_privatised!, small_d) == expected, "known-answer histogram (privatised)")
 end
 
 println("Input length = N · 10000 = $LEN bytes, grid = $BLOCKS × $THREADS threads")
@@ -173,11 +180,25 @@ if !QUICK
         "($(su_s)× against $(su_u)×), which contradicts this contention model; check the " *
         "naive and privatised times per dataset before drawing conclusions.**"
     end
+    # A speedup below 1 is reported as measured and explained.
+    if speedups["uniform"] < 1
+        conclusion *= "  On the uniform dataset the privatised kernel was slower ($(su_u)×): with bytes " *
+            "spread over 256 bins the naive kernel's global atomics rarely hit the same address, so there " *
+            "is little contention for privatisation to remove, while each block pays for zeroing and " *
+            "merging its 256 shared bins and for two barriers."
+    end
+    if speedups["skewed (90 % 0x00)"] < 1
+        conclusion *= "  On the skewed dataset the privatised kernel was slower ($(su_s)×): inside each " *
+            "block 90 % of the shared-memory atomics hit the same word `local_hist[1]`, and on this GPU " *
+            "serialising them per block cost more than the naive kernel's global atomics on `hist[1]`."
+    end
     section = """
     ## Exercise 3: privatised histogram
 
     $(run_info_md())
-    Input: N · 10000 = $LEN bytes (UInt8), 256 bins (UInt32).  Grid = $BLOCKS blocks × $THREADS
+    Input: N · 10000 = $LEN bytes (UInt8), 256 bins (UInt32).  Uniform: random bytes; skewed:
+    exactly 90 % of the positions hold 0x00 and the rest random non-zero bytes, shuffled with the
+    seeded RNG.  Both kernels see identical data.  Grid = $BLOCKS blocks × $THREADS
     threads (16 blocks per SM) for both kernels.  The histogram is zeroed before every launch
     outside the timed region (reset-aware timing, one `CUDA.@elapsed` per launch).  Bandwidth =
     input bytes / time / 10⁹; speedup = naive time / privatised time.

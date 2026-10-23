@@ -73,15 +73,22 @@ number of timed launches (default 100, as in the brief).
 - Every kernel time is measured with one warm-up launch, `CUDA.synchronize()`, and then
   `CUDA.@elapsed` (CUDA events) around 100 launches; the mean per launch is reported.
   `@time`/`@btime` are not used for kernels.
-- The histogram kernels accumulate into their output, so they are timed with the reset-aware
-  variant: the histogram is zeroed before each launch outside the timed region and each launch
-  has its own `CUDA.@elapsed`.
+- Kernels that change their own input or output are timed with the reset-aware variant: before
+  each launch, outside the timed interval, SAXPY's y is restored from an unchanged copy and the
+  histogram is zeroed; each launch then has its own `CUDA.@elapsed`.  The result after the last
+  measured launch is checked against the CPU again.
+- Every script also checks the known-answer examples of the step-by-step guide (SAXPY
+  [12, 24, 36], the 2 × 3 transpose, the histogram of [0, 0, 1, 255], entropies 0, 1 and 8).
 - Bandwidth = bytes moved / time / 10⁹ (GB/s); throughput in exercise 4 = input bytes / time /
   10⁶ (MB/s).  The bytes counted per kernel are stated above each table.
 - Inputs are generated on the CPU from the seeded RNG (`Random.seed!(SEED)`) and copied to the
   GPU, so every run with the same student ID uses the same data.
-- Exercise 4 reads N in the boundary tests both as a number of windows (N · 4096 bytes) and as a
-  number of bytes (one partial window).  A partial last window is normalised by its real length.
+- Exercise 3 skewed dataset: exactly 90 % of the positions are 0x00, the rest random non-zero
+  bytes, shuffled with the seeded RNG.
+- Exercise 4 window convention: width W = 4096, step W (adjacent windows), a short final window
+  is kept and normalised by its actual length m.  The boundary sizes N ∈ {1, 31, 32, 33, 255,
+  256, 257} are tested as byte lengths, as the guide specifies, and additionally as numbers of
+  windows.  Both routes are implemented and submitted; the fused route is the one to be marked.
 
 ## Known issues and notes
 
@@ -106,8 +113,9 @@ running the scripts on the device listed under "Device".
 
 *Describe here what you reviewed, changed and ran yourself.*
 
-No course-supplied helper files are used; the timing helper in `src/p1_common.jl` follows the
-measurement pattern given in the project brief.
+The optional support pack (CPU references, timing helper, starters) is not used; the timing
+helper in `src/p1_common.jl` follows the measurement pattern of the brief and the step-by-step
+guide, and the guide's known-answer examples are included as tests.
 
 ## Submission
 

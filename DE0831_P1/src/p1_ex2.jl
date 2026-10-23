@@ -118,6 +118,15 @@ launch_copy(B, A, tile) =
 
 const TRANSPOSES = (("naive", launch_naive), ("tiled", launch_tiled), ("tiled, no padding", launch_nopad))
 
+# Known-answer example from the step-by-step guide: [1 2 3; 4 5 6] -> [1 4; 2 5; 3 6].
+A_small = CuArray(Float32[1 2 3; 4 5 6])
+for tile in TILES, (name, launch) in TRANSPOSES
+    B = CUDA.fill(NaN32, 3, 2)
+    launch(B, A_small, tile)
+    CUDA.synchronize()
+    require(Array(B) == Float32[1 4; 2 5; 3 6], "known-answer transpose ($name), TILE=$tile")
+end
+
 # Verify every transpose kernel against Array(A)' for every TILE: at N×N, at
 # sizes that are not multiples of any TILE (partial tiles at the edges), and
 # on rectangular matrices (catches swapped row/column indices).

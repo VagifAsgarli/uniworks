@@ -213,6 +213,14 @@ println("  mean H: low $(f3(mean_of(1:first(HIGH_WINDOWS)-1))), " *
         "high $(f3(mean_of(HIGH_WINDOWS))), mid $(f3(mean_of(last(HIGH_WINDOWS)+1:length(H)))) bits/byte")
 println("  windows above $THRESHOLD bits/byte: $(first(detected))-$(last(detected)) (matches the known section)")
 
+# --- Known-answer windows from the step-by-step guide (exact values) -------
+for (bytes, h) in ((UInt8[0, 0, 0, 0], 0.0), (UInt8[0, 1, 0, 1], 1.0),
+                   (collect(0x00:0xff), 8.0), (zeros(UInt8, 5), 0.0))
+    H_known = check_scanner(bytes, "known answer, $(length(bytes)) bytes")
+    require(abs(H_known[1] - h) <= 1e-4, "known-answer entropy: got $(H_known[1]), expected $h")
+end
+println("Known-answer windows passed: H = 0, 1, 8 bits/byte")
+
 # --- Boundary tests ---------------------------------------------------------
 # N is read both as a number of windows (N·W bytes) and as a number of bytes
 # (one partial window), so the bounds check in the counting loop is exercised.
@@ -248,9 +256,12 @@ println("Plot written to $PLOT_FILE")
 # Benchmark and performance analysis
 # ---------------------------------------------------------------------------
 
-# FLOPs per window in the fused kernel: per bin one division, one log2 and one
-# multiply (the sign is free), then 255 additions in the reduction.
-const FLOPS_PER_WINDOW = 3 * NBINS + (NBINS - 1)
+# Operation count per window in the fused kernel: per bin one division and one
+# multiply (the sign is free), then 255 additions in the reduction.  The 256
+# log2 evaluations are counted separately: a log2 is a multi-instruction
+# special-function evaluation, not one FLOP.
+const FLOPS_PER_WINDOW = 2 * NBINS + (NBINS - 1)
+const LOG2_PER_WINDOW  = NBINS
 # DRAM bytes per window in the fused kernel: the window is read once, H_j written once.
 const BYTES_PER_WINDOW = W + sizeof(Float32)
 
@@ -301,6 +312,9 @@ function write_analysis(m)
     bps        = get(m.res_fused, :blocks_per_sm, nothing)
     r_zero     = m.t_zero / m.t_uniform
     r_letters  = m.t_letters / m.t_uniform
+    amdahl(f, s) = 1 / ((1 - f) + f / s)
+    f_cont     = max(0.0, 1 - m.t_uniform / m.t_fused_big)   # contended share of the mix run time
+    f_zero     = max(0.0, 1 - m.t_uniform / m.t_zero)
 
     ridge_txt = ridge === nothing ? "not available (the FP32 peak of this device is unknown)" :
         "**$(f1(ridge)) FLOP/byte** ($(f1(m.peak_gflops)) GFLOP/s FP32 peak / $(f1(bw_ref)) GB/s $(bw_ref_name))"
@@ -308,21 +322,28 @@ function write_analysis(m)
     theo_txt  = m.theo_bw === nothing ? "" :
         " and $(pct(m.bw_fused / m.theo_bw)) of the theoretical $(f1(m.theo_bw)) GB/s"
     roofline = """
-    The fused kernel performs about $(FLOPS_PER_WINDOW) FLOPs per window (256 × (division, log2,
-    multiply) + 255 additions) and moves $(BYTES_PER_WINDOW) bytes of DRAM traffic per window
-    (the 4096-byte window is read once and one Float32 is written), so its operational intensity
-    is **$(f3(m.oi)) FLOP/byte**.  The basic route does the same arithmetic but also writes the
-    256 × windows count matrix and re-reads it in the array operations, so its intensity is even
-    lower.  On this GPU the ridge point is $ridge_txt, so the scanner sits $left_txt to the left of
+    Operation-count convention: per window the fused kernel performs 256 divisions, 256
+    multiplications and 255 additions, i.e. $(FLOPS_PER_WINDOW) FLOPs, plus $(LOG2_PER_WINDOW) base-2
+    logarithms counted separately (a logarithm costs far more than an addition).  Byte convention:
+    useful global bytes, not measured DRAM traffic: each 4096-byte window is read once and one
+    Float32 is written, $(BYTES_PER_WINDOW) bytes per window.  The operational intensity is therefore
+    **$(f3(m.oi)) FLOP/byte** (plus $(f3(LOG2_PER_WINDOW / BYTES_PER_WINDOW)) log2/byte).  The basic route does the
+    same arithmetic but also writes the 256 × windows count matrix (1 KB per 4 KB window) and reads it
+    back in the array operations, so its intensity is lower still.  On this GPU the ridge point is
+    $ridge_txt, so the scanner sits $left_txt to the left of
     the ridge, deep in the **memory-bound** region: the roofline caps it at
     $(f3(m.oi)) FLOP/B × $(f1(bw_ref)) GB/s = $(f1(attainable)) GFLOP/s, i.e. at streaming the input at
     full DRAM bandwidth.  Measured: on the $(f1(m.big_bytes / 1e6)) MB input the fused kernel takes
     $(ms(m.t_fused_big)) ms, which is $(f1(m.bw_fused)) GB/s of DRAM traffic and $(f1(m.gflops_fused)) GFLOP/s,
     i.e. **$(pct(frac_copy)) of the measured device-to-device copy bandwidth ($(f1(m.copy_bw)) GB/s)**$theo_txt.
+    The roofline does not model atomic contention or special-function (log2) throughput, so it is
+    an upper bound here, not a prediction.
     """
 
+    count_matrix_cost = m.t_basic_big - m.t_hist_big
     evidence = """
-    Evidence:
+    Observed on this GPU (Nsight Compute counters were not collected, so the limiter named above is
+    an inference from these observations, not a profiler measurement):
     - `CUDA.registers`: $(fmt_opt(regs, string)) registers per thread (fused), $(fmt_opt(get(m.res_basic, :registers, nothing), string)) (basic kernel);
       shared memory $(fmt_opt(shmem, string)) bytes per block, local memory (spills) $(fmt_opt(lmem, string)) bytes.
     - Occupancy (`CUDA.occupancy`, 256 threads per block): $(occ === nothing ? "n/a" : pct(occ))$(bps === nothing ? "" : ", $(bps) resident blocks per SM").
@@ -334,6 +355,10 @@ function write_analysis(m)
     - Content dependence (fused kernel, same $(f1(m.big_bytes / 1e6)) MB size): all-0x00 bytes $(ms(m.t_zero)) ms,
       letters a-z $(ms(m.t_letters)) ms, uniform random bytes $(ms(m.t_uniform)) ms, test-file mix $(ms(m.t_fused_big)) ms;
       all-0x00 is $(f2(r_zero))× and letters $(f2(r_letters))× the uniform time.
+    - Basic route on the same input: counting kernel alone $(ms(m.t_hist_big)) ms, whole scan (kernel +
+      array step) $(ms(m.t_basic_big)) ms, so writing the count matrix and reading it back costs
+      $(ms(count_matrix_cost)) ms ($(pct(count_matrix_cost / m.t_basic_big)) of the basic scan); the fused kernel, which
+      removes that step, takes $(ms(m.t_fused_big)) ms.
     - Divergence is ruled out as the limiter: the only data-dependent branches are the bounds
       check (false only in a partial last window), the `c > 0` test on one value per thread and
       the reduction's `t <= s`, which is warp-uniform for s ≥ 32; the work per thread is identical.
@@ -375,15 +400,15 @@ function write_analysis(m)
         **Per-warp sub-histograms.**  Give each of the 8 warps of a block its own 256-bin copy in
         shared memory (8 × 256 × 4 B = 8 KiB per block, still far below the shared-memory limit),
         and add the 8 copies together before computing -p log2 p.  A hot bin is then contended by
-        32 threads instead of 256, and threads of different warps never collide.  Expected benefit:
-        the uniform-data time is the floor, because there the atomics are already spread over 256
-        addresses; low-entropy windows should therefore move from up to $(f2(r_zero))× to close to 1×
-        the uniform time, i.e. up to **$(f2(r_zero))× faster on constant data, $(f2(r_letters))× on text-like
-        data and $(f2(m.t_fused_big / m.t_uniform))× on the test-file mix** ($(ms(m.t_fused_big)) ms → about
-        $(ms(m.t_uniform)) ms), minus the cost of zeroing and merging the copies: 8 extra shared-memory
-        writes and 8 reads per thread against its 16 atomics, but uncontended and bank-conflict-free
-        (thread t touches bin t of each copy).  The estimate is based on the measured content
-        dependence above.
+        32 threads instead of 256, and threads of different warps never collide.  Estimate: on the
+        test-file mix the time in excess of the uncontended (uniform-data) time is attributed to
+        contention, f = 1 − $(ms(m.t_uniform)) / $(ms(m.t_fused_big)) = $(f2(f_cont)) of the run time; if that
+        part becomes s = 8 times faster (8× fewer threads per copy of a hot bin), the overall
+        speedup is 1 / ((1 − f) + f / s) = **$(f2(amdahl(f_cont, 8)))×** on the mix, and
+        $(f2(amdahl(f_zero, 8)))× on constant data (f = $(f2(f_zero))).  Both f values come from the measured
+        content dependence above; the cost of zeroing and merging the copies (8 extra shared writes
+        and 8 reads per thread against 16 atomics, uncontended and bank-conflict-free) is not
+        included, so these are upper bounds.
         """
     else
         limiter = if occ !== nothing && occ < 0.5
@@ -410,10 +435,11 @@ function write_analysis(m)
         **Vectorised loads: read 4 bytes per load (`UInt32`) and unpack them in registers.**  Each
         thread would issue 4 loads of 4 bytes instead of 16 loads of 1 byte, so a warp request moves
         128 bytes instead of 32 and the load instruction count drops 4×, with the same number of
-        shared atomics.  Expected benefit: the kernel moves from $(f1(m.bw_fused)) GB/s towards the
-        $(f1(m.copy_bw)) GB/s that a coalesced copy achieves on this GPU, i.e. at most
-        **$(f2(min(4.0, m.copy_bw / m.bw_fused)))×** (bounded by both the 4× fewer loads and the measured
-        copy bandwidth); a realistic target is about half of that because the atomics remain.
+        shared atomics.  Estimate: per input byte the kernel issues one load and one shared atomic, so
+        assume loads are a fraction f = 0.5 of the issued work (an assumption: no profiler counter was
+        collected); making that part s = 4 times cheaper gives 1 / ((1 − f) + f / s) =
+        **$(f2(min(amdahl(0.5, 4), m.copy_bw / m.bw_fused)))×**, which may not exceed the measured headroom to a coalesced copy,
+        $(f1(m.copy_bw)) / $(f1(m.bw_fused)) GB/s = $(f2(m.copy_bw / m.bw_fused))×.
         """
     end
 
@@ -458,8 +484,9 @@ function write_analysis(m)
     at **$(f1(kernel_bps / 1e6)) MB/s** on a $(f1(m.big_bytes / 1e6)) MB input, versus **$(f1(m.cpu_mbps)) MB/s**
     for the single-threaded CPU reference ($(f1(kernel_bps / 1e6 / m.cpu_mbps))× faster); including the
     pageable host-to-device copy ($(f1(m.h2d_bw)) GB/s) the end-to-end rate is $(f1(e2e_bps / 1e6)) MB/s.
-    For a 1 TB disk image that is $(duration(tb / kernel_bps)) of kernel time, $(duration(tb / e2e_bps)) end
-    to end, and $(duration(tb / (m.cpu_mbps * 1e6))) on one CPU core.  Consequences for practice:
+    At these measured rates a 1 TB disk image would take approximately $(duration(tb / kernel_bps)) of kernel
+    time, $(duration(tb / e2e_bps)) including the host-to-device copy, and $(duration(tb / (m.cpu_mbps * 1e6))) on one CPU
+    core, in each case excluding reading the image from storage.  Consequences for practice:
 
     $(rstrip(io_point))
     $(rstrip(batch_point))
@@ -476,9 +503,11 @@ function write_analysis(m)
       output, packed or encrypted malware sections and exfiltration archives, but also every
       ordinary JPEG, ZIP or video, so it ranks data for deeper analysis rather than detecting
       malice; and an adversary can lower it deliberately (Base64 encoding caps it at 6
-      bits/byte, padding with low-entropy bytes dilutes a window).  Fast scanning matters
-      because it lets an analyst apply this cheap signal to *all* the data and reserve the
-      expensive tools for the flagged regions.
+      bits/byte, padding with low-entropy bytes dilutes a window).  A high-entropy region still
+      needs closer inspection: identifying its format (archive, media, encrypted container),
+      trying to decompress it, signature or YARA scanning, or disassembly.  Fast scanning
+      matters because it lets an analyst apply this cheap signal to *all* the data and reserve
+      the expensive tools for the flagged regions.
     """
 
     resources_table = md_table(
@@ -573,10 +602,15 @@ if !QUICK
     ## Exercise 4: entropy scanner
 
     $(run_info_md())
-    W = 4096 bytes, one block of 256 threads per window.  Throughput = input bytes / time / 10⁶
-    (MB/s).  "Basic: kernel + array ops" is the whole basic route (count kernel, then
-    `p = c / W`, `-p log2 p` and `sum(...; dims=1)` as GPU array operations); the fused route is a
-    single kernel.  Results are already on the GPU; the host-to-device copy is listed separately.
+    Window convention: width W = 4096 bytes, step W (adjacent, non-overlapping windows), a short
+    final window is kept and normalised by its actual length m; the CPU reference uses the same
+    convention.  One block of 256 threads per window, each thread counts 16 bytes.  Throughput =
+    input bytes / time / 10⁶ (MB/s); every input byte is counted once (no dropped tail, no
+    overlapping reads).  "Basic: kernel + array ops" is the whole basic route (count kernel, then
+    `p = c / m`, `-p log2 p` and `sum(...; dims=1)` as GPU array operations) and gives the basic
+    throughput; the counting kernel alone is listed too, the difference being the cost of writing
+    and re-reading the count matrix (1 KB per 4 KB window).  The fused route is a single kernel.
+    Inputs are already on the GPU; the host-to-device copy is listed separately.
 
     $(md_table(header, rows))
     **Content dependence** (fused kernel, $(length(big)) bytes, same size, different contents):
@@ -594,7 +628,7 @@ if !QUICK
         oi = FLOPS_PER_WINDOW / BYTES_PER_WINDOW,
         theo_bw, copy_bw, peak_gflops = peak,
         big_bytes,
-        t_fused_big = b_big.t_fused,
+        t_fused_big = b_big.t_fused, t_hist_big = b_big.t_hist, t_basic_big = b_big.t_basic,
         bw_fused = gbps(b_big.nwin * BYTES_PER_WINDOW, b_big.t_fused),
         gflops_fused = b_big.nwin * FLOPS_PER_WINDOW / b_big.t_fused / 1e9,
         t_fused_tf = b_tf.t_fused, mbps_tf = mbps(b_tf.n, b_tf.t_fused),

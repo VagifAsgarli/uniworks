@@ -50,25 +50,36 @@ compilation nor earlier queued work ends up in the measurement.
   returned.
 """
 function time_kernel(launch::Function; reps::Integer = REPS, reset = nothing)
+    reset === nothing || return time_stats(launch; reps = reps, reset = reset).mean
+    launch()                                   # warm-up (and compilation)
+    CUDA.synchronize()
+    elapsed = CUDA.@elapsed begin
+        for _ in 1:reps
+            launch()
+        end
+    end
+    return Float64(elapsed) / reps
+end
+
+"""
+    time_stats(launch; reps = REPS, reset = nothing) -> (; mean, min, max) seconds
+
+Warm-up launch + `CUDA.synchronize()`, then `reps` launches each timed by its
+own `CUDA.@elapsed`; `reset()` (if given) restores the inputs before every
+launch, outside the timed interval.  The minimum and maximum show the variation
+between samples, which matters for kernels that run for only a few µs.
+"""
+function time_stats(launch::Function; reps::Integer = REPS, reset = nothing)
     reset === nothing || reset()
     launch()                                   # warm-up (and compilation)
     CUDA.synchronize()
-    if reset === nothing
-        elapsed = CUDA.@elapsed begin
-            for _ in 1:reps
-                launch()
-            end
-        end
-        return Float64(elapsed) / reps
-    else
-        total = 0.0
-        for _ in 1:reps
-            reset()
-            CUDA.synchronize()
-            total += Float64(CUDA.@elapsed launch())
-        end
-        return total / reps
+    samples = zeros(reps)
+    for r in 1:reps
+        reset === nothing || reset()
+        CUDA.synchronize()
+        samples[r] = CUDA.@elapsed launch()
     end
+    return (mean = sum(samples) / reps, min = minimum(samples), max = maximum(samples))
 end
 
 "Bandwidth in GB/s (1 GB = 10^9 bytes) for `bytes` moved in `t` seconds."
@@ -215,8 +226,9 @@ function run_info_md()
     return """
     Student: $STUDENT_NAME ($STUDENT_CARD), N = $N, seed = $SEED.
     Device: $(CUDA.name(CUDA.device())) (compute capability $(CUDA.capability(CUDA.device()))).
-    Timing: one warm-up launch + `CUDA.synchronize()`, then `CUDA.@elapsed` over $REPS launches
-    (CUDA events, GPU time); the tables report the mean time per launch.
+    Timing: one warm-up launch + `CUDA.synchronize()`, then `CUDA.@elapsed` (CUDA events, GPU
+    time) over $REPS launches; the tables report the mean time per launch.  Kernel times exclude
+    host/device transfers, file I/O, plotting and CPU checks unless a row says otherwise.
     """
 end
 
