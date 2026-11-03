@@ -30,4 +30,4 @@ every file is in `materials/text-extracts/`.
 
 | Assignment | Due | Status |
 |---|---|---|
-| [Project work: secure and ethical AI system — HR assistant](project-work_secure-ethical-hr-assistant/) | 9.11.2026, 10:00 (presentation 10 or 17.11) | materials and course digest ready |
+| [Project work: secure and ethical AI system — HR assistant "Atlase"](project-work_secure-ethical-hr-assistant/) | 9.11.2026, 10:00 (presentation 10 or 17.11) | deck and notes ready; to upload |

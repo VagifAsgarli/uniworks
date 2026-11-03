@@ -179,9 +179,10 @@ production? Documentation — a written record of who approved this, and why?
   over-trust the ranking"); their owners: data owner + HR/recruitment for data; AI/product owner +
   HR + compliance/risk for model approval; recruiters with override and reason; external audits,
   decision log (score, recommendation, final outcome), version log, log retention per labour law.
-- **Incident response (W6):** cycle *detect → contain → eradicate & recover → learn* (W6 refers to
-  a figure from stationx.net; the classic NIST/SANS form is preparation, detection & analysis,
-  containment, eradication, recovery, lessons learned **[verify wording against the slide]**).
+- **Incident response (W6):** the slide's figure (stationx.net) shows the six-step cycle
+  *Preparation → Identification (Detection) → Containment → Eradication → Recovery → Lessons
+  Learned*; the lecturer's worked examples use the short form *detect → contain → eradicate &
+  recover → learn*.
   Worked examples: Chevy (detected via viral screenshot, pulled within a day, rebuilt with
   guardrails); Air Canada (slow legal process, > 1 year). Responsible disclosure: notify privately,
   ~90-day fix window. Out-of-band verification and codewords as governance controls (deepfake
