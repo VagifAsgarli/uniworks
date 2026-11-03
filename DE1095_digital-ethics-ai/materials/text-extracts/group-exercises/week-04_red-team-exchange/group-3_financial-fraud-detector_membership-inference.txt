@@ -1,0 +1,25 @@
+Membership inferance
+Financial Fraud Detector
+The AI analyzes financial transactions and customer activity to identify potentially fraudulent behavior.
+Transactions may be assigned a risk score or flagged for further investigation.
+Attacker: cyber criminal who wants to narrow
+down the database of clients who have been
+used to train the data  Use less personal data
+for training.
+They prompt the model to get information about
+the used test data  Anonymize or
+pseudonymize the
+The AI system outputs the sensitive information  training data.
+Regularly test whether
+membership-​inference
+attacks are successful
+Try to narrow down clients personal data,
+banking data / Try to learn the exact threshold
+parameters so that the attacker wont get caught.
+Apply differential privacy
+and regularization during
+training
+AI Privacy & Query-​
+Abuse Governance Policy
+Deployment stage.
+Privacy audits.

@@ -1,0 +1,100 @@
+Group 5 - AI News & Content Platform
+Scenario: NewsHub is a large online news platform that uses AI to analyse
+incoming news reports, summarise articles and recommend trending stories to
+editors. The system collects information from multiple external sources and
+social-​media feeds. AI-​generated summaries are reviewed by editors, but
+trending topics and article recommendations are generated automatically and
+influence what millions of users see on the homepage
+Threat Actors  CIA risks
+AI Attack Surface
+TRAINING DATA  Choose 2:  C - Confidentiality
+How could it be targeted/manipulated?  Nation-​state  What information could be exposed?
+Insider
+Sensitive user
+1. Attackers could inject fake or
+misleading news into external sources
+Hacktivist  information or
+Script kiddie  internal
+or social-​media feeds.
+2. They could manipulate
+training/reference data so the AI learns  NewsHub data
+or prioritizes false information.
+Organized crime  could be
+3. A coordinated campaign could create
+many fake accounts/posts to influence
+what the AI considers “trending.”
+exposed.
+ACTOR 1:
+I - Integrity
+PROMPT/INPUT
+What could be manipulated or made
+How could input be abused?  Script  inncorect?
+kiddie/
+1. Attackers could send malicious or
+hacktivist
+misleading news articles designed to  Attackers could
+manipulate the AI.
+manipulate AI-​generated
+2. Prompt injection could be hidden  news and
+inside an article, telling the AI to ignore
+its instructions or produce a specific  recommendations,
+result.
+causing false or
+3. Attackers could flood the system with
+fake reports to influence  ACTOR 1:  misleading information to
+recommendations.  be shown to users.
+Visitor
+Nation-​state : that
+MODEL OUTPUT  wants to create  A - Availability
+disinformation or to
+What if the output is wrong or automatically  conceal a event or  How could the service be disrupted?
+trusted?  distort the truth
+Attackers could
+1. The AI could generate false or
+biased summaries.  overload or disrupt
+2. Incorrect recommendations could  the AI service,
+cause false stories to become highly
+visible.  making news
+3. If editors or automated systems trust  recommendations
+the AI output without sufficient
+verification, misinformation could reach  unavailable.
+millions of users.
+4. Manipulated outputs could damage
+NewsHub's reputation and credibility.
+TOOLS/PLUGINS
+What systems could the AI access or affect?
+1. News databases and content-​
+management systems.
+2. Social-​media APIs and external news
+feeds.
+3. Article publishing systems.
+4. Homepage/trending-​story
+recommendation systems.
+5. Potentially email, analytics, or
+internal databases if connected.
+Mitigations
+Encryption,
+C risk - >  Access control,
+Multi Factor
+Authentication
+Verify rusted
+I risk - >
+sources,
+validation and
+human review
+DDoS
+protection
+A risk ->  and
+backups
+Threat Actor -> Attack Surface -> Attack/Abuse-> Impact -> Control
+Trusted-​source
+Nation-​  Training Data  Inject fake or  reputation
+damage and
+verification, data
+validation, AI
+/ External  manipulated
+State
+public  monitoring,
+News Sources  news  human editorial
+misinformation
+review

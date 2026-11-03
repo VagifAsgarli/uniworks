@@ -1,0 +1,93 @@
+AI Research Agent  A hidden instruction sits in a document and the agent just
+follows it.
+Agent should have READ-​ONLY permission, not to download
+bad content.
+An autonomous research agent browses
+the live web, visits external websites,  Tools: Web,
+Actions:
+Research,
+Agent may access data beyond its approved permissions.
+documents,
+downloads and reads documents, and
+analyze,
+databases,  Systems:  summarize,
+It memorizes
+APIs, analytics,  Documents,  report, monitor,
+sites & info even
+compiles reports that are provided to  email  spreadsheets,  recommend  it has access to
+task systems,  all sorts of data  when they may
+(also unverified &  no longer be
+External websites and downloaded files may be
+CRM, databases,
+company leadership.  notifications  potentially  useful or are
+dangerous  dated/ obsolete
+sources  compromised.
+it can look up
+reports that it
+has created in
+the past
+Malicious files could attempt to execute code.
+Finding  Creating
+essential  a report
+websites/  Reporting
+documents  to  False information can contaminate future outputs.
+company
+Extracting
+relevant
+leadership
+information
+Not a multi agent system.
+Company  Market researchers
+One bad result can affect later decisions and reports.
+leadership  and strategists
+No human input necessary. Users may trust incorrect
+Business  research without verification.
+analytics
+Legal and  Receives research
+Works with other
+security
+requests  decides which
+AI agents
+team  Shares research
+and insights
+Passes findings to
+other agents
+it can choose which
+sources of information
+information is
+relevant to
+team  Triggers next-​step  (websites, documents,  reach the goal
+Supports team  newsletters, etc.) to
+An autonomous agent could operate outside intended
+actions  use when compiling a
+workflows  automatically  report
+Sends messages  boundaries if controls fail.
+and task updates
+Uses APIs and
+shared databases
+Exchanges
+structured data
+ASI06 - Memory and  ASI04 - Agentic supply
+ASI01 - Goal Hijacking  ASI01 - Agent Goal  ASI06 - Memory and  ASI04 - Agentic supply
+context poisoning  The data supplied from
+chain vulnerabilities  Hijack  context poisoning  chain vulnerabilities
+various sources directly
+ASI04 - Agentic supply  impact the output
+chain vulnerabilities  which is the report
+given to leaders
+Website or document containing hidden
+The agent acquires false data and outputs an  External unverified sources may compromise
+instruction or code that can hijack research
+invalid report containing multiple errors  data and consequently - output
+task.
+treat all sources as  Utilize verified data providers
+Verify all facts before storing
+unverified/ potentially  but monitor all data sources
+them in long-​term memory
+harmful  for potential harm
+Directly consuming untrusted content, indirect  The agent relies directly on facts and information
+Untrusted data sources contain false information
+prompt injection  gathered in the web to make conclusions and
+leading to a misguided research report
+output a report
+5 minutes

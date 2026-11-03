@@ -1,0 +1,177 @@
+=== Slide 1 ===
+Digital ethics
+Roberts Nils Šteinbergs
+=== Slide 2 ===
+What did we discuss last time?
+=== Slide 3 ===
+Ethics is the philosophical study of moral phenomena. Also called moral philosophy, it investigates normative questions about what people ought to do or which behavior is morally right. Its main branches include normative ethics, applied ethics, and metaethics.
+=== Slide 4 ===
+Digital ethics
+Digital ethics is the study of ethical theories, paradigms, and principles that govern the use of technology. It connects theoretical ethical frameworks with technical operating mechanisms to evaluate and promote safe, responsible, and human-centric behavior in virtual spaces.
+=== Slide 5 ===
+What digital ethics problems have you faced?
+=== Slide 6 ===
+Trolly problem
+=== Slide 7 ===
+=== Slide 8 ===
+Theory I (Philosophy)
+Ethics, or moral philosophy, is the systematic study of moral phenomena, investigating what individuals ought to do and what constitutes a "good life.«
+
+While Aristotle views virtue as the ultimate essence of a flourishing life (eudaimonia), I. Kant positions it as a secondary moral power that supports the primary requirement of acting from duty.
+=== Slide 9 ===
+Aristotel’s view on ethics
+Eudaimonia (human flourishing or a well-lived, happy life). He believes the ultimate goal of human existence is to actively live and do well by training your character to be excellent
+It is the end goal.
+=== Slide 10 ===
+Kant’s view on ethics
+Primary (Duty)
+
+Focuses on Duty and having a Good Will. He argues that our goal is not to chase happiness which is based on temporary desires and feelings but to make sure we are worthy of happiness by doing what is morally right.
+Secondary (Ethics)
+=== Slide 11 ===
+To make Kant's idea simple, imagine you are walking down a path in a heavy storm:
+Your duty: this is the path you must walk. Doing the right thing simply because it is the right thing is your sole mission.
+Your desires & feelings: these are the strong gusts of wind (like laziness, fear, or selfish temptations) trying to blow you off course.
+Virtue: this is the shield you hold up to block the wind.
+=== Slide 12 ===
+What is Virtue?
+Kant       	                  	              vs
+Virtue is a willpower muscle. It is the moral strength of resolve you use to protect your good will. It acts like a shield to block selfish inclinations, lazy desires, or emotions from stopping you from doing your duty.
+Aristotel
+Virtue is the core of the good life. It is a habit of finding the Golden Mean –the perfect middle point between two extremes. For example, courage is the healthy balance between cowardice (not enough confidence) and recklessness (too much confidence).
+=== Slide 13 ===
+How We Make Decisions
+Kant       	                  	              vs
+Reason must rule alone. Desires and emotions are unreliable and selfish. For an action to have genuine moral value, you must do it purely out of respect for your duty, even if you feel completely against it.
+Aristotel
+Feelings and reason work together. A truly virtuous person doesn't have to fight their emotions; they have successfully trained their feelings to naturally align with what is right.
+=== Slide 14 ===
+The Gist of It
+Kant       	                  	              vs
+The universal moral law tells us what is right, and virtue is simply the internal strength we must use to force ourselves to obey it.
+Aristotel
+Cultivating a good character (virtue) is the primary step, which naturally leads to right actions and a happy, flourishing life.
+=== Slide 15 ===
+What is universal moral law?
+Instead of giving us a long checklist of specific ‘dos and don'ts’, Kant's moral law is a universal test that we must run on our intentions before we act. He formulated this test in a few famous ways:
+The Test of Universality: "Act as if the maxim of your actions were to become through your will a general natural law". In simple terms: before you do something, ask yourself, "Would I want my personal rule to become a universal law that literally everyone else must follow?". If your action relies on making a special exception for yourself (like lying to get out of trouble, which only works if most other people are telling the truth), then it violates the moral law.
+The Test of Humanity: Always treat other people as ends in themselves and never merely as means to an end. This means you must respect and value people for their own sake, rather than using them as convenient tools or stepping stones to get what you want.
+=== Slide 16 ===
+Aristotelian TeleologyThe Path to Eudaimonia
+Aristotle’s ethics is teleological, meaning it is oriented toward an end (telos).
+Virtue as Function: virtue (arete) is defined as a "habit" or "disposition" that allows an entity to perform its function well. Just as a good eye is one that sees well, a good human is one who lives in accordance with reason.
+The Golden Mean: virtue is a "middle ground" between two vices: excess and deficiency. For example, courage is the mean between cowardice (deficiency) and recklessness (excess).
+Eudaimonia: the ultimate goal is flourishing or "the good life," achieved through the soul’s activity in accordance with virtue.
+Life of Contemplation: the highest form of life is the theoria (contemplative) life, where human reason is used to its fullest potential.
+=== Slide 17 ===
+Kantian DeontologyThe Categorical Imperative
+Kant’s ethics is deontological, emphasizing the necessity of acting from duty.
+Categorical Imperative: the ultimate criterion is: "Act as if the maxim of your actions were to become through your will a general natural law."
+Good Will: Kant argues that only a "good will" is unconditionally good. Actions are moral only if they are done from a sense of duty, rather than inclination or desired outcomes.
+Virtue as Support: in Kant’s system, virtue is not the goal but a "moral power" that helps the good will resist sensuous impulses and stay committed to the moral law.
+Treating Others as Ends: kantianism requires that individuals always be treated as ends in themselves, never merely as a means to an end.
+=== Slide 18 ===
+Question | Aristotle | Kant
+What is the goal of life? | Eudaimonia (living a flourishing, active, and excellent life). | Duty and having a Good Will (acting out of moral obligation).
+What is Virtue? | A trained habit of finding the healthy middle ground (the "Golden Mean") between extremes. | A willpower muscle (a "shield") that guards your good will against lazy or selfish emotions.
+What role do feelings play? | Feelings and reason work together.  A good person naturally enjoys doing good deeds. | Reason must rule alone. Feelings are unreliable; you must do your duty even if you do not feel like it.
+How do we do the right thing? | By practicing (doing good deeds over and over until they become natural habits). | By using reason to obey the unconditional moral law (Categorical Imperative).
+=== Slide 19 ===
+Imagine an elderly neighbour is struggling to carry heavy groceries up the stairs.
+A) Aristotle’s Approach: you help them because you have practiced being a kind person. You help them willingly and gladly, because your reason and your emotions work together in perfect harmony.
+B) Kant’s Approach: you help them because you know it is the right thing to do (your duty). Even if you are exhausted, running late, and really do not want to help, you use your virtue (willpower) as a shield to block out those lazy feelings and do your duty anyway.
+Which one sounds more true to you?
+=== Slide 20 ===
+While Kant believed the moral law comes from human reason, other schools of ethics look to different sources:
+Divine Command Theory: believes the moral law consists of direct commands from God (such as the Ten Commandments).
+Natural Law Ethics: believes the moral law is built directly into the natural design and order of the universe.
+Contractualism (Social Contract): believes moral laws are simply the reasonable rules of conduct that human beings collectively agree to follow so we can cooperate and live in peace.
+=== Slide 21 ===
+Theory II (In work)Professional Conduct and Organizational Ethics
+Modern institutions translate these philosophical principles into actionable codes. The World Health Organization (WHO) provides a framework for ethical conduct through five core principles:
+Integrity
+Accountability
+Independence and Impartiality
+Respect
+Professional Commitment
+=== Slide 22 ===
+Integrity
+Staff must behave in accordance with ethical principles, acting in good faith and intellectual honesty. This includes observing local laws, avoiding abuse of privileges, and maintaining scientific integrity.
+=== Slide 23 ===
+Accountability
+Individuals must take responsibility for their decisions and the consequences of their actions. This involves:
+setting clear, realistic objectives;
+optimizing the use of entrusted resources;
+exercising adequate supervision over delegated tasks.
+=== Slide 24 ===
+Independence and Impartiality
+Official duties must be conducted solely in the interest of the organization, ensuring personal convictions do not compromise official duties.
+Conflict of Interest: staff must disclose potential conflicts promptly.
+Gift Policy: gifts exceeding US$100 must generally be declined.
+=== Slide 25 ===
+Respect
+Maintaining a professional environment characterized by courtesy and the valuing of diversity. There is a zero-tolerance policy for sexual harassment, exploitation, and abuse.
+=== Slide 26 ===
+Professional Commitment
+Demonstrating loyalty to the organization’s mandate and maintaining high technical standards. This includes being open to new ideas and favoring new concepts.
+=== Slide 27 ===
+Theory III (In society)Privacy, Surveillance, and Data Ethics
+The digital age has introduced complex ethical dilemmas regarding the boundaries between the public and private spheres.
+
+Everything we talked about last time…
+=== Slide 28 ===
+The Myth of Anonymization
+Big Data analytics can frequently "re-identify" individuals from anonymized datasets. By cross-referencing de-identified geolocation data points (e.g., where a phone is located at night), data aggregators can determine an individual's home and daily routines, effectively stripping away the intended anonymity.
+=== Slide 29 ===
+Surveillance and Smart Cities
+Technologies intended to improve efficiency often come with privacy costs:
+Traffic Cameras and License Plate Readers: improve safety but enable mass surveillance of movement.
+Facial Recognition: controversial due to concerns regarding accuracy, bias, and the potential for wrongful identification and erosion of civil liberties.
+Smart Meters: optimize utility use but collect detailed data on a resident's private habits.
+=== Slide 30 ===
+Cloud Computing and Consent
+The "Cloud"* is a misnomer; it is simply someone else's computer.
+Ownership Imbalance: terms of Service (ToS) often grant providers broad rights to analyse and use data for purposes far beyond the user’s intent (e.g., targeted advertising).
+Consent: explicit consent requires an affirmative action (clicking "I Agree"), while implied consent is inferred from usage. However, open-ended language in agreements often masks the true intent of data exploitation.
+* Terms like ‘cloud,’ ‘green,’ variations of ‘eco-’ are a form of greenwashig (another ethical dilemma)
+=== Slide 31 ===
+Theory IV (Digital space regulations)How the EU AI Act Translates Ethical Principles into Legally Binding Rules
+The European Union Artificial Intelligence Act (Regulation (EU) 2024/1689) codifies the non-binding guidelines of trustworthy AI into a strict, legally enforceable risk-based framework. The intensity of legal oversight scales directly with the potential severity and probability of harm…
+=== Slide 32 ===
+Unacceptable-Risk AI Systems (Strictly Prohibited) I
+Under Article 5, the EU bans outright any AI practices that violate fundamental human rights, dignity, or autonomy:
+Cognitive Behavioral Manipulation: systems deploying subliminal, manipulative, or deceptive techniques beyond a person's consciousness to materially distort behavior and cause significant harm.
+Vulnerability Exploitation: systems that exploit natural vulnerabilities (due to age, disability, or social/economic status) to distort behavior in a harmful way.
+Social Scoring: classifying or evaluating individuals over time based on social behavior or personality traits, leading to disproportionate or unrelated detrimental treatment.
+=== Slide 33 ===
+Unacceptable-Risk AI Systems (Strictly Prohibited) II
+Facial Recognition Scraping: creating or expanding facial recognition databases through the untargeted scraping of facial images from the internet or CCTV footage.
+Biometric Categorisation & Emotion Recognition: real-time biometric categorization to deduce protected attributes (e.g., race, political opinion, sexual orientation), and emotion recognition systems deployed in workplaces or educational institutions.
+Real-Time Remote Biometric Identification (RBI): using real-time RBI in publicly accessible spaces for law enforcement is prohibited, with extremely narrow, judicially authorized exceptions (e.g., kidnapping, prevent terrorism, or specific serious crimes).
+=== Slide 34 ===
+High-Risk AI Systems (Mandatory Compliance)
+AI systems used in critical sectors such as critical infrastructure, education, hiring, credit scoring, health/life insurance, law enforcement, and border control are heavily regulated. Providers must fulfill stringent requirements before placing these systems on the market…
+=== Slide 35 ===
+High-Risk AI Systems (Mandatory Compliance)
+Technical Robustness and Security: systems must meet high standards of accuracy, cybersecurity, resilience, and automatic event logging (traceability).
+Data Governance: models must be developed on representative, relevant, complete, and error-free training, validation, and testing datasets designed to detect, prevent, and mitigate statistical biases.
+Human Oversight & Transparency: systems must feature appropriate human-machine interfaces so that natural persons can understand and, if necessary, override, disregard, or "kill-switch" the AI's outputs.
+Fundamental Rights Impact Assessments (FRIAs): prior to deployment, public authorities and certain private entities (such as banks or insurance firms) must perform a FRIA to identify specific risks to affected individuals.
+=== Slide 36 ===
+General-Purpose AI (GPAI) and Systemic Risk
+The Act enforces transparency for foundational models (e.g., GPT-4, Gemini) by requiring detailed training summaries, technical documentation, and compliance with EU copyright law. GPAI models trained with computation exceeding \(10^{25}\) FLOPs* are classified as presenting systemic risks. These models are subject to additional binding mandates, such as mandatory adversarial testing (red teaming), cybersecurity logging, and energy-efficiency reporting.
+* FLOP– floating-point operation is legally defined as any mathematical operation or assignment involving floating-point numbers. The cumulative number of floating-point operations is the primary metric used to measure the physical scale of computational resources expended to train a AI model.
+=== Slide 37 ===
+Transparency Obligations (Article 50)
+Fully active by August 2, 2026, Article 50 mandates that interactive systems (like chatbots) explicitly notify users that they are dealing with AI. Additionally, providers must embed persistent, machine-readable watermarks to declare the artificial origin of generated content, including text, audio, and deep fakes.
+
+Problem:
+Some watermarks are only readable by the AI that implements them. Why is it a problem?
+=== Slide 38 ===
+Is it possible to abide to the EU regulations?
+How and what kind of AI is ethical in your opinion?
+=== Slide 39 ===
+Questions?
+=== Slide 40 ===
+Thank you!
+Email: Roberts-Nils.Steinbergs@rtu.lv (It might change)

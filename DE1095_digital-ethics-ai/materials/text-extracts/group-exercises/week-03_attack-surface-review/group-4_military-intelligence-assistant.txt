@@ -1,0 +1,89 @@
+Group 4 - AI Military Intelligence Assistant
+Scenario: A NATO member state's defence organisation uses an internal AI
+assistant to help analysts process large amounts of intelligence information. The
+system summarises reports, searches classified and unclassified document
+repositories and helps analysts identify relationships between events. Employees
+authenticate using organisational accounts, and access to information depends
+on their security clearance. Analysts use the AI's outputs to support their work,
+but final intelligence assessments are made by humans.
+AI Attack Surface  Threat Actors  CIA risks
+TRAINING DATA  Choose 2:  C - Confidentiality
+How could it be targeted/manipulated?  Nation-​state  What information could be exposed?
+Insider
+Classified
+Hacktivist  reports,
+False intelligence
+could be inserted  Script kiddie  intelligence
+sources,
+into training/fine-​  Organized crime  credentials,
+tuning data
+private info
+ACTOR 1:
+I - Integrity
+PROMPT/INPUT
+How could input be abused?
+Nation-​  What could be manipulated or made
+inncorect?
+state
+Malicious  Data from satellites,
+radars, reports,
+prompts used
+monitoring systems
+to manipulate  can be manipulated,
+AI responses  ACTOR 2:  leading to wrong
+interpretation and
+decisions further on
+Insider
+MODEL OUTPUT
+A - Availability
+What if the output is wrong or automatically
+How could the service be disrupted?
+trusted?
+Malware inside
+False or  the
+misleading  organisational
+intelligence  network (insider)
+/ disrupt
+assessments
+authentification
+or summaries
+TOOLS/PLUGINS
+What systems could the AI access or affect?
+Document
+repositories
+and internal
+search
+systems
+Mitigations
+Role-​based
+access control
+(strong
+C risk - >  authentication -
+MFA) and
+encryption
+Systems immune to outside
+interference, e.g. blockchain
+technology, for confirming
+inputs (maybe also/or digital
+signatures/checksums, log all
+I risk - >
+changes - if someone modifies
+the file, the digital signature or
+hash will no longer match,
+make backups)
+Redundancy,
+implement
+A risk ->  API rate
+limiting
+Threat Actor -> Attack Surface -> Attack/Abuse-> Impact -> Control
+Modifies,  Wrong decisions  Check & confirm data, identify
+Internal  deletes or  taken based on bad  the unlawful changes, remove
+corrupted data from dataset,
+data because AI
+Insider  document  mislabels  produces incorrect
+undo decision based on bad
+data (do not relly on a very
+limited number of person)
+repositories  reports or  summaries about  Multi-​Factor Authentication
+(MFA)
+metadata  events

@@ -1,0 +1,94 @@
+Group 3 - AI Banking Customer Assistant
+Scenario: NorthBank has introduced an AI assistant into its online and mobile
+banking services. Customers can ask questions about banking products and,
+after authentication, ask about their accounts and recent transactions. The
+assistant searches an internal bank knowledge base and can access customer
+information. It can also create support cases and initiate certain customer-​
+service requests, although sensitive transactions require additional
+confirmation.
+AI Attack Surface  Threat Actors  CIA risks
+Choose 2:
+Nation-​state
+TRAINING DATA  C - Confidentiality
+Insider
+How could it be targeted/manipulated?  What information could be exposed?
+Hacktivist
+Script kiddie  Unauthorized access
+Incorrect  to banking data
+information in the  Organized crime  ( account balances,
+bank's internal  transaction history)
+knowledge base
+(cause AI to provide
+misleading advice)
+ACTOR 1:
+I - Integrity
+PROMPT/INPUT  Organized crime: exploit
+the system for financial  What could be manipulated or made
+How could input be abused?  gain and to obtain
+sensitive  inncorect?
+personal/banking data.
+Can leak or sell the data to
+external actors.
+Attacker use crafted
+Initiate incorrect
+prompts to manipulate
+the assistant into
+banking actions
+revealing info/performing  or present fake
+actions outside the  information
+request  ACTOR 1:
+Insiders who can, at
+the highest level,
+bypass the additional
+MODEL OUTPUT  confirmation stage,
+A - Availability
+could use the
+What if the output is wrong or automatically  database for personal  How could the service be disrupted?
+financial gain
+trusted?
+Service disruption
+- spamming
+Incorrect AI  -​cost and traffic
+responses give  alert
+customer false info
+about accounts;
+transactions; fees;
+procedures
+TOOLS/PLUGINS
+What systems could the AI access or affect?
+Connected to customer
+account data/ support
+systems. An abuse of the
+integrations could expose
+customers info/
+unauthorized service
+request
+Mitigations
+C risk - >
+Design autjorization in the
+backend. Let the AI
+assistant only read the
+logged-​in user's own data.
+Mask account details. Log
+and monitor data access.
+Only approved
+staff/request can change
+I risk - >
+the database. Review and
+log all changes. The AI
+can't approve. Any money
+movement needs step-​up
+confirmation
+Rate limits per
+user/ip. if the AI
+A risk ->  assisstant is
+overloaded, the
+normal menu is
+still accessed
+Threat Actor -> Attack Surface -> Attack/Abuse-> Impact -> Control
+Prompt  Customer  Enforce
+injection/  authorisation
+Organized  financial/c
+Input/Prompt  manipulates  outside the AI/
+crime  AI to access  onfidential  restrict access
+banking's data  data leak  for users

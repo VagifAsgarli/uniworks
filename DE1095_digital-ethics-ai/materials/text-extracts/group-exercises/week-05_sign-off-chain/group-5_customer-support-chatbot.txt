@@ -1,0 +1,54 @@
+AI Customer-​Support Chatbot
+A company uses an AI chatbot to answer customer questions and resolve account issues. The chatbot has
+access to selected customer information and can perform approved account actions, such as updating
+contact details or changing account settings.
+The data  Test common and  Test that the  account owner :
+Checks: Verify customer
+reviews: Data  data is accurate and up to
+difficult customer  chatbot cannot
+change account
+review and  categorise  Reactions how
+questions; verify  correct AI actions
+governance  date; Protect personal  answers against
+details or settings
+by changing
+costumers  usefull the
+information and comply
+without the  questions to  answers are
+Team; Data  approved  required customer  manually their
+identify future  to the
+with privacy regulations;  information.  Who signs off?  verification.  account settings
+Privacy Officer  Check training data for
+AI/Model Owner  updates  Costumers
+Customer
+errors, bias, and  Service/Product
+They check that: customer  inappropriate content.  Owner
+data is accurate and up to  Verify that  IT/Security  Test that the chatbot  safing
+date; personal information  account changes  does not reveal
+override the  required for  Comparing
+is protected and complies  are made exactly
+another customer's
+information or
+customer  chatbot actions
+AI required to
+important action
+transfer sensitive
+satisfaction of  request for
+(linked with  costumers with
+with privacy rules; training  as requested ,no  perform actions
+support  to correct its  or high risks
+security...) that  answers befor
+future
+data is free from errors,  unintended  outside its
+responses or  requests to a
+bias, and inappropriate
+changes.  permissions.
+team  demand human
+human
+and after an  training
+actions  verification  update
+content.
+- Riskiest point : The chatbot performs account changes based on a malicious request or incorrect information
+- Most important control : Human Oversight. Because a human can review high-​risk actions, verify customer identity,
+and prevent unauthorized or incorrect account changes before they affect the customer.
+30

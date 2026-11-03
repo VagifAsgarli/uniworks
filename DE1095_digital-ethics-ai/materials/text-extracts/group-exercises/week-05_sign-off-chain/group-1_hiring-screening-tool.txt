@@ -1,0 +1,57 @@
+AI Hiring-​Screening Tool
+An AI system reviews job applications and CVs and ranks candidates based on their suitability for
+a role. Recruiters use the ranking to decide which candidates progress to the next stage.
+Explainability-​  Feature importance  External regulatory
+Data quality- Check
+Recruiters can  audits, discrimination
+Recruiters receive  weights, applicant  Decision Log : Record
+Recruiter/ HR
+Data owner
+confirms what a
+CV and application
+data for accuracy,
+Check  Functional testing  Fairness  Job-​related validity -
+representative
+override an AI
+recommendation
+the key factors  score logs, override
+dispute defence, and
+internal algorithmic
+candidate score, AI
+recommendation, and
+privacy,
+- Edge cases: missing  that influenced  notes, and training
+Verify that features  drift tracking.
+/ bias  and provide a
+completeness and  final hiring outcome.
+suitable candidate  CV fields, career gaps,
+used by the model  can override it  the candidate's  dataset metadata.
+outdated
+means and that the
+legality
+non-​standard CV  reason
+formats, multilingual
+are actually  ranking
+data reflects it  information.
++ HR/Recruitment  and bias  CVs, duplicates, etc.
+testing  relevant to the job.
+Data is collected,  Access control  Escalation -
+Version Log : Track
+Log Retention : Keep
+stored and  - define who  Suspicious, unfair
+which version of AI
+all screening records
+processed  Test and approve  or disputed  and Datasets have
+safely stored
+can access (AI  AI/Product  every significant  recommendations  according to local job
+securely and  been used.
+market laws.
+lawfully  inputs,  Owner + HR +  model update  must be reviewed
+by a human
+datasets etc.)  Compliance/Risk  before it goes
+live.
+The control that matters most: human oversight. The riskiest point is live operation,
+when recruiters use the ranking to decide who progresses, because wrongly excluded
+candidates with different but just as useful skills are never seen and recruiters tend to
+over-​trust the ranking.
+30

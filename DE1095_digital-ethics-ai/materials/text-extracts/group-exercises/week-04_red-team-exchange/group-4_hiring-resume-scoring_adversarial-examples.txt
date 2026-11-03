@@ -1,0 +1,27 @@
+Adversarial examples
+Hiring / Resume-​Scoring Tool
+The AI analyzes candidate resumes and application information against job requirements. It scores or ranks
+candidates to help recruiters decide which applications should receive further review.
+A job applicant who does not meet all the job
+Standardizing into
+requirements. He/she adds hidden job-​related
+unformatted raw text or
+keywords using white text on white background.
+repeated keywords
+The AI may extract the hidden words and
+so that hidden fonts
+incorrectly assign the candidate a higher score.
+and styling will be
+removed.
+The attacker's goal is to get unfairly high resume
+score to get the job.
+Requirement for human
+review in case of a high
+score,
+The recruiter double
+checks the CV, and in
+case of issues with it the
+potential employee is
+blacklisted and held
+accountable
+Deployment and serving.

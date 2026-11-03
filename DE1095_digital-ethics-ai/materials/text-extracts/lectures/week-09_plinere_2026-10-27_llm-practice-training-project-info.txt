@@ -1,0 +1,583 @@
+Digital Ethics and Artificial
+Intelligence Interaction
+Large Language Models
+Riga Technical University — Faculty of Computer Science, Information Technology and Energy
+Institute of Information Technology
+27.10.2026  1
+Project work and exam
+Project work  Exam
+Task: 3 or 10 November 2026
+To improve your mark: 19 January 2027
+Individual student presentations: 10 and 17 November 2026
+Theoretical questions and a task
+Graded with a mark
+2
+Plan of the lecture
+• Recap of the previous lecture
+• How an LLM works: embeddings, attention, probabilities, temperature
+• Using LLMs in practice: chat, prompts, RAG, tools
+• How a model is trained: data and learning
+3
+What is an LLM?
+An LLM (large language model) is a model that predicts the next token of a
+text.
+• Input: a text, the prompt.
+• Output: its continuation, the completion.
+• A language model encodes statistical information about language: given “My favorite color is __”, it predicts “blue”
+more often than “car”.
+4
+How does it work? One simple idea
+Phone keyboard  LLM
+Suggests the next word while you type  The same idea, trained on a huge amount of text
+• It predicts the next token, again and again.
+• It uses statistical patterns learned from text, not understanding.
+5
+Completion: many tasks are continuing a text
+Translation, summarization and coding can be framed as completion tasks.
+• Prompt: “To be or not to be” → completion: “, that is the question.”
+• Prompt: “How are you in French is …” → completion: “Comment ça va”
+• A completion is a prediction based on probabilities. It is not guaranteed to be correct.
+6
+What does “large” mean?
+Parameter  GPT (2018)  GPT-2 (2019)
+A variable inside the model, updated
+117 million parameters  1.5 billion parameters
+during training
+• “LLM” is not a precise scientific term: what is large today may be small tomorrow.
+7
+History (1/2): from simple to smart
+1948 · Markov
+2015 · Attention  2017 · Transformer  2018 · GPT
+model
+The decoder looks at all states  Attention only: no recurrent  A transformer without the
+Predicts the next word from  of the encoder  part  encoder: decoder only
+the previous ones
+Before attention (seq2seq): the encoder reads the input and the decoder writes the output. Both parts are recurrent: they work one
+token at a time.
+Attention (2015) added one thing: the decoder looks at all states of the encoder, not at one summary.
+Transformer (2017) keeps the structure “encoder in, decoder out”, but removes the recurrent part: only attention is left.
+GPT (2018) is a transformer without the encoder: only the decoder is left.
+8
+Markov model vs LLM
+Markov model  LLM
+Sees only “the” → “park” first (the most likely word after “the”: 5  Sees the whole text, including “cat” → more likely “house”,
+of 15)  “garden” (illustrative example)
+• Text: “The cat is in the …”
+• The Markov model ignores “cat” and predicts “park”: the most frequent word after “the”.
+Illustrative example made for this lecture  9
+History (2/2): from GPT to ChatGPT
+GPT-2 and GPT-3
+GPT (2018)  (2019–2020)  ChatGPT (2022)
+Conversational model based on GPT.
+A transformer (decoder only) trained on  The same idea, much bigger.  About 100 million monthly users by
+a large amount of unlabeled text
+Surprise: one model could do many  January 2023
+tasks
+10
+Timeline of LLMs
+Markov model (1948),
+Attention (2015),
+Transformer (2017),
+GPT (2018),
+GPT-3 (2020),
+ChatGPT (2022).
+11
+Key concept: tokens
+What it is  Common words  Rule of thumb
+Often one token; rare words are split
+About 3–4 characters (English)  100 tokens ≈ 75 words (English)
+into pieces
+• The model reads tokens, not letters or whole words.
+12
+Token example
+“I can’t wait to build AI applications” = 9 tokens (GPT-4)
+• A token can be a character, a word or a part of a word (like -tion).
+• “can’t” is split into two tokens: can + ’t.
+13
+Task 1 · 10 min · Live tokenizer
+Use an online tokenizer and compare how texts are split.
+1 Open platform.openai.com/tokenizer
+2 Enter “I can’t wait to build AI applications”, the same phrase in UPPER CASE, and a sentence of your own
+3 Count the tokens and explain the differences
+14
+Task 1 · Answer · Live tokenizer
+Capital letters and rare strings are usually split into more tokens; different
+models split the same text differently.
+Book example GPT-4: 9 tokens. Online tokenizer (GPT-5.x & O1/3): 8 tokens. Models split text differently
+Rule of thumb About 3–4 characters per token; 100 tokens ≈ 75 words
+15
+Key concept: the context window
+What it is  What counts  Size
+The amount of text the model can  The prompt and the completion  From thousands to more than 100,000
+handle at once  together  tokens
+16
+Plan of the lecture
+1  Recap of the previous lecture
+2  How an LLM works: embeddings, attention, probabilities, temperature
+3  Using LLMs in practice: chat, prompts, RAG, tools
+4  How a model is trained: data and learning
+17
+The big picture: from text to the next token
+Text  Tokens  Embeddings  Transformer  Probabilities  Next token
+18
+Embeddings: tokens as vectors
+Token  Vector  Embedding space
+cat  [v1, v2, …, vn]  Similar meanings lie close together
+• Each token is represented as a vector: a list of numbers.
+19
+Self-attention: tokens look at other tokens
+Each token looks at all other tokens to understand its context.
+• Think of words casting votes on how important other words are for their meaning.
+• In “The cat sat”, “sat” is linked to “cat”: the cat is the one who sat.
+20
+Attention as a question-and-answer game
+Questions  Answers  Matching
+Each token produces a query: what it  Other tokens offer what they know, e.g.  The best-fitting answer goes back to
+needs to know, e.g. “Who is talking?”  “The speaker is Susan”  the asker
+21
+Information flows left to right
+Masking: a token gets information only from the tokens to its left.
+• GPT-style models are unidirectional: they read left to right.
+• So the order of information in the prompt matters.
+• Not the same as a masked language model, which fills in a missing token using context on both sides.
+22
+Task 2 · 10 min · Attention role play
+Six students are the tokens of “Susan : My dog is friendly”.
+1 Each token may ask a question, e.g. “Who is talking?”
+2 Tokens answer only from their left
+3 Who can ask whom?
+23
+Task 2 · Who can ask whom
+Susan  :  My  dog  is  friendly
+An arrow points from the token that asks to a token it may ask. Arrows go only to the left.
+“My” may ask “:” and “Susan”. “friendly” may ask all five tokens before it. “Susan” has no arrows: nothing stands to its left.
+There are no arrows to the right: this is masking.
+24
+Task 2 · Questions go left, answers come back
+Susan  :  My  dog  is  friendly
+The speaker is Susan →  The dog →
+Who is talking? ←  What is friendly? ←
+Orange: the question goes to the left, to a token that stands before.
+Green: the answer comes back to the right, to the token that asked.
+No question goes to the right: the tokens on the right are hidden (masking).
+25
+Task 2 · Answer · Attention role play
+“My” asks who is talking and gets the answer from “Susan” on its left.
+“Susan” cannot get answers from tokens on its right.
+Rule Masking: information flows left to right
+Name GPT-style models are unidirectional
+26
+A probability for every token
+Example: “One,
+Distribution  Sampling
+A probability for every possible token
+Two,”  The step that chooses the actual token
+Next token: “Buck” 51 %, “Three” 31 %
+• The model assigns a probability to every possible next token.
+27
+Temperature: controlling randomness
+Low temperature  Temperature 1  High temperature
+The most likely token almost always  Sampling follows the model’s  Less likely tokens are chosen more
+wins  probabilities  often
+• Temperature is a sampling parameter set in the API or playground, not in the prompt text.
+28
+Task 3 · 10 min · Temperature: predict the results
+A model is asked five times: “Suggest a name for a coffee shop”. First with t
+= 0, then t = 0.7, then t = 1.2.
+1 What will the five answers look like at each temperature?
+2 Which setting would you choose for many different ideas? For the same answer every time?
+3 Does a higher temperature make the answers more correct?
+29
+Task 3 · Answer · Temperature: predict the results
+At t = 0 the answers are almost identical; at 0.7 they differ but stay
+reasonable; at 1.2 they are more random and unusual.
+Ideas A higher temperature gives more different answers
+Same answer t = 0
+Correctness A higher temperature does not make answers more correct, only more random
+30
+Task 3 · Example answers
+Temperature  Five answers to “Suggest a name for a coffee shop”
+t=0  Bean & Brew · Bean & Brew · Bean & Brew · Bean & Brew · Bean & Brew
+t = 0.7  The Daily Grind · Bean There · Brew Haven · Morning Cup · Café Aroma
+t = 1.2  Moonlit Roast · Whisker & Wick · Velvet Steam · The Sleepy Quokka · Ember & Oat
+For many different ideas, use a higher temperature; for the same answer every time, use t = 0.
+Illustrative example: these are not outputs of a real model.
+Illustrative example made for this lecture  31
+Autoregressive generation: one token at a time
+Predict  Append  Repeat
+The next token  It to the text  Until the end
+32
+Example: generating token by token
+Prompt (green) and generated tokens (orange)
+One  ,  ␣Two  ,  ␣Buck  le  ␣my  ␣shoe
+Step 1: the model predicts “␣Buck” (51 % in the book) and appends it to the text.
+Step 2: the model reads the longer text and predicts “le” → “Buckle”.
+Step 3: it predicts “␣my” and appends it. (illustrative example)
+Step 4: it predicts “␣shoe” and appends it. (illustrative example)
+␣ marks a leading space. Every step is the same operation: predict one token, append it, repeat.
+Last two steps: illustrative example  33
+From prompt to answer (1/8): the prompt
+Explain transparency in AI in one sentence.
+The prompt is the text we give to the model.
+The model does not “answer”: it continues this text, token by token.
+The answer is the continuation of the prompt.
+In a chat application the prompt is built from messages with roles. We will see this in the next part.
+34
+From prompt to answer (2/8): tokenization
+Tokens
+Explain  ␣transparency  ␣in  ␣AI  ␣in  ␣one  ␣sentence  .
+Token IDs
+176289  48507  306  20837  306  1001  21872  13
+The model works only with these numbers (token IDs), not with letters.
+The same token always gets the same ID: both “␣in” tokens have ID 306.
+␣ marks a space at the start of a token. Another model may split the text differently.
+35
+From prompt to answer (3/8): embeddings
+Token → token ID → embedding (vector)
+Explain  ␣transparency  ␣in  ␣AI  ␣in  ␣one  ␣sentence  .
+0.12  0.91  −0.25  0.64  −0.25  0.03  0.38  −0.51
+−0.80  0.07  0.58  −0.12  0.58  0.49  −0.70  0.15
+0.45  −0.33  0.10  0.77  0.10  −0.61  0.22  0.09
+…  …  …  …  …  …  …  …
+Each token becomes a vector: a list of numbers (real ones have hundreds or thousands).
+The same token has the same vector here: both “␣in” vectors are identical.
+The context is added in the next step, by self-attention.
+Vector values: illustrative example  36
+From prompt to answer (4/8): reading the prompt
+Explain  ␣transparency  ␣in  ␣AI  ␣in  ␣one  ␣sentence  .
+“␣sentence” can look at every token on its left, not only at some of them (schematic illustration: real weights are learned and
+differ)
+Self-attention  Masking  Prefill
+Each token collects information from  A token cannot look at tokens on its  All prompt tokens are processed at
+the tokens before it  right  the same time
+Links: schematic illustration  37
+From prompt to answer (5/8): probabilities of the next token
+First token of the answer: probability of each candidate (illustrative example)
+Transparency  34 %
+AI  17 %
+In  12 %
+It  9%
+Being  5%
+… other tokens  23 %
+Next: sampling chooses one token from this list. It is appended to the text, and the step repeats.
+Probabilities: illustrative example  38
+From prompt to answer (6/8): choosing a token
+Candidates for the first token (illustrative example)
+Transparency  AI  In  It  Being  …
+34 %  17 %  12 %  9%  5%  23 %
+Sampling → “Transparency”  The chosen token is appended to the text.
+Low temperature  Higher temperature  Where it is set
+The most likely token almost always  Less likely tokens are chosen more  In the program (API), not in the
+wins: similar answers  often: more varied answers  prompt
+Probabilities and choice: illustrative example  39
+From prompt to answer (7/8): generating the answer
+Prompt (green) and generated tokens (orange, illustrative example)
+␣sentenc
+Explain  ␣transparency  ␣in  ␣AI  ␣in  ␣one  .
+e
+␣mean  ␣work
+Transparency  ␣in  ␣AI  ␣that  ␣people  ␣can  ␣understand  ␣how  ␣it
+s  s
+.  <end>
+Each step: read the prompt and all tokens generated so far → probabilities → sample one token → append it.
+The end-of-sequence token <end> tells the model to stop. A limit on the length can also stop the generation.
+The same prompt can give a different answer next time, because the token is sampled.
+Generated tokens: illustrative example  40
+From prompt to answer (8/8): what the model did
+What the model did  What the model did not do
+Cut the prompt into tokens  Did not search the internet (unless the application adds
+search or retrieval)
+Turned tokens into vectors
+Did not check whether the answer is true
+Read the prompt with self-attention
+Computed probabilities for the next token  Did not decide the answer in advance: sampling can give a
+different one next time
+Sampled one token, appended it, repeated until <end>
+41
+Plan of the lecture
+1  Recap of the previous lecture
+2  How an LLM works: embeddings, attention, probabilities, temperature
+3  Using LLMs in practice: chat, prompts, RAG, tools
+4  How a model is trained: data and learning
+42
+Completion, instruct and chat models
+Completion (base)  Instruct  Chat
+Continues a document  Treats the prompt as a request to answer
+Conversation with marked roles
+Example: davinci-002. The prompt “What  Example: InstructGPT. The same kind of
+Examples: GPT (in ChatGPT), Claude,
+is a good dish for chicken?” is continued  prompt gets an answer, not a longer list of
+Gemini
+with “What is a good dish for beef? …”  questions
+Today chat has taken over: in July 2023 the chat API was 97 % of OpenAI’s API traffic.
+43
+Chat format: system, user, assistant
+system  Set by the developer of the application: fixed text, the user cannot change it.
+fixed text  Example: You are a helpful assistant.
+user  The person types here: the request, the question or the task.
+input  Explain transparency in AI in one sentence.
+assistant  Output: written by the model, token by token.
+output  (the model writes this part)
+The application turns the messages into one text with special tokens that mark the roles.
+Models are trained to follow the system message closely.
+For the model this is still one text to continue: the answer is its continuation.
+The message texts are examples; real applications use their own instructions.
+Message texts: illustrative example  44
+Task 4 · 15 min · Roles in a chat
+Example: Library assistant.
+1 What goes into the system message?
+2 What are the user and assistant messages?
+45
+Task 4 · Possible answer · Roles in a chat
+system  You are a polite library assistant. Answer briefly and help readers find books. If you do not know
+role, rules, tone  something, say so.
+user  Do you have books about digital ethics?
+the question
+assistant  I can help you search the catalogue. Which language would you prefer?
+the answer
+This is one possible example: other wording is fine if each role does its job.
+The system message is written by the developer of the application; the user writes the question.
+The message texts are an illustrative example, not the only correct answer.
+46
+Zero-shot vs few-shot prompting
+Zero-shot  Few-shot
+Classify the review as positive, negative or neutral.
+Classify the review as positive, negative or neutral.
+Review: The screen is too dark. → negative
+Review: The phone stopped working after a week.  Review: It works as described. → neutral
+Label:  Review: I love the camera! → positive
+Review: The phone stopped working after a week. →
+Zero examples: only the instruction. The model has to  Several solved cases in one format. The model sees the
+work out by itself what the labels mean and in what  pattern “review → label” and adds the label to the last
+format to answer.  review.
+Prompts: illustrative example made for this lecture  47
+Task 5 · 10 min · Few-shot prompt
+Write a few-shot prompt that rewrites a full name as “Surname, N.”
+1 Write the instruction in one sentence
+2 Add two or three solved examples in one format (name → result)
+3 End the prompt with a new name and an arrow
+48
+Task 5 · Possible answer · Few-shot prompt
+Write each name as “Surname, N.”
+Anna Brown → Brown, A.
+John Smith → Smith, J.
+Maria Lopez → Lopez, M.
+Peter Jones →
+Expected The model continues the pattern and writes “Jones, P.”
+Why The examples show the format of the answer, so no long instruction is needed
+49
+Retrieval-augmented generation (RAG)
+File (e.g. a PDF)  Prompt
+the needed part of the file
+1 Retrieve
+the needed part  Model
+Question: When does the
+library close?
+3 Generate
+2 Add to the prompt
+Answer, based on the part of the file
+The model itself does not change.
+The application finds the needed part of the file and puts it into the prompt, and
+the model answers using it.
+Schema: schematic illustration · example texts: illustrative example  50
+Task 6 · 10 min · Files and personal data
+Which of these files can you attach to a chat, and why?
+1  Restaurant menu
+2  Library rules
+3  Insurance contract with the name, address and personal code of a client
+4  List of student grades with names
+51
+Task 6 · Answer · Files and personal data
+Menu and library rules: yes. Contract and grade list: no, they contain
+personal data.
+Why The file goes to the application and to the model provider
+Also The model uses the file like any other text and may repeat the data in an answer
+52
+Tools
+Information  Computation  Action
+Private or up-to-date data  Tasks such as arithmetic  Send email, book, control devices
+53
+Agents
+Compound
+What is an agent  What it can do
+Anything that perceives its environment  Its actions come from the tools it can
+mistakes
+and acts on it  use  95 % correct per step is about 60 %
+after 10 steps
+54
+Task 7 · 15 min · The agent acts alone
+An agent can send emails and book rooms.
+1 Which actions need human confirmation?
+2 Why?
+55
+Task 7 · Answer · The agent acts alone
+Open task. Irreversible, costly, legally relevant actions and actions affecting
+other people’s data need human approval.
+Also Keep a log of actions, limit permissions, name who is responsible
+56
+Task 8 · 10 min · Who is responsible for the letter?
+HR uses an LLM for rejection letters and the manager just forwards them.
+1 Who is accountable?
+2 What is wrong with the process?
+57
+Task 8 · Answer · Who is responsible for the letter?
+Decisions with legal effect must be taken by humans with a real margin of
+manoeuvre, not by merely approving the AI proposal.
+Accountability Stays with the organisation and the person who decides
+58
+Plan of the lecture
+1  Recap of the previous lecture
+2  How an LLM works: embeddings, attention, probabilities, temperature
+3  Using LLMs in practice: chat, prompts, RAG, tools
+4  How a model is trained: data and learning
+59
+Training data
+Common Crawl  Mixed quality  Widely used
+A nonprofit crawls about 2–3 billion web  Clickbait, misinformation, propaganda,  Variants of Common Crawl are used in
+pages each month (2022–2023)  conspiracy theories  most models that disclose their data
+• An AI model is only as good as the data it was trained on.
+60
+Languages in the training data
+Language  Share of Common Crawl  English is about eight times more
+common than the second language,
+English  45.88 %  Russian.
+Russian  5.97 %  Languages with little data are called
+low-resource languages.
+German  5.88 %
+Swahili  0.0077 %
+Punjabi  0.0061 %
+If a language is not in the training data, the model cannot work in it.
+61
+Knowledge cut-off
+Example
+Cut-off date  At the cut-off date a singer had
+What helps
+Events after the end of the training data  released 10 albums. Yesterday the 11th  Give the model the up-to-date
+are unknown to the model  came out. The model does not know it  information, for example with RAG
+and answers 10.
+• A model knows only what was in its training data.
+Example adapted: illustrative example  62
+Task 9 · 10 min · An outdated model
+A chatbot gives a wrong answer about an event from last month.
+1 Why can this happen?
+2 What can the application do about it?
+63
+Task 9 · Answer · An outdated model
+The event happened after the model’s cut-off date, so it was not in the
+training data.
+Fix Give the model the information: RAG or a search tool
+Note Without it the model may say it does not know, or make up an answer
+64
+Three steps of training, with examples
+1 Pre-training  2 Supervised finetuning (SFT)  3 Preference finetuning
+Self-supervised, on a large amount of text  Demonstration data: (prompt, response)  Comparison data: (prompt, winning, losing)
+Example
+Prompt: Serendipity means the occurrence
+Example
+Example  and development of events by chance in a
+Prompt: How to make pizza
+Input: <BOS>, I, love  happy or beneficial way. Use the word in a
+Winning: Mix flour, water, yeast and salt, let
+Output: street  sentence.
+the dough rise, add toppings and bake.
+(next-token prediction)  Response: Running into Margaret and being
+Losing: for a family of six?
+introduced to Tom was a fortunate stroke of
+serendipity.
+Steps 2 and 3 together are called post-training. InstructGPT: 98 % of the compute went to pre-training, 2 % to post-training.
+Step 3 example: illustrative example  65
+Step 1 in detail: the text gives its own labels
+Input (context)  Output (next token)  The sentence “I love street food.”
+gives six training examples.
+<BOS>  I
+<BOS> and <EOS> mark the
+<BOS>, I  love  beginning and the end of a sequence.
+<BOS>, I, love  street  No manual labelling is needed.
+<BOS>, I, love, street  food
+<BOS>, I, love, street, food  .
+<BOS>, I, love, street, food, .  <EOS>
+66
+Why post-training? “How to make pizza”
+Completion 1  Completion 2  Completion 3
+Adds context to the question: “for a  Adds follow-up questions: “What  Gives the instructions on how to make
+family of six?”  ingredients do I need?”  pizza: this is the answer we want
+• Before post-training any of the three can follow. After supervised finetuning the third one is the most likely.
+67
+Preference finetuning: whose preferences?
+Goal  The problem  Example: LAION
+People of different cultural, political,
+Responses that align with human  13,500 volunteers; in a self-reported
+social and religious backgrounds
+preference (RLHF, DPO)  survey 90 % of them identified as male
+disagree
+• People from different backgrounds disagree about what a good response is.
+68
+How preference data is made
+3 Comparison data:  4 A reward model  5 The main model is
+1 Several responses  2 People compare
+(prompt, winning,  learns to score  trained to get high
+to one prompt  two responses
+losing)  responses  scores (RLHF)
+Why compare?  It takes time  Labelers disagree
+Scores vary: one labeler gives 5,  Comparing two responses takes on  For InstructGPT, labelers gave the
+another 7 on a 10-point scale  average 3–5 minutes (fact-checking)  same ranking in about 73 % of cases
+69
+Task 10 · 10 min · Which step of training?
+Match each description with a step of training.
+1 Predicting the next token on a huge amount of text  a Preference finetuning
+2 Learning from high-quality examples of conversations  b Pre-training
+3 Learning which responses people prefer  c Supervised finetuning (SFT)
+70
+Task 10 · Answer · Which step of training?
+1 → b pre-training · 2 → c supervised finetuning (SFT) · 3 → a preference
+finetuning (RLHF, DPO)
+Why A pre-trained model only completes text; post-training teaches it to respond to users
+Analogy Pre-training is like reading to acquire knowledge; post-training is learning how to use it
+71
+Finetuning or RAG?
+Information-based  Behaviour-based  Remember
+Facts are wrong, outdated or missing  Output is irrelevant or in the wrong  RAG adds information to the prompt;
+→ RAG  format → finetuning  finetuning trains the model further
+• First find out what kind of failure it is.
+72
+Task 11 · 10 min · Finetuning or RAG?
+What helps in each case: RAG or finetuning? Say why.
+1  The bot does not know a rule that changed last week
+2  The answers are correct, but always in a style that does not fit the application
+3  The bot must answer from the private documents of a company
+4  The answers are correct, but not relevant to the task
+73
+Task 11 · Answer · Finetuning or RAG?
+1 RAG · 2 finetuning · 3 RAG · 4 finetuning
+Information Facts are missing, outdated or private: RAG puts the information into the prompt
+Behaviour The format, the style or the relevance is wrong: finetuning trains the model further
+74
+Training data and the law (AI Act)
+Copyright  Transparency  Exception
+Comply with EU copyright law (Art. 53  Publish a detailed summary of the  Models under a free and open licence,
+para. 1 lit. c)  content used (Art. 53 para. 1 lit. d)  unless they carry systemic risk
+• Providers of general-purpose AI models have obligations that concern their training data.
+75
+Task 12 · 10 min · Whose data, whose preferences?
+English is 45.88 % of Common Crawl. In one dataset 90 % of the volunteer
+labelers identified as male.
+1 Who may be served worse by such a model?
+2 What should developers tell the public about their data?
+76
+Task 12 · Answer · Whose data, whose preferences?
+1 People who speak languages with little data; people whose preferences are not
+represented among the labelers.
+2 What data the model was trained on: the AI Act requires a detailed summary of the
+content used for training.
+Open task Possible answers; accept any reasoned answer
+Also Consent: did the authors of the texts agree that their texts are used?
+77
+Final Task · 20 min
+Write a short answer to these four questions.
+1 What did you remember most from today’s lecture?
+2 Explain in two or three sentences how a model writes an answer to a question.
+3 Name reasons why a model can give a wrong answer.
+4(optional) How often do you use LLMS in your life (for work/ studies)?
+Please write answers (1-2 pages) and send me: darja.plinere@rtu.lv
+Once you have sent your answers, you can be free, see you next week!
+78

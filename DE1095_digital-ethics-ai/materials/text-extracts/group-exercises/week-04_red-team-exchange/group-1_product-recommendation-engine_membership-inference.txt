@@ -1,0 +1,36 @@
+Membership Inference
+Product Recommendation Engine
+The AI analyzes customer activity, preferences, and product information to recommend products a user may
+be interested in. Recommendations are shown on the company’s website or app.
+A Competitor or a Hacker.  Monitor for unusual
+The attacker tries different user profiles and  querying patterns.
+checks how the AI responds.  Limit the number of
+By observing the outputs, the attacker can  requests a user can send to
+determine whether a specific person's data was  the recommendation
+likely included in the model's training dataset.  system.
+Detect highly similar profile
+variations.
+Regularly test the model
+against privacy attacks
+before deployment
+To determine whether a specific individual's data
+(a specific customer's purchase/browsing history)
+was part of the dataset used to train the  Defence process:
+Restrict access to customer
+recommendation model
+data, conduct regular privacy
+audits, and establish clear
+data protections policies
+(GDPR) and strict data-​
+handling rules, role-​based
+responsibilities
+RESPONSIBLE:
+AI system owner, and security
+team should conduct regular
+privacy audits and review
+suspicious activity to reduce
+Monitoring and
+the risk of customer data
+Maintance  being exposed through
+membership inference
+attacks.

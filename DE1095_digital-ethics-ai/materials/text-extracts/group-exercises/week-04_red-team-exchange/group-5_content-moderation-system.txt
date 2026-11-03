@@ -1,0 +1,3 @@
+Content Moderation System
+The AI analyzes user-​generated content such as text, images, or posts to identify content that may violate
+platform rules. It can flag, classify, or recommend removal of suspicious content.

@@ -1,0 +1,28 @@
+Membership inference
+Medical Diagnosis Support Tool
+The AI analyzes patient information such as symptoms, medical history, and test results. It provides healthcare
+professionals with possible diagnoses or clinical recommendations to support their decisions.
+An attacker : unauthorised user, cybercriminal,
+or someone with access to the medical ai
+send: repeated queries about specific person,
+but changing details a bit each time like age,  Limit the number of
+diagnosis etc.  queries per user. Detect
+what happens: the attacker may get sensitive  repeated attempts with
+medical information or training data  slightly modified queries
+membership may be exposed  about the same patient.
+Trying to steal personal medical information that
+was used for training the medical diagnostics
+tool. This is sensitive information that can be
+valuable for criminal purposes.
+Only authorised people
+(healthcare specialists)
+can access the AI system
+(internal network
+security). Security team
+should regularly review
+access logs and monitor
+for suspicious querries.
+Deployment stage. The attacker tries to  Teaching employees to
+receive information about the training  recognize suspicious
+dataset from the model after it has been  threats.
+deployed.

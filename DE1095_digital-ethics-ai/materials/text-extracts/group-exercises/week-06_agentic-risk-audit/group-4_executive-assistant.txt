@@ -1,0 +1,80 @@
+AI Executive
+Assistant  Can be influenced by attacker to execute different output
+In case of high level executives are having this AI tool it can
+misbehave and get information from history and/or
+influence calendar visits.
+An AI assistant supports company
+executives and has persistent memory  Read and
+access
+Can access data beyond it's permissions
+send e-​
+plus access to company email and  mails
+calendars
+confident
+calendars. It can use information from  company
+calendar  data  Since AI uses certain plug-​ins system can be affected
+previous interactions when completing  shedule  retrieve  info
+meetings  previous
+remembers
+through it
+past
+interactions
+(everything)
+assistant cannot run code or execute scripts
+security  Schedule
+information
+manage  continuity
+and  and
+emails and  and record-​  control  organize
+calendars
+malicious info stored in memory could affect its work and
+keeping  meetings
+influence decisions and tasks
+no other agents so no communication problems.
+E-​mail/calendar APIs are systems, not necessarily other
+agents
+agent is responsible for calendars and emails and one wrong
+action can set off chain of events missed meetings, incorrect
+information in emails etc.
+IT
+Executives  executive  office  administr
+assistants  executive  ators  Executives may trust AI too much and act on incorrect
+information.
+can access email,
+calendars, internal
+documents, and
+Communicates with  confidential
+no other  company email,
+email  company
+information.
+calendar and possibly  manage
+agents  other internal  ment  The AI assistant can do tasks on its own but it isn't able to
+business systems
+through APIs.
+calender
+make its own long term plans or goals
+manage
+ment
+Human agent trust  Because the assistant has
+Identity and Privilege abuse  Memory & Context Poisoning  Data privacy&
+exploitation  Decision-​making risk  misinformation
+confidental  Identity and  access to executive email,
+calendars, and sensitive
+Privilege
+company information,
+misuse of these privileges
+could cause immediate and
+Oversight, trusting given answers without  Assistants access to executive emails,
+Incorrect or malicious information could be
+stored in persistent memory and affect future
+abuse  serious damage.
+checking  calendar could be misused.
+tasks.
+Acceptance before  Identity check before starting
+Regular check-​ins with
+transferring given  to work with this tool, like
+gathered history
+information in calendars  work email ID and password
+Acts on wrong information through received  It could expose confidential information or allow  One malicious information can affect multiple
+emails  unauthorized actions using executive privileges.  emails, decisions and future tasks
+5 minutes

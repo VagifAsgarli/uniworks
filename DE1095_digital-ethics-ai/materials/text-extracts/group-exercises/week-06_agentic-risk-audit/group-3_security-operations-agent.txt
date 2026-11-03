@@ -1,0 +1,92 @@
+AI Security-​
+Operations Agent  Malicious input can make the agent pursue the wrong thing
+It can query logs and run remediation actions. Misused tools
+could wrongly isolate machines or delete data.
+An AI security agent can query company  The agent needs privileged access to security and
+logs, investigate alerts, and perform  Investigate alerts
+infrastructure systems, making permission abuse a major
+remediation actions across company
+automatically, while
+risk.
+Query company
+delegating
+logs to detect  decision-​power
+and prevent  about more serious
+security  cases to humans  Yes, it stores
+systems, including isolating machines it
+incidents
+Can access:  Handle sensitive  incident
+Can investigate  security logs,  employee, device,  history and
+user account  network and
+Compromised integrations could influence the agent or
+security alerts,
+considers compromised.  previous
+Automated
+block malicious
+sorting of
+IP addresses, and  information,  security-​event
+security incidents  generate incident  incident records.  investigations.
+expose sensitive systems.
+based on pre-​set  reports.
+data
+criteria
+Security logs, files, scripts, or investigation artifacts could
+Give clear,  contain malicious content
+Detect and  Isolate
+Prevent  evidence-
+investigate  compromised  security  based
+security  devices,  reporting
+threats  machines, or  incidents  False or malicious incident data could contaminate the
+systems
+quickly  agent’s context and lead to incorrect future decisions.
+If it exchanges data or tasks with other agents, messages
+could be altered or contain malicious instructions.
+One wrong decision, such as isolating a critical server, can
+System/m  Business  spread into outages across many systems and teams.
+Incident  IT and
+achine  users and
+response  system  employees
+operators
+team  owners
+Analysts may over-​trust confident reports and approve
+actions without checking.
+Automatically logs
+potential security
+Endpoint  threats and takes
+Communicates  SIEM
+with ticketing  isolation  Automatically  action
+automation
+Autonomous remediation power means that drifting outside
+bots  in case the
+webhooks  agents  isolates  company's security
+is compromised
+compromised
+machines
+Require  its scope could cause real harm. It needs a kill switch and
+human
+approval for
+high-​impact
+monitoring.
+actions
+ASI02: Tool Misuse and  ASI03: Identity and Privilege
+ASI10: Rogue agents  ASI02: Tool Misuse and  ASI03: Identity and
+Exploitation  Abuse  ASI10: Rogue agents  Limiting what the agent can
+Exploitation  Privilege Abuse
+do and requiring human
+Identity &  approval for major actions
+Privilege Abuse  caps the damage, even if the
+AI gets tricked.
+The agent wrongly isolates a healthy machine  The agent's broad credentials are stolen or  A compromised or malfunctioning security
+(or an attacker tricks it into doing so) because it  over-​scoped, letting an attacker (or the agent  agent acts outside its intended goals and
+misjudges an alert or is manipulated through  itself) access and change systems it should  performs unauthorized security actions.
+Require human approval for  Give the agent a dedicated
+poisoned log content.  never touch.  Limit privileges, require approval
+high-​impact actions like  least-​privilege identity with  for critical actions, monitor
+isolating machines, with rate  short-​lived credentials, and  behavior, and provide a kill switch
+limits and easy rollback.  log and monitor all its actions.
+Remediation tools directly change live  A security agent needs wide access across
+systems, so one mistaken isolation can take  the company, so compromising it hands an  rogue behavior could disable accounts,
+down a critical server and halt business  attacker admin-​level reach everywhere, and  isolate critical systems, or disrupt company
+operations, or be used by an attacker as a  it's hard to detect because the actions look  operations.
+way to cause an outage.  like legitimate security work.
+5 minutes

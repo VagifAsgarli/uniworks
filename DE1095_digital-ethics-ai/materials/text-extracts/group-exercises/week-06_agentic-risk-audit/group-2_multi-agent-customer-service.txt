@@ -1,0 +1,66 @@
+Multi-​Agent
+Customer-​Service  Malicious input could redirect agent from independent task
+System
+Can be directed to the wrong agent
+A triage agent receives customer requests and  Processes
+decides whether to hand them to a separate  Relies on other
+requests  An agent may access to a sensitive accounts/actions
+and directs
+agents (customer
+billing agent or refunds agent. The agents  data base,
+further
+messaging tools)
+exchange customer information and instructions  Customer  Personal and
+Yes, it remember
+past interactions
+to complete the request.  management  payment
+systems,
+order and
+information
+External tools/model may introduce vulnerabilities
+refunds
+Sensitive information
+(tickets, Mails,
+searches, data etc.)
+Less relevant unless the agent can execute code
+Resolve customer
+Decide on direction  requests more
+(separate billing agent  accurately
+or refunds agent)
+False information could persist in shared customers context
+Protect customers
+payment personal
+Coordinate tasks  data & payment
+between agents  information
+One compromised agent could send false instructions to
+others
+One agent’s error can spread through the whole workflow
+Employees  Customers
+Staff/customer may trust incorrect agents’ recommendation
+Technical
+Supervisors  support
+Sending prompts,  Task requests
+Exchange customer  requests  To which agent to
+(send E-​mails,
+context  direct
+retrieve
+information)
+An autonomous agent could act outside its intended scope
+Delegate tasks  Perform approved
+actions
+ASI07  ASI08  ASI03  ASI07  ASI08  ASI03  Because this is a multi-​agent
+system. If one agent sends
+malicious or incorrect
+ASI07  information others, the
+problem can spread across the
+entire workflows/ trigger
+A compromised agent sends false instructions or  One agent makes a wrong decision and other  An agent uses excessive permissions to
+customer data to other agents  agents continue acting on it  access/modify customer accounts  further incorrect actions.
+Give each AI agent only the
+Supervise the work of  Add validation checkpoints ,  consequences
+permissions it needs to
+agent  rate limits and circuit breaks
+perform its task.
+The error could spread across several agents and  A single mistake can become multiple incorrect  It could expose customer data or cause
+affect the final customer action  actions before a human notices  unauthorized refunds, account changes
+5 minutes

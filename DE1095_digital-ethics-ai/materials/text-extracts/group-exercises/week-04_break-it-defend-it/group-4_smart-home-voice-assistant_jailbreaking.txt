@@ -1,0 +1,41 @@
+Smart-​Home Voice Assistant
+Users control connected devices through voice commands.
+jailbreaking  The assistant can operate lights, heating, door locks,
+cameras, and other authorized smart-​home devices.
+The attacker: an  Hijack voice
+intruder who  commands  Make the AI ignore
+The assistant is
+wants to break
+like  its safety  The AI accepts flexible
+connected to
+into another
+person's house  "lock/unlock  restrictions and  natural-​language
+sensitive devices, so
+How: bypass safety  commands, so
+restrictions by stealing
+the door"  execute  attackers may use  bypassing its
+The AI might
+the home owner's
+confuse the
+unauthorized  specially crafted  restrictions can
+facial, vocal or other  instructions to bypass
+identification data  intruder for  smart-​home  its safety rule
+lead to dangerous
+adding phrases like
+the real  real-​world
+"emergency override"  commands
+homeowner
+Voice recognition :
+the assistant only
+Use a non-​voice
+verification (like a
+The second layer of
+verification is
+Generate  Report the
+Log more data
+follow the  PIN/confirmation on  automatically  an alert  incident to
+instructions of  app) before executing  required for  to prevent
+"verified" people  commands to  commands ask  that is sent  the  future attacks
+(like member of the  lock/unlock doors or  outside of the
+house)  disable cameras
+home  to the user  authorities

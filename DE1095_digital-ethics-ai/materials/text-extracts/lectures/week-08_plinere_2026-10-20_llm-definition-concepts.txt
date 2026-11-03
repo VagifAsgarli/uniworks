@@ -1,0 +1,380 @@
+Digital Ethics and Artificial
+Intelligence Interaction
+Large Language Models
+Definition, key concepts and how they work
+Riga Technical University — Faculty of Computer Science, Information Technology and Energy
+Institute of Information Technology
+20.10.2026  1
+Plan of the lecture
+• Bridge: from digital ethics to LLMs
+• 1 What is an LLM?
+• 2 A short history: from Markov to ChatGPT
+• 3 Basic concepts: tokens, context, embeddings
+• 4 How an LLM works: transformer, probabilities, generation
+• 5 LLMs in practice: prompts, chat, retrieval, tools, models
+2
+Recap: key themes from digital ethics
+Human
+Transparency  Accountability  Consent  Fairness
+judgment
+Can people see how it  Who answers for the  Did people agree to the  Are people treated
+works?  result?  use of their data?  equally?  Which decisions stay
+with people?
+• Which of these themes do you remember from the digital ethics lectures?
+3
+Transparency and accountability
+Transparency: information about an actor that lets others monitor how it
+works and performs.
+• It enables accountability but does not ensure it. In the end, people must be held accountable.
+4
+Accountability: at which level?
+Component  System  Society
+Does it work well in its context, with its
+Does the model work as specified?  Are the rules we gave it the right rules?
+users?
+• Accountability needs both ends of the relationship: who answers, and to whom.
+5
+Case: Ariane 5 (1996)
+Ariane 5 (1996): a software failure destroyed the launcher, and no individual
+or team was held directly responsible.
+• Responsibility was spread across programmers, designers, requirements and test engineers, and managers.
+6
+Case: Robodebt (Australia)
+2016  About 700,000  AUD 1.8 billion
+Australia launches an automated  People wrongly accused of fraud over  Spent on compensation in one class
+system to detect welfare overpayments  three years  action case
+• Staff were reduced while the number of exceptions to handle increased.
+7
+Lesson from Robodebt
+Mistakes happen at scale, so correcting them must be designed at scale.
+• Disputing an automated decision cost time and attention, and the accused people paid it.
+8
+Ethics along the prediction supply chain
+Source  Model  Compare  Optimize  Learn  Predict
+What is predicted,  How are errors
+Which data, from  How are people  Whose priorities  Who learns from
+on what  handled and
+whom?  grouped?  win?  the results?
+assumptions?  disputed?
+• Every prediction passes through a chain of stages; each stage is a place for accountability.
+9
+The chain and LLMs
+Stage  Question for an LLM
+Source  Whose texts and data were used?
+Model  What is the model asked to predict?
+Compare  What patterns and categories does it learn?
+Optimize  Whose goals shape the model and service?
+Learn  Who learns from user inputs and outputs?
+10
+Robodebt: where did it go wrong?
+Use the stages Source,
+Model,
+Compare,
+Optimize,
+Learn
+on the Robodebt case.
+1 Name one failure at each stage
+11
+Robodebt: where did it go wrong?
+Source: income from other agencies when the form was blank.
+Model: two-week income average.
+Compare: repeated errors not examined.
+Optimize: all burden on applicants.
+Learn: findings not shared.
+Lesson Mistakes happen at scale, so correcting them must be designed at scale
+12
+Where these themes meet LLMs
+Ethics theme  Where it meets LLMs in this lecture
+Transparency  How the model produces text: tokens, attention, probabilities
+Accountability  Model, system and user: who is responsible for a completion?
+Consent and data  What goes into a prompt, the context window and retrieved documents
+Fairness  Patterns learned from documents written by people
+Human judgment  Tools and agents that act on our behalf
+13
+From ethics to mechanism
+To judge LLMs ethically, we first need to understand what they are and what
+they do.
+• Today: definition, concepts and mechanism. Later: training, limitations and evaluation.
+14
+An LLM: text in, text out
+At the most basic level, an LLM takes a string and returns a string.
+• Input: the prompt. Output: the completion (also called the response). Example: “One, Two,” → “ Buckle My Shoe”.
+15
+The core job: predict the next word
+Phone keyboard  LLM
+Suggests a few likely next words (Markov model, 1948)  The same idea, with far more power and context
+• A language model predicts the probability of the next word.
+• Running an LLM is like repeatedly pressing the middle suggestion button.
+16
+Predicting words and stereotypes
+Autocomplete  Frequent text  Risk
+Predicts likely continuations from what  Stereotypes in the text can come back
+Becomes likely text
+people wrote  out
+• UN Women campaign (2012): autocomplete suggestions for the start “Women should not”.
+17
+LLMs mimic documents
+Given the start of a document, the model produces its most likely
+continuation.
+• Ask: how would a document that starts with this prompt continue?
+18
+Task1 · 1 min · Predict the next words
+Complete the text with the most likely next words: “Yesterday, my TV
+stopped working. Now, I can’t turn it on at …”
+1 Write your continuation
+2 Why that one?
+19
+Task1 · Example: completing a document
+“all.”  “Thursday.”  Random characters
+By far the most likely continuation  Possible, but rare  Possible, but very unlikely
+• Prompt: “Yesterday, my TV stopped working. Now, I can’t turn it on at”
+20
+Task 2 · 3 min · Continue the document
+Predict the most likely continuation and the type of document.
+1 “Dear Sir or Madam,”
+2 “def add(a, b):”
+3 “Q: What is 2+2? A:”
+21
+Task 2 · Answer · Continue the document
+The model continues the document that is most likely to start this way.
+1 A formal letter
+2 The body of a code function
+3 “4”
+22
+LLM versus a search engine
+Search engine index  LLM
+Applies learned patterns to complete any prompt, including
+Can return a stored text, but only text it has stored
+new ones
+23
+Foundation models
+Generalist  Off-the-shelf  Building block
+Used as it is, or lightly adapted (fine-
+One model for many tasks  Basis for apps, assistants and agents
+tuning)
+• Most LLM applications use ready-made models instead of training their own.
+24
+Foundation models: beyond text
+Foundation models  Multimodal  General-purpose
+Large language models and large  Text together with images or other data  From one model per task to one model
+multimodal models  (e.g. CLIP embeddings)  for many tasks
+25
+The legal view: a GPAI model
+AI Act: a GPAI model shows significant generality and can competently
+perform a wide range of distinct tasks.
+• It can be integrated into many downstream systems or applications. Large generative models are typical
+examples.
+26
+AI model versus AI system
+AI model  AI system  GPAI system
+A component such as an LLM; not a  Model plus other components, e.g. a  System based on a GPAI model,
+system by itself  user interface  usable for many purposes
+27
+Task 3 · 5 min · Model or system?
+Name each item using the AI Act vocabulary.
+a  An LLM that translates, summarises and writes code  Choose from: · AI system built on a generative model
+b  A chat app built on that LLM  · GPAI model (generative)
+c  A model that detects fraud  · AI system built on a GPAI model
+d  An image-generation app  · analytical AI for one purpose
+28
+Task 3 · Answer · Model or system?
+a) GPAI model (generative).
+b) AI system built on a GPAI model.
+c) Analytical AI for one purpose, not a GPAI model
+d) AI system based on a generative model
+29
+Task 4 · 5 min · Model and system duties
+A start-up builds a chatbot on another company’s GPAI model.
+1 Who has which duties?
+30
+Task 4 · Answer · Model and system duties
+The model provider prepares technical documentation and makes it
+available to downstream providers.
+Start-up tells users they talk to AI and marks AI-generated content
+31
+Task 5 · 10 min · Mark it as AI
+A university chatbot answers student questions.
+1 What should users be told?
+2 How should AI-generated text be marked?
+32
+Task 5 · Answer · Mark it as AI
+Users must clearly recognise that they talk to AI, with clear information at the
+first contact. AI-generated content is marked in a machine-readable way.
+Deepfakes Disclose when content is artificially generated or manipulated
+33
+Analytical AI versus generative AI
+Analytical AI  Generative AI
+Analysis, classification, anomaly and fraud detection  Creates content: text, images, audio, video
+• LLMs such as ChatGPT or Gemini belong to generative AI.
+34
+Pause · 2 min · Does it understand?
+Does an LLM understand language the way you do?
+1 What would “understanding” mean here?
+2 What does the model actually compute?
+35
+LLMs work statistically
+LLMs recognise patterns in language and use probability calculations to
+produce human-looking text.
+• They do statistically what people do through meaning and an understanding of causality.
+36
+Task 6 · 10 min · A false statement about a person
+An LLM invents a false claim about a real person.
+1 Which rights does the person have?
+2 Why is an output filter not erasure?
+37
+Task 6 · Answer · A false statement about a person
+Rights to rectification and erasure (GDPR). A filter hides the output, but the
+data may remain in the model.
+Correction Needs measures such as correcting data or fine-tuning
+38
+Early language models
+1948  2014
+Markov model of natural language (phone keyboard
+seq2seq: a recurrent network that reads one token at a time
+suggestions)
+39
+seq2seq: encoder and decoder
+Encoder  Thought vector  Decoder
+Reads tokens one at a time and  The final hidden state, passed to the  Generates output tokens from the
+updates a hidden state  decoder  thought vector
+40
+The information bottleneck
+One fixed-size thought vector often loses important information from longer
+texts.
+• The decoder then has little to work with: the information bottleneck.
+41
+Attention (2014–2015)
+Before  With attention
+One thought vector for the whole input  The decoder searches across the states of all tokens
+• Keep every token’s hidden state and let the decoder “soft search” over them.
+42
+The transformer (2017)
+No recurrence  Direct links  Fixed length
+Distant words relate directly to each
+Relies completely on attention  Handles only a fixed, finite sequence
+other
+43
+GPT (2018)
+Decoder only  Pre-trained  Single task
+A transformer without the encoder  On a large amount of unlabeled text  After fine-tuning, good at one task
+44
+GPT-2 and GPT-3: scale
+GPT (2018)  GPT-2 (2019)  GPT-3 (2020)
+Another order of magnitude in size and
+117 million parameters, 4.5 GB of text  1.5 billion parameters, 40 GB of text
+data
+45
+Few-shot learning: the birth of prompt engineering
+With a few examples in the prompt, GPT-3 could perform almost any
+language task.
+• Changing the prompt conditions the model: prompt engineering begins.
+46
+ChatGPT (2022)
+ChatGPT  Fastest-growing app
+About 100 million users by January 2023 (TikTok: 9 months;
+Conversational model based on GPT, late November 2022
+Instagram: 2.5 years)
+47
+Task 7 · 5 min · Timeline of LLMs
+Put the events in chronological order and say what attention solved.
+A ChatGPT · seq2seq · transformer · Markov model · attention · GPT · GPT-3
+48
+Task 7 · Answer · Timeline of LLMs
+Markov model (1948),
+seq2seq (2014),
+attention (2015),
+transformer (2017),
+GPT (2018),
+GPT-3 (2020),
+ChatGPT (2022).
+Attention It removed the information bottleneck of one fixed thought vector
+49
+Tokens: the unit of text
+Typical size  Common words  Vocabulary
+About 3–4 characters  Often a single token  The set of all tokens a model uses
+• A text of 100 tokens is roughly 75 words.
+50
+Why tokens, not words or characters?
+Meaningful parts  Small vocabulary  Unknown words
+Fewer tokens than words: a more
+“cooking” = “cook” + “ing”  A new word is split into known pieces
+efficient model
+• Vocabulary size is chosen by developers: Mixtral 8x7B has 32,000 tokens, GPT-4 has 100,256.
+51
+From text to numbers and back
+Text  Tokenizer  Token numbers  LLM  Back to text
+52
+Pause · 1 min · Guess the tokens
+How many tokens do “strange new worlds” and “STRANGE NEW WORLDS”
+have?
+1 Guess both numbers
+2 Which is larger, and why?
+53
+Tokens in practice
+Lower case: 4 tokens
+str  ange  ␣new  ␣worlds
+UPPER CASE: 6 tokens
+STR  ANGE  ␣NEW  ␣WOR  L  DS
+54
+Tokenization methods
+BPE
+Byte-Pair Encoding; common because  WordPiece  SentencePiece
+it is efficient
+• Tokenization is the process of breaking text into tokens.
+55
+How BPE works: the word “apple”
+Start  Merge  Later
+Frequently adjacent characters are
+a, p, p, l, e  “appl” may be treated as one token
+combined
+• Rare words can be built from known pieces, so the model stays adaptable.
+56
+The tokenizer is deterministic
+A tokenizer always maps the same text to the same tokens.
+• “ghost” is one token; the typo “gohst” becomes three (g, oh, st), so it stands out.
+57
+Counting tokens
+Length  Time  Cost
+The size of a text for the model  Roughly linear in the number of tokens  Services usually charge per token
+58
+Task 8 · Tokenizer
+Use an online tokenizer and compare how texts are split.
+1 Split “strange new worlds”, “STRANGE NEW WORLDS”
+2 Count the tokens
+3 Explain the differences
+59
+Task 8 · Answer · Tokenizer
+Capital letters and typos usually give more tokens than normal lower-case
+text: 4 tokens versus 6 tokens
+Rule of thumb About 3–4 characters per token; 100 tokens ≈ 75 words
+60
+The context window
+Prompt +  Growth
+Typical size
+completion  Thousands of tokens
+Claude 2: 100,000 tokens; GPT-4: a
+Together must fit into the window  128K version
+61
+Task 9 · 7 min · Token budget
+A prompt has 600 words and the answer has 300 words.
+1 Estimate the number of tokens
+2 Does it fit into a 4096-token window?
+3 What is processed faster, the prompt or the answer?
+62
+Task 9 · Answer · Token budget
+About 800 + 400 = 1200 tokens. It fits into the 4096-token window.
+Speed The prompt is read in parallel, so it is much faster per token than writing the answer
+Cost Time and price grow roughly with the number of tokens
+63
+Task 10 · 10 min · What to paste into a chat
+A student pastes a classmate’s email (name and grades) into a public
+chatbot.
+1 Which problems do you see?
+2 What would you do instead?
+64
+Task 10 · Answer · What to paste into a chat
+Personal data of a third person without consent; in open systems one
+person’s input can become another’s output; inputs may be used for
+training.
+Instead Use a closed system, anonymise the data, and tell people how inputs are stored
+65

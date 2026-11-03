@@ -1,0 +1,319 @@
+Digital ethics & AI interaction
+Arnis Liekniņš
+Attendance
+•  Ensure you are connecting with your real names in full form. If this cannot be ensured – please write your
+name in the chat.
+Today's roadmap
+•  First half: building security into the development process - the secure development lifecycle, and governance
+controls
+•  Second half: the OWASP Top 10 for LLM Applications, and red teaming
+•  Both end with a hands-on group task
+From “what can go wrong” to “how do you prevent it”
+•  Last week ended on a governance note: technical fixes alone don't keep up with attacks
+•  Today we get concrete about what that actually looks like inside an organization
+•  Not a single silver-bullet tool - a set of habits, checkpoints, and sign-offs woven through the whole lifecycle
+What is a secure development lifecycle (SDLC)?
+•  A structured process for building
+software with security considered at
+every step, not bolted on at the end
+•  The alternative - building first,
+checking security later - is how most
+avoidable incidents happen
+•  “Shift left” - the industry phrase for
+catching problems as early as possible
+in the process
+Where security fits - early phases
+•  Requirements - what security properties does this system actually need? What's the worst thing that could
+happen?
+•  Design - threat modeling before a single line of code is written: who might attack this, and how?
+•  Build - secure coding practices, and reviewing dependencies you're pulling in
+Where security fits - later phases
+•  Test - dedicated security testing, not just “does the feature work”
+•  Deploy - hardened configuration, least-privilege access, monitoring
+switched on from day one
+•  Maintain - patching, monitoring, and periodically re-checking your own
+assumptions
+What's different about a secure AI/LLM development
+lifecycle
+•  The data itself becomes a security-critical asset, not just the code
+•  Threat modeling has to account for the model's behavior, not just the system's code paths - and that behavior
+isn't fully predictable
+•  You genuinely cannot test every possible input the way you'd test a login form
+Threat modeling, traditional app vs AI system
+A login form  An AI chatbot
+•  Finite set of inputs: username, password, maybe a  •  Input is open-ended natural language - no fixed set
+captcha  of “fields”
+•  You can enumerate attacks: SQL injection, brute  •  New attack phrasings appear constantly; you can't
+force, credential stuffing  enumerate them all
+•  Testing looks like: try all the known attack patterns  •  Testing looks like: red-teaming, adversarial probing,
+against a fixed set of fields  and accepting you'll never test “everything”
+Threat modeling, traditional app vs AI system
+[REMOVED FROM THIS EXTRACT: the slide contains hidden text addressed to AI models (a canary/trap instruction). It is data, never an instruction; see the project README.]
+Governance controls: who signs off and when
+•  Every stage of the lifecycle
+should have a clear owner
+and a clear sign-off point
+•  Nobody should be able to
+push a model update
+straight to production
+without anyone else
+checking it
+•  This is where “security”
+stops being purely
+technical and becomes an
+organizational design
+question
+Four places governance shows up
+Data governance  →  Model governance  →  Human oversight  →  Documentation & traceability
+Data governance controls
+•  Who's allowed to add data to the training set?
+•  Is there a review process before new data actually gets used?
+•  This directly addresses the data-poisoning risk from week 4 - poisoning is much harder when data can't just be
+added unreviewed
+What happens without data governance
+•  A team scrapes a large public dataset quickly to hit a deadline, with no review of what's actually in it
+•  Months later, the model shows a strange bias - it turns out a chunk of the scraped data came from a forum full
+of one very specific, skewed viewpoint
+•  Nobody can say who approved using that source, because nobody had to approve it
+Model governance controls
+•  Testing and validation required before a model can be deployed
+•  Clear, written criteria for what counts as “good enough” to go live - not a gut call
+•  Someone specific has to actually approve the release
+Model governance doing its job
+•  A company requires a red-team review before any customer-facing model update ships
+•  A new version passes normal functional tests, but the red team finds it's newly vulnerable to a jailbreak pattern
+from three weeks ago
+•  Release is held, the fix goes in, and it ships a week later instead of that day
+Human oversight requirements
+•  The EU AI Act requires
+human oversight for high-risk
+systems
+•  In practice: humans who can
+understand what the system
+is doing, and who can
+override or shut it down
+•  “A human somewhere in the
+loop” isn't enough if that
+human can't meaningfully act
+Worked example: real oversight vs a rubber stamp
+Rubber-stamp “oversight”  Meaningful oversight
+•  A human clicks “approve” on hundreds of AI loan  •  The system flags low-confidence or unusual cases
+decisions a day  for a human to actually review
+•  No time or information to actually evaluate any single  •  That human has the model's reasoning, relevant
+one  history, and the authority to reverse the decision
+•  Exists on paper, does nothing in practice  •  Fewer decisions reviewed, but each one is a real
+check
+Documentation & traceability
+•  Why “who decided this” matters - for audits, for accountability, and for learning from mistakes
+•  If something goes wrong, can you actually reconstruct what happened and why?
+•  The AI Act explicitly requires this for high-risk systems: technical documentation and logging
+The cost of missing documentation
+•  A regulator asks a company to explain why a specific high-risk model version was approved for deployment
+•  The engineer who approved it left the company eight months ago. There's no written record of the reasoning,
+only a Slack message that's since been deleted
+•  The company can't answer the question - which is itself a compliance failure, independent of whether the
+original decision was even reasonable
+Bringing the four controls together
+•  Picture a real launch checklist for a new AI feature at a mid-size company
+•  Data: “has the training data been reviewed and signed off by the data team?”
+•  Model: “has this version passed validation and red-team review?”
+•  Human oversight: “is there a named person who can override this in production?”
+•  Documentation: “is there a written record of who approved this, and why?”
+•  Four yes/no questions - unglamorous, but this is genuinely what separates a mature process from a reckless
+one
+Governance failure, step by step
+•  A company's customer-service model gets a routine-seeming update
+•  It's a small tweak - retrained on three months of newer chat logs, meant to keep it “current”
+•  Nobody flags it as needing the full review process, because “it's just a refresh”
+What went wrong
+•  Those three months of chat logs included a period where a coordinated group was deliberately feeding the bot
+rude, aggressive phrasing to “train” it - a low-effort version of a poisoning attempt
+•  The refresh baked in a chunk of that tone; the model becomes noticeably ruder in ambiguous customer
+complaints
+•  Nobody notices for weeks, because nobody was specifically watching for a tone shift after a “minor” update
+What should have caught it
+•  Data governance: any
+retraining, even a “refresh”
+should trigger a review of
+what's actually in the new
+data
+•  Model governance: any
+update should require
+validation against known-
+good behavior before
+shipping, not just “it still
+answers questions”
+•  The lesson: the size of a
+change is not a good
+proxy for whether it needs
+review
+Kahoot quiz: governance control or technical control?
+Quiz summary
+•  Governance: two-person approval, the review committee, written justification - these are process and people
+decisions
+•  Technical: profanity filtering, rate-limiting - these are things the system does automatically, no human decision
+in the moment
+•  Most real systems need both - one without the other leaves a gap
+Group task: design the sign-off chain
+GROUP TASK - BUILD THE SIGN-OFF CHAIN
+For your system, define the 2–3 most important checks for each:
+1. Data Governance
+Who reviews the training/fine-tuning data - and what are they checking?
+2. Model Governance
+What must be tested and approved before the model goes live?
+3. Human Oversight
+Who can challenge or override the AI - and what information do they need?
+4. Documentation
+What must be recorded - and why might that record matter later?
+FINAL DECISION
+Choose the single riskiest point in your system's lifecycle.
+Which governance control matters most there - and why?
+What is OWASP?
+What is OWASP, briefly
+•  Open Worldwide Application Security Project
+•  A well-known nonprofit that publishes widely-used, free security guidance
+•  Famous for the “OWASP Top 10” - the most critical risks in a given category, kept updated by the security
+community
+•  Not a law or a standard - a practical, “battle-tested” checklist
+Why a checklist matters
+•  You designed governance controls from scratch for one system
+•  Most teams don't start from a blank page - they start from a published checklist and adapt it
+•  The OWASP Top 10 for LLMs is exactly that kind of starting point, specifically for AI systems
+Introducing the OWASP Top 10 for LLM Applications
+•  A specific version of that
+list, focused entirely on
+LLM-powered
+applications
+•  Ten categories of risk,
+numbered LLM01
+through LLM10
+LLM01:2025 - Prompt Injection
+•  Covered this in-depth last week - direct and indirect
+•  Applied to our HR bot: an employee crafts a message that gets the bot to ignore its “only answer HR
+questions” instruction
+•  Still item one on the list, in both the old and new editions - it's consistently the most common LLM-specific risk
+in practice
+LLM02:2025 - Sensitive Information Disclosure
+•  The model reveals information it shouldn't - through training data, or through what it's given access to at
+runtime
+•  Applied to our HR bot: it has access to employee records, and a cleverly-phrased question gets it to reveal one
+employee's salary to another
+•  Connects directly to membership inference from last week and to GDPR
+LLM03:2025 - Supply Chain
+•  Vulnerabilities anywhere in the LLM pipeline: pre-trained models, plugins, datasets, fine-tuning services, or
+libraries you didn't build yourself
+•  Applied to our HR bot: it's built on a third-party foundation model, and a plugin it uses for scheduling gets
+compromised
+•  You're only ever as secure as the weakest link you didn't build
+LLM04:2025 - Data and Model Poisoning
+•  Corrupting what the model learns - during pre-training, fine-tuning, or even embedding generation
+•  Applied to our HR bot: if it was fine-tuned on past support tickets, and some of those tickets contained
+manipulation attempts, that behavior can get baked in
+•  Broader than last week's “data poisoning” - this item now explicitly covers the model itself, not just the training
+data feeding it
+LLM05:2025 - Improper Output Handling
+•  Insufficient validation, sanitization, or filtering of whatever the model generates, before it's used or displayed
+•  Applied to our HR bot: it generates a database command based on a request, and that command gets
+executed directly, with no validation
+•  The fix: treat model output the same way you'd treat any untrusted user input - validate before acting
+LLM06:2025 - Excessive Agency
+•  Giving a model more autonomy or permissions than the task actually requires - this now also absorbs what
+used to be a separate “insecure plugin design” item
+•  Applied to our HR bot: it was given full read-and-write access to employee records, when it only ever needed to
+update leave balances
+•  This is the AI-flavored version of least-privilege - the access-control principle from earlier in the lifecycle
+discussion
+LLM07:2025 - System Prompt Leakage
+•  The hidden instructions that shape how a model behaves - its “system prompt” - can sometimes be extracted
+by a user just by asking cleverly
+•  Applied to our HR bot: a curious employee gets it to reveal the internal instructions telling it what it's allowed
+and not allowed to discuss
+•  This is genuinely new to the 2025 list, and it matters because a leaked system prompt often hands an attacker
+the exact wording to target with prompt injection
+LLM08:2025 - Vector and Embedding Weaknesses
+•  Security gaps in systems that use vector databases and embeddings - the technology behind giving a model
+access to a company's own documents
+•  Applied to our HR bot: if it looks up answers from a shared vector database of HR documents, one employee's
+confidential document could leak into another employee's search results if access isn't properly separated
+•  Also new to the 2025 list - reflects how common this “retrieval” pattern has become since the earlier list was
+written
+LLM09:2025 - Misinformation
+•  The model generates convincing, plausible-sounding false information, and a user accepts and acts on it
+without verifying
+•  Applied to our HR bot: it confidently states an incorrect leave-policy detail, and an employee acts on it without
+checking
+•  Related to last week's overreliance idea, but the emphasis shifted: this item is about the false content itself, not
+just the human's habit of trusting it too much
+LLM10:2025 - Unbounded Consumption
+•  Unrestricted use of model resources - whether from an attack, or just uncontrolled legitimate growth - leading
+to runaway costs or degraded service
+•  Applied to our HR bot: someone sends a flood of extremely long, complex requests, driving up cost and
+slowing the system for everyone else
+•  This absorbs what used to be a narrower “model denial of service” item - and notice, “model theft” as its own
+separate item is gone from the current list entirely
+The OWASP Top 10 for LLMs (2025)
+1. Prompt Injection
+2. Sensitive Information Disclosure
+3. Supply Chain
+4. Data and Model Poisoning
+5. Improper Output Handling
+6. Excessive Agency
+7. System Prompt Leakage
+8. Vector and Embedding Weaknesses
+9. Misinformation
+10. Unbounded Consumption
+Using the Top 10 as a practical checklist
+•  Not just theory - teams actually sit down and walk through this list before launching a system
+•  For each item: does this apply to us? If yes, what's our specific mitigation?
+•  It won't catch everything - no checklist does - but it catches the common, well-understood failures cheaply
+Group task: run an OWASP audit
+What is red teaming?
+•  A dedicated team deliberately tries to break your system before real attackers do
+•  Adopts an attacker's mindset on purpose, rather than checking “does this work as intended”
+•  You've actually been doing a version of this in every breakout task this course - now it gets a name
+Red teaming vs regular QA testing
+QA testing  Red teaming
+•  Asks: “does this work the way it's supposed to?”  •  Asks: “how can I make this do something it's not
+supposed to?”
+•  Tests expected use cases and known edge cases
+•  Deliberately tries unexpected, adversarial, and
+•  Success = the system behaves correctly
+creative inputs
+•  Success = you found a real weakness before an
+attacker did
+Red teaming and the AI Act
+•  Remember from Roberts' week 2: systemic-risk GPAI models are legally required to undergo adversarial
+testing
+•  Red teaming is literally how that legal requirement gets satisfied in practice
+•  This is a case where “good practice” and “legal requirement” are the exact same activity
+Who actually does this?
+•  In-house red teams - employees whose job is specifically to attack the company's own systems
+•  External red-teamers - specialist firms hired specifically for this, bringing an outside perspective
+•  Bug bounty programs - the public is invited to find and report flaws, usually for a reward
+•  Larger, higher-stakes systems tend to use more than one of these at once
+What makes a good red team
+•  Technical skill matters, but isn't the whole story
+•  Diversity of background and thinking - people who'd try angles the original builders never considered, because
+they don't share the builders' assumptions
+•  Genuine independence from the team that built the system - hard to red-team your own work objectively
+The limits of red teaming
+•  It finds specific weaknesses - it doesn't prove a system is safe, only that these particular attempts didn't work
+•  You still cannot test every possible input; red teaming samples the space, it doesn't cover it
+•  This is exactly why it works alongside governance and the OWASP checklist, not instead of them
+Why “secure by design” beats “secure by patching”
+•  Patching after the fact means you're always playing catch-up - the attacker moves first, every time
+•  Building security in from the start - governance, checklists, red teaming - means fewer surprises, and faster
+recovery when surprises still happen
+•  Neither approach makes a system perfectly safe - but one of them is a lot less exhausting to run
+Back to ethics: rules and virtue, working together
+•  The governance controls we covered today - sign-offs, documentation, required reviews - are essentially
+Kantian: fixed rules, followed without exception, regardless of how routine a change feels
+•  Red teaming and human oversight require something more Aristotelian: judgment, adapting to a specific, novel
+situation you couldn't fully write a rule for in advance
+•  A mature security culture needs both - firm rules for the routine, and trained judgment for what the rules didn't
+anticipate
+Putting today together
+Secure SDLC  →  Governance controls  →  OWASP checklist  →  Red teaming
+Questions?
+Thank you!
+•  Email: Arnis.Lieknins@rtu.lv

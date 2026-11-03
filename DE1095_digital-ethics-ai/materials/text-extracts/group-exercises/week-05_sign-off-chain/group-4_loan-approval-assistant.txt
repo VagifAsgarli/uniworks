@@ -1,0 +1,34 @@
+AI Loan-​Approval Assistant
+A bank uses AI to analyze information from loan applications and relevant customer financial
+data. It assesses the application and provides a risk assessment or recommendation that
+supports the bank's lending decision
+Data  Check data  A subject-​  Staff can  Record
+Remove  Record AI
+quality  Test accuracy  Red-​team: a team  They can evaluate  Log human
+compliance  unnecessary  Require sign-​off  matter expert  override AI  recomendation,  date/time and
+(incorrect,  (compare  of experts set up  the input data (loan
+team reviews  sensitive  to test the  from  (a financial  applications) and  with  overrides/  input data and  who approved
+missing or  predictions  override automatic  documents  final human  the final loan
+the data  personal data  system/algorithm
+risk/compliance,  analyst or a  reasons
+outdated)  with known  before
+algorithms  reasons  decision  decision
+for potential  bank officer)
+outcomes)  deployment
+threats
+Check for  Verify income,  At the same time,
+debt, credit-​  require extensive
+BIAS and  Reviewers must  Record AI version  These records help
+documentation  investigate
+unacceptable  history data  see key-​factors,  justifying why a  and model used
+complaints and can
+differences in  (trusted  behind the  certain algorithmic  for the  be used as training
+sources)  recommendation  decision was  recommendation
+approval rates  overridden
+data if the
+customer agrees
+Riskiest point : In the final loan approval/rejection decision, due to errors or BIAS can
+directly affect a customer's access to the credit
+Most important control : human oversight, due to the high-​impact decisions should be
+reviewed when necessary
+30

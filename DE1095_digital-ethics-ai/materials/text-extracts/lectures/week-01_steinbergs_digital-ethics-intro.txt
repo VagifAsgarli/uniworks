@@ -1,0 +1,44 @@
+=== Slide 1 ===
+Digital ethics
+Roberts Nils Šteinbergs
+=== Slide 2 ===
+What is ethics?
+=== Slide 3 ===
+Ethics is the philosophical study of moral phenomena. Also called moral philosophy, it investigates normative questions about what people ought to do or which behavior is morally right. Its main branches include normative ethics, applied ethics, and metaethics.
+=== Slide 4 ===
+Why ethics matter?
+=== Slide 5 ===
+Trolly problem
+=== Slide 6 ===
+=== Slide 7 ===
+Truth vs Loyalty: This type of ethical dilemma arises when one is caught between absolute honesty and allegiance to individuals or groups (Kidder, 2015). For instance, consider an employee who discovers fraudulent activities in their company. If they disclose this information, they remain truthful but might violate their loyalty to the company and colleagues (real-world example of whistleblowing).
+Individual vs. Community: Individual vs. community dilemmas involve discrepancies between personal interests and collective benefits (Kidder, 2010). A pandemic situation offers an apt example—individuals might resist wearing masks for personal comfort, but this stands contrary to the community’s need for public safety (this is a contemporary real-world example).
+Short-term vs. Long-term: This type of ethical dilemma compels one to choose between immediate benefits or long-term consequences (Kidder, 2015). For instance, a business might opt to cut corners and make profits now, despite the potential long-term detriment to its reputation and customer trust (real-world example of businesses taking shortcuts).
+Justice vs Mercy: Lastly, justice vs. mercy dilemmas highlight the tension between fair consequences and compassion (Kidder, 2010). In the courtroom, for example, a judge might struggle with issuing a strict sentence (justice) or leniency (mercy), particularly in extenuating circumstances such as the accused being a first-time offender (real-world example from the legal system).
+https://helpfulprofessor.com/ethical-dilemma-examples/
+=== Slide 8 ===
+Truth vs Loyalty
+Academics
+A student who is aware of another student’s academic dishonesty faces the problem of loyalty to a friend versus the truthful reporting of misconduct.
+=== Slide 9 ===
+Individual vs Community
+Freedom of SpeechA person’s right to express potentially harmful or offensive ideas can conflict with a community’s desire for safety and respect.
+
+Education Policy ChangesPolicies like school consolidation can affect individual children who prefer smaller, neighborhood schools over larger institutions preferable for budgetary and educational reasons.
+=== Slide 10 ===
+Short-term vs Long-term
+Public PolicyPoliticians often have to choose between pursuing policies with immediate benefits that voters will notice or focusing on the long-term, slower solutions like infrastructure development.
+=== Slide 11 ===
+Justice vs Mercy
+Academic MisconductA professor who catches a student plagiarizing could provide a second chance, valuing mercy to allow for learning and growth, or they could issue immediate punishment (like failing the student) to uphold academic integrity and justice.
+=== Slide 12 ===
+=== Slide 13 ===
+Digital ethics
+Digital ethics is the study of ethical theories, paradigms, and principles that govern the use of technology. It connects theoretical ethical frameworks with technical operating mechanisms to evaluate and promote safe, responsible, and human-centric behavior in virtual spaces.
+=== Slide 14 ===
+What digital ethics problems have you faced?
+=== Slide 15 ===
+Questions?
+=== Slide 16 ===
+Thank you!
+Email: Roberts-Nils.Steinbergs@rtu.lv (It might change)

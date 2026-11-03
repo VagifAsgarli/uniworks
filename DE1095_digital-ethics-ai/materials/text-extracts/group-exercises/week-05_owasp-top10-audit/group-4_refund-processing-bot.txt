@@ -1,0 +1,29 @@
+AI Refund-​Processing Bot
+An online store uses an AI bot to review customer refund requests using order,
+payment, and customer information. The bot can decide whether a request
+meets refund conditions and has authority to issue refunds to customers.
+LLM02 Sensitive Information Disclosure  LLM01 Prompt Injection
+LLM06 Excessive Agency
+Users may try to manipulate the chatbot
+Treat customer text as an untrusted
+Data connected to the customer banking  Apply role-​based access controls and mask  into ignoring rules, reveal sensitive  Require human approval for high-​value
+data and seprate it from systems  Damage public safety, and it breaks trust.
+information can be leaked  sensitive customer data.  information, or performing unauthorized  or suspicious refund.
+instruction.
+actions.
+LLM06 - Excessive Agency
+Because  the system
+LLM06 Excessive  can move from generating text to
+Agency
+Because botreal-​
+performing  cann  directly
+world  issueinvolving
+actions  refunds,the
+so auser's
+singlemoney.
+bad
+decision its
+Limiting canpermissions
+immidiatly cause  financialconfirmation
+and requiring  loss.  creates
+an important boundary even if another control fails.

@@ -1,0 +1,38 @@
+AI Email-​Drafting Assistant
+An AI assistant helps users draft, reply to, and summarize emails. It can access
+relevant mailbox content and has permission to send emails on the user's
+behalf.
+Sensitive Information Disclosure  Excessive Agency  Misinformation
+Make the user declare that they have
+Sensitive information such as banking info,
+The AI assistant could send malicious emails  The user takes the summary of an email at  read the full email in addition to the
+medical records, personal identification  Apply strict access controls and anonymize  Always require user review and
+to important contacts or send sensitive  face value and misunderstands the actual  summary (when sending a reply or
+documents etc., could leak from the  the information  approval before sending an email
+information to spam and scam emails  contents of the email  downloading files from the email). This
+gathered emails
+would hold the user accountable
+Sensitive
+LLM06  Information
+- Excessive  Disclosure.
+Agency
+Emails hold
+Because  theasystem
+lot of personal
+can moveinformation  and a text
+from generating  leak to
+can be
+devastating real-​
+performing  and wcause  serious involving
+orld actions  harm to the
+theuser,  formoney.
+user's
+example,its
+Limiting  banking  info landing
+permissions  in the hands
+and requiring  of a scammer
+confirmation  creates
+leading
+an  to a loss
+important  of money
+boundary  even if another control fails.

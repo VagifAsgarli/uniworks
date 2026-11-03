@@ -1,0 +1,25 @@
+Project work: deadline and presentations
+9 November, 12:00  10 and 17 November
+9 November, 10:00  Presentations of the projects: the first
+The list of who presents when will be
+Submission deadline.  25 students on 10 November, the
+ready.
+others on 17 November.
+• Each presentation lasts 7 minutes and is held online. The task is on the next slide.
+1
+Design a secure and ethical AI system (theoretical)
+Choose an imaginary AI system for a real use case, for example an HR assistant, a student-support chatbot or a
+code-review agent. You don’t have to build anything. You must describe the system and show how you would make it
+secure, ethical and legal. Work must be done individually.
+Your presentation must cover:
+The system What it does, who uses it, who is affected, and what can go wrong.
+Lifecycle For each of the five stages (data, training, evaluation, deployment, monitoring), name one risk and how you would handle
+it.
+Security At least three threats, which attack types apply (for example prompt injection, data poisoning, model extraction), and one
+preventive and one detective control for each. Check your system against the OWASP Top 10 for LLM Applications.
+Governance Who approves what (data, model, human oversight, documentation), and a short incident response plan.
+Ethics and law The EU AI Act risk tier and what it requires, data protection, and one real ethical dilemma with your reasoned choice.
+Quality and limits How you would measure that it works, and two limits of LLMs that affect your system (for example hallucinations,
+outdated knowledge, bias in training data).
+7 minutes presentation (online).
+2

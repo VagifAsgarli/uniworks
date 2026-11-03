@@ -1,0 +1,89 @@
+Group 2 - AI Recruitment & Candidate Screening
+Scenario: alticHire is a large recruitment company that uses an AI
+system to screen job applications for its corporate customers.
+Applicants upload CVs and cover letters, and the AI compares them with
+job requirements. The system uses historical recruitment data and
+company hiring criteria to generate a candidate score from 0–100 and
+recommend candidates for interview. HR employees review the
+recommendations before making the final hiring decision.
+AI Attack Surface  Threat Actors  CIA risks
+TRAINING DATA  Choose 2:  C - Confidentiality
+How could it be targeted/manipulated?  Nation-​state  What information could be exposed?
+Insider
+Candidate personal
+Impersonating  Hacktivist  information (past
+another
+person/vacancy,  Script kiddie  applicants), salary
+AI could be biased  requirements,
+toward a specific  Organized crime  employment and
+gender/race/univercity  education details
+/age, CVs have aged
+Insider -
+ACTOR 1:  manipulating  I - Integrity
+PROMPT/INPUT  input
+What could be manipulated or made
+How could input be abused?  data/hiring
+criteria  inncorect?
+Personal information of
+the applicants
+An unsuitable
+stolen/abused;  applicant could
+If someone lied on their
+CV, they cannot check
+be hired because
+of manipulated
+Unauthorized attacks if
+the system isn't updated
+ACTOR 2:  Hacktivist -  candidate scores
+to expose
+the biases
+MODEL OUTPUT  A - Availability
+What if the output is wrong or automatically  How could the service be disrupted?
+trusted?
+The CV database
+has a server/system
+The applicant  failure, causing the
+gets wrongfully  system to not be
+denied the job/an  able to recommend
+underqualified  candidates for the
+applicant gets  interview
+the job
+TOOLS/PLUGINS
+What systems could the AI access or affect?
+The historical
+recruitment
+database, and
+maybe use online
+CV/vacancy
+databases
+Mitigations
+Encrypt
+C risk - >
+candidate data
+and require
+restricted access
++ authentification
+Rigorous model
+training & model
+I risk - >
+testing with
+human
+oversight &
+reviews
+Have a backup
+system and a
+A risk ->  disaster recovery
+plan so the hiring
+process is not
+disturbed
+Threat Actor -> Attack Surface -> Attack/Abuse-> Impact -> Control
+Regular human
+Manipulating
+Prompt/input  the data to get  Unsuitable  review (by multiple
+people - for
+Insider  for selecting  a better hiring
+criteria for a
+candidate/  multiple criteria),
+and controlling who
+the candidate  corruption  has access for final
+candidate  decisions

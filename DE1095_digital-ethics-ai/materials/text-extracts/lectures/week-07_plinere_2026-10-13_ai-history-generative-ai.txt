@@ -1,0 +1,473 @@
+Digital Ethics and Artificial
+Intelligence Interaction
+Ph.D. Darja Plinere
+Riga Technical University — Faculty of Computer Science, Information Technology and Energy
+Institute of Information Technology
+13.10.2026
+About me
+• Ph. D. Darja Plinere, Lecturer & Senior Researcher
+• Work experience in RTU: since 2007
+• Field of interest: AI, Agent & agentic systems,
+Supply chain management
+2
+Course timeline
+• Lectures by Roberts Nils Šteinbergs
+• Lectures by Arnis Liekniņš
+• Lectures by me
+• Project
+• Exam
+3
+Contents
+• Artificial Intelligence historical background
+• LLM definition & architecture
+• LLM mechanism of operation
+• LLM training
+• LLM limitations
+• LLM algorithm and quality evaluation
+4
+Artificial Intelligence
+Artificial Intelligence (AI) has evolved from an abstract
+philosophical concept and mathematical curiosity into one of the
+most transformative technological forces of the twenty-first century
+• By 2026 it affects economies, governance, healthcare, education, transport
+and military operations.
+Russell and Norvig, 2021; Copeland, 2000 & Brynjolfsson and McAfee, 2014; Crawford, 2021  5
+AI in 2026
+AI
+AI performing  Generative
+human tasks  embedded
+AI  everywhere
+• Retrieval, recommendations, speech recognition, navigation, forecasting, diagnostics
+• Transformers produce text, images, music, code and video at scale
+• Vehicles, robotics, supply chains, agriculture, law enforcement, defence
+6
+AI historical foundations
+•1950. Turing
+Can machines think?
+The Turing Test as an operational criterion
+“Computing Machinery and Intelligence” (1950)
+AI historical foundations
+•1956. The Dartmouth Conference
+Institutional Birth of AI: McCarthy, Minsky, Rochester, and Shannon,
+asserted that intelligence could be precisely described and therefore
+simulated by machines
+Foundational Figures in Early AI
+Claude  Herbert Simon
+John McCarthy  Marvin Minsky
+Shannon  & Allen Newell
+• McCarthy: coined “Artificial Intelligence” and developed LISP, central to symbolic AI; focused on formal logic and automated
+reasoning (McCarthy, 1988)
+• Minsky: intelligence as a collection of interacting computational processes; helped establish cognitive science alongside AI
+(Minsky, 1986)
+• Shannon: information theory gave a mathematical model of communication, enabling the digital representation of information
+(Shannon, 1948)
+• Simon & Newell: early cognitive simulation models; human thinking as symbolic problem-solving (Newell and Simon, 1976)
+Early AI
+Extraordinary optimism
+Intelligence was expected to be fully formalised within decades
+(Simon, 1965), but perception, language ambiguity and
+common sense were underestimated (Russell and Norvig,
+2021)
+Limitations of Early AI
+No generalising  Ambiguity  No learning  Perception
+Could not go beyond  Nothing learned from real-
+Weak with natural language  Poor at sensory tasks
+predefined rules  world data
+• The gap between formal reasoning and real-world intelligence led to the AI winters.
+11
+AI Winters, 1970s–1990s
+Cause  Effect
+Expectations of rapid progress towards human-level AI  Reassessment of general-purpose AI in the short term
+• Sustained cuts in funding, confidence and research output after the optimism of the 1950s and 60s.
+12
+Structural causes of stagnation
+Limited compute  Data scarcity
+Too little speed, memory and storage; only simplified
+No mature internet, so no statistical learning at scale
+environments were feasible
+13
+Symbolic and rule-based systems
+Ambiguity  Perception  Common sense  Adaptation
+Natural language  Sensory processing  Everyday reasoning  Novel environments
+• Good Old-Fashioned AI (GOFAI) relied on explicitly programmed logical rules. Effective in constrained
+environments, but brittle in the real world.
+14
+Overestimated progress
+Funding bodies expected rapid breakthroughs. When AI failed to deliver,
+funding was cut.
+• A cycle of technological hype and disappointment.
+15
+First AI Winter, 1974–1980
+ALPAC report, 1966  Funding cuts, 1970s
+Machine translation was far less effective than expected  US and UK agencies reduced investment in AI programmes
+16
+Second AI Winter, 1987–1993
+Expensive  Hard to scale  Manual
+Costly to maintain  Narrow and rigid  Dependent on knowledge engineering
+• Commercial enthusiasm for expert systems such as MYCIN and XCON collapsed.
+• Investment fell sharply, with layoffs and institutional withdrawal.
+17
+Long-term impact
+The winters were not intellectual stagnation but a phase of methodological
+reassessment.
+• Research moved to probabilistic reasoning, statistics and learning theory, towards data-driven approaches.
+18
+Rise of machine learning, 1990s–2010
+Before  After
+Manually encoded rules  Patterns learned directly from data
+• A paradigm shift from symbolic AI to statistical, data-driven learning: the foundation of modern AI.
+19
+From symbolic AI to statistical learning
+The problem  The shift
+Symbolic AI was rigid and could not scale to real-world  Probabilistic methods infer patterns from data. Intelligence
+complexity  became statistical pattern recognition
+20
+Statistical AI
+Speech  Information  Predictive
+NLP
+recognition  retrieval  analytics
+• Predictions based on likelihood instead of deterministic outputs, handling uncertainty better than symbolic AI.
+21
+Neural network resurgence
+Image  Pattern  Early speech
+Data clustering
+classification  recognition  processing
+• Layers of connected units adjust their parameters during training and model complex nonlinear relationships.
+Renewed interest in the 1990s thanks to more compute and better algorithms.
+22
+Machine learning, defined
+A program learns from experience E with respect to tasks T and performance
+measure P, if its performance at T, measured by P, improves with E.
+• Mitchell (1997) made machine learning a rigorous scientific discipline.
+23
+IBM Deep Blue, 1997
+Brute force  Evaluation  Hardware
+Search techniques  Advanced functions  Parallel computing
+• Defeated world chess champion Garry Kasparov: specialised AI outperforming human experts in a structured
+domain.
+• Not general intelligence, but a symbol of the power of narrow AI.
+24
+The internet and big data
+Text  Commerce  Social  Media
+Web corpora  E-commerce transactions  Social media data  Multimedia content
+• For the first time, models could be trained on large-scale, real-world datasets.
+25
+GPU computing
+Faster  Larger  Richer  Scalable
+Model training  Neural networks  Architectures  Experimentation
+• Chips built for graphics proved ideal for the parallel processing machine learning needs, and became the enabler
+of 2010s deep learning.
+26
+Deep learning revolution, 2012–2020
+Architectures  Data  Hardware
+Deep neural networks  Large-scale datasets  GPU parallel processing
+• AI moved from an academic discipline to core global digital infrastructure, driven by three converging factors.
+27
+AlexNet and ImageNet, 2012
+Features  Data  GPUs
+Deep CNNs learn hierarchical  Large labelled datasets improve  Acceleration makes deep training
+representations  performance  feasible
+• Krizhevsky, Sutskever and Hinton cut error rates in the ILSVRC image challenge by a wide margin.
+28
+Foundations of deep learning
+Backprop  Gradients
+Representation  CNNs  RNNs
+At scale  Optimisation
+• Multi-layer neural networks learn hierarchical representations and extract features from raw data automatically.
+29
+Transformation of computer vision
+Objects  Faces  Video  Medicine  Surveillance
+Detect and classify  Recognition at scale  Real-time analysis  Imaging diagnostics  Automated
+• CNNs gave machines near-human or superhuman perception in constrained tasks.
+30
+Advances in speech recognition
+Accuracy  Robustness  Languages  Real time
+Speech-to-text  To noise  Multilingual  Transcription
+• Deep neural networks replaced HMM-based approaches in automatic speech recognition.
+• Enabled voice interfaces and accessibility tools.
+31
+Natural language processing
+Semantic
+Translation  Sentiment  Summaries  Chatbots
+search
+• The 2017 transformer processes sequences in parallel and laid the foundation for 2020s large language models.
+32
+Recommendation systems
+Streaming  Shopping  Social  Music
+Video  E-commerce  Content ranking
+• Deep networks trained on massive behavioural data personalise content at scale.
+• A driver of data-driven digital economies and attention-based business models.
+33
+Voice assistants
+Siri  Alexa  Google Assistant
+Apple  Amazon  Google
+• Intent recognition, speech processing and contextual understanding for natural interaction.
+34
+Autonomous vehicles
+Tesla  Waymo  Uber ATG
+Neural-network driving systems  Alphabet autonomous division  Advanced Technologies Group
+• Computer vision, reinforcement learning and sensor fusion with LiDAR, radar and cameras. Full autonomy
+remained limited.
+35
+Major AI research organisations
+OpenAI  DeepMind
+Founded to develop safe, beneficial AGI. Reinforcement  AlphaGo beat Lee Sedol in 2016: deep reinforcement learning
+learning and generative models  in complex decisions
+36
+Major AI research organisations (2)
+Meta AI  Anthropic
+Computer vision, NLP and open-source models that widened  Founded around AI alignment and safety, with a focus on
+access to AI research  interpretability and controllability
+37
+Scientific and economic impact
+Healthcare  Finance  Manufacturing  Science
+Diagnostic imaging, drug  Protein folding, physics
+Trading, fraud detection  Predictive maintenance
+discovery  simulation
+• AlphaFold (DeepMind) was a breakthrough in protein structure prediction. Deep learning also fuelled data-driven
+business models.
+38
+Generative AI revolution, 2020–2026
+AI moved from analysis and prediction to creating new text, images, audio,
+video and code.
+• Foundation models now sit at the core of global digital infrastructure.
+39
+What is generative AI?
+Discriminative  Generative
+Classify or predict outcomes  Synthesise new data that resembles the training distribution
+• Typical architectures: transformers, VAEs and GANs.
+40
+Applications of generative AI
+Language  Images  Video  Music  Code  Simulation
+Essays, reports,  Environments,
+Synthesis and art  Animation  Composition  Software generation
+dialogue  scenarios
+41
+Large language models
+Trained on massive text corpora to learn statistical relationships between
+words and generate fluent language.
+• Transformers replaced RNNs with attention, modelling long-range dependencies (Vaswani et al., 2017).
+42
+LLM families
+GPT  Claude  Gemini  LLaMA
+OpenAI  Anthropic  Google DeepMind  Meta
+• Sufficiently large models show emergent capabilities that were not explicitly programmed.
+43
+The ChatGPT breakthrough, 2022
+Adoption  Diffusion shock  Competition
+One of the fastest-adopted  AI became a mass-market general-  Rapid rivalry and investment in
+technologies in history  purpose technology  foundation models
+• Instruction-tuned transformers in a consumer-facing interface made advanced AI available to everyone.
+44
+AI image and video generation
+DALL·E  Stable Diffusion  Runway ML  Midjourney
+Text-to-image synthesis  Open-source imaging  Generative video tools  High-fidelity artistic images
+• Diffusion models and GANs create realistic images and video from text prompts.
+45
+Risks of synthetic media
+Photorealistic synthetic media makes it harder to tell real from artificial
+content.
+• Concerns: authenticity, misinformation and copyright infringement.
+46
+AI-driven coding systems
+StarCoder, Code
+GitHub Copilot  AlphaCode
+Powered by OpenAI Codex  DeepMind
+LLaMA
+Open code LLMs
+• LLMs trained on code and documentation help developers write, debug and optimise software.
+47
+AI-assisted programming
+Benefits  Risks
+Higher developer productivity and changed workflows.
+Security vulnerabilities, code reliability and over-dependence
+Engineers shift from manual coders to supervisors and
+on automated systems
+architects
+48
+Task 1 · 5 min · Timeline
+Put the events in chronological order.
+• Dartmouth Conference
+• ChatGPT
+• Deep Blue
+• Turing paper
+• AlexNet
+• Lighthill Report
+• Transformer
+• ALPAC report
+• Bonus: when did the two AI winters happen?
+49
+Task 1 · Answer · Timeline
+Bonus: the two AI winters were 1974–1980 and 1987–1993.
+1950  Turing paper  1997  Deep Blue
+1956  Dartmouth Conference  2012  AlexNet
+1966  ALPAC report  2017  Transformer
+1973  Lighthill Report  2022  ChatGPT
+50
+Task 2 · 10 min · Algorithm, ML or generative AI?
+Decide which situations are:
+• a plain algorithm,
+• ML,
+• deep learning
+• generative AI, and explain why.
+1  A calculator computes 15 × 24  6 A mail service detects spam
+2  Netflix recommends a film  7 A traffic light switches every 30 seconds
+3  A camera recognises a face  8 A system predicts the price of a flat
+4  A program sorts students by surname  9 Midjourney creates an image
+5  ChatGPT answers a question  10 A bot replies using pre-written if–then rules
+51
+Task 2 · Answer · Algorithm, ML or generative AI?
+Fixed rules without learning: plain algorithm. Learned from data: ML or deep
+learning. Creates new content: generative AI.
+1  Algorithm: fixed arithmetic rules  6 ML: a classifier learned from labelled emails
+2  ML: learns from viewing data  7 Algorithm: a fixed timer (an adaptive light would be ML)
+3  Deep learning (CNN): learns features from pixels  8 ML: regression on historical prices
+4  Algorithm: a fixed sorting rule  9 Generative AI: a diffusion model creates an image
+5  Generative AI: an LLM produces new text  10 Rule-based algorithm: nothing is learned
+52
+Task 3 · 3 min · Which era of AI is this?
+Investors are closing startups en masse because computers cannot cope
+with translating texts: too little memory and weak algorithms.
+Which period of AI history does this describe?
+• Dartmouth
+• AI winter
+• Era of expert systems
+• Deep learning revolution
+• Era of LLMs and agents
+53
+Task 3 · Answer · Which era of AI is this?
+The first AI winter, mid-1970s: after the ALPAC report (1966) and the Lighthill
+Report (1973).
+Clues Machine translation, too little memory and computing  Not 1987–93 The second winter hit expert-system and Lisp-
+power, collapsing funding  machine companies, not machine translation
+54
+Task 4 · 15 min · Hallucination experiment
+Ask an LLM about a fact that does not exist, three times, and compare the
+answers.
+• Example: “Who won the Nobel Prize in AI in 1987?”
+• Describe and explain what you see using the LLM slides
+55
+Task 4 · Answer · Hallucination experiment
+The model often answers confidently, and differently each time.
+Why It predicts plausible text from statistical word relationships  What to do Check sources, ask for references, use retrieval or
+and does not verify truth  search
+56
+Task 5 · 20 min · Ethics of synthetic media
+A realistic video of a politician saying something they never said appears
+before an election.
+• Identify the stakeholders and the risks
+• Propose three measures
+57
+Task 5 · Answer · Ethics of synthetic media
+No single measure is enough: combine technology, platform policy, law and
+education.
+Who Voters, the politician, platforms, media, lawmakers  Measures Labelling and watermarks · provenance checks ·
+Risks Lost trust in real media, disinformation, violation of  fact-checking and fast removal · media literacy · legal liability
+personal rights
+58
+Task 6 · 15 min · LLM experiment
+Everyone gets the same question: “Explain how neural networks learn.”
+Each group gets different instructions, then we compare the outputs.
+A The plain question  1 What changed in the answer?
+B …explain it to a 10-year-old child  2 Why did it change?
+C Role of a professor, first-year CS students, one  3 Which part of the prompt influenced it?
+mathematical example
+D Large context and extra constraints
+59
+Task 6 · Answer · LLM experiment
+Prompt + context → model → output: role, audience, format and context
+steer the result.
+A  Plain, generic explanation  1 Changed: tone, length, vocabulary and depth
+B  Simple language and analogies  2 Why: the model conditions its output on the whole prompt
+C  Formal tone, one worked mathematical example  3 Cause: audience, role, example request, extra constraints
+D  Stricter structure and constraints
+60
+Task 7 · 15–20 min · Find the hallucination
+Ask an LLM for sources, check every claim yourself and record the verdict in
+a table.
+1 Ask for five scientific papers on a chosen topic: authors,  Table: AI claim · Checked? · Source · Correct / incorrect / partly
+year, DOI  Then answer: why does a confident LLM tone not mean the
+2 Check that each paper really exists  information is reliable?
+3 Alternative: a biography of a little-known person, organisation
+or event, with sources
+61
+Task 7 · Answer · Find the hallucination
+A confident tone belongs to the style of the text, not to its truth.
+Typical result Some papers exist, some have wrong authors,  Why The model generates fluent, plausible text from patterns
+years or DOIs, some do not exist  and has no built-in link to sources, so fluency is not evidence
+Rule Always check sources and DOIs
+62
+Task 8 · 10 min · Human or AI?
+Some of these images were made by humans, some by AI. Guess which, and
+say why.
+1 Look at 3 images
+2 Guess the origin of each one
+3 Write down the signs your decision is based on
+63
+Task 8 · 3 min · Human or AI?
+64
+Task 8 · 3 min · Human or AI?
+In this case, the AI-generated image is actually more colorful, though that alone may not tell everything. Another area you can evaluate is the texture and
+pattern complexity. In the real version, the frog’s spots are much more detailed, whereas the AI version has spots that are much more simplistic.
+65
+Task 8 · 3 min · Human or AI?
+66
+Task 8 · 3 min · Human or AI?
+67
+While subtle, if you look closely at the children’s arms and hands, many appear misplaced or even missing. Some hands don’t match or align with the
+respective child, which is also a common error in AI-generated images of people.
+Task 8 · 3 min · Human or AI?
+68
+Task 8 · 3 min · Human or AI?
+69
+Both images of Mount Fuji, the highest mountain in Japan, depict beautiful, vibrant, and realistic-looking scenery. This AI photo is also well done, with
+seemingly accurate reflections in the water.
+Task 9 · 10 min · Human or AI?
+Some of these texts were made by humans, some by AI. Guess which, and
+say why.
+1 Look at 4 short texts
+2 Guess the origin of each one
+3 Write down the signs your decision is based on
+70
+Task 9 · 10 min · Human or AI? (texts)
+Read the four texts. Guess human or AI for each one and write down the signs behind your decision.
+1 Maya was thoughtful, ambitious, and endlessly curious,  3 Living with intention means more than moving through
+with a warm smile and a talent for turning challenges into  the days; it means choosing, again and again, what
+opportunities. At twenty-three, she stood at the threshold of  deserves our attention. In a world full of distractions, the
+a bright future, ready to embrace whatever the world had in  quiet courage to focus on what matters can turn an ordinary
+store.  life into a meaningful one.
+2 I went to the woods because I wished to live  4 Emma Woodhouse, handsome, clever, and rich, with a
+deliberately, to front only the essential facts of life, and to  comfortable home and happy disposition, seemed to unite
+see if I could not learn what it had to teach, and not, when I  some of the best blessings of existence; and had lived
+came to die, discover that I had not lived.  nearly twenty-one years in the world with very little to
+distress or vex her.
+71
+Task 9 · 10 min · Human or AI? (answer)
+Read the four texts. Guess human or AI for each one and write down the signs behind your decision.
+1 Maya was thoughtful, ambitious, and endlessly curious,  3 Living with intention means more than moving through
+with a warm smile and a talent for turning challenges into  the days; it means choosing, again and again, what
+opportunities. At twenty-three, she stood at the threshold of  deserves our attention. In a world full of distractions, the  AI
+AI  a bright future, ready to embrace whatever the world had in  quiet courage to focus on what matters can turn an ordinary
+store.  life into a meaningful one.
+2 I went to the woods because I wished to live  4 Emma Woodhouse, handsome, clever, and rich, with a
+deliberately, to front only the essential facts of life, and to  comfortable home and happy disposition, seemed to unite
+see if I could not learn what it had to teach, and not, when I  some of the best blessings of existence; and had lived
+came to die, discover that I had not lived.  nearly twenty-one years in the world with very little to
+distress or vex her.
+Human (Thoreau, Walden, 1854)
+Human (Austen, Emma, 1815)
+Typical AI cues: generic abstract wording, balanced three-part lists, a tidy upbeat ending. Human cues: concrete voice, irony, unexpected
+word order. But Austen also uses a list of three, so such cues alone are not proof.
+72
+Final task · 20 min · What will you remember?
+Write a short reflection on what you learned about the history of AI.
+1 Summarise the history of AI in a few sentences
+2 Are rule-based systems still needed today? Give an example
+3 Your thoughts: what will AI look like in five years?
+73
+Thank you!
+Darja Plinere
+darja.plinere@rtu.lv
+Riga Technical University
+Faculty of Computer Science, Information Technology and Energy
+74

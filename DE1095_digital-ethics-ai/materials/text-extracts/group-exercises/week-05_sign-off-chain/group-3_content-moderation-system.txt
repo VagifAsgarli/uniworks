@@ -1,0 +1,43 @@
+AI Content-​Moderation System
+A social platform uses AI to analyze user posts, comments, images, and other content. It
+identifies potentially harmful or prohibited content and may flag, restrict, or remove it according
+to platform rules.
+Trust &  Data  Data quality  Tests false  data protection
+rules and
+and  positives  specialist : signs
+Safety  protection  accordance  and false
+off on privacy
+and personal-​
+risk control  Human reviewer  A moderator
+The reviewer  Records of
+Record what
+content was
+Record
+acceptance  needs platform
+teams  specialist  to guidelines  data compliance  can allow content  may review  which policy  flagged and  which
+negatives  previously  guidelines on
+appeals for
+restricted  triggers  why it was  content was
+restricted by the
+blocked posts  content  what  flagged  removed
+AI
+Checking for
+Privacy and  Must be  Sign off from
+bias against
+tested: slang,  legal owners  Records of
+certain groups  sesitive  context,  or model
+The reviewer  Needed to  Hold the reviewer
+Human approval
+of people or  data check  sarcasm, tone  safety owners
+needs the
+needed for
+who took  investigate  accountable if
+views  context and  there is suspicion
+edge/borderline  what  errors and
+of bias
+model  cases  incidents later
+decision  action
+Riskiest point: personal or sensitive data may be collected, exposed, or used incorrectly.
+Data governance matters most, because in this step the data can still be reviewed and
+checked, and the risk of sensitive data leak can be reduced
+30

@@ -1,0 +1,39 @@
+Technical Support Agent
+The AI helps employees troubleshoot IT problems. It can
+prompt injection  access selected internal systems and perform approved
+actions such as checking accounts, retrieving technical
+information, and assisting with common support tasks.
+A hacker or malicious  The AI processes the
+user deliberately tries  malicious instruction  It can be hard to
+to manipulate the AI  The attacker adds a
+along with the  Gain unauthorized  separate content
+legitimate request and  It has too much
+or make it perform an  malicious  may incorrectly treat the  control over  from instructions -
+action it was not  instruction to a  attacker's instructions as
+user requests and  power (excessive
+intended to perform.
+support request,
+something it should  accounts and
+follow.  The AI may perform  prompt instructions  privileges) to
+making it look like  an unintended action,
+retrieving technical  are essentially the
+normal text that the  such as accessing or
+access & change
+AI should process.
+revealing information
+that the attacker
+information.  same in their form.
+should not have
+access to.
+Separate data from  Least privilege access  Input filtering  Review prompts, outputs
+Monitor and flag
+commands  the AI gets the  scan incoming  Track unusual AI actions  and audit logs
+suspicious prompts
+the AI should  minimum access  messages for  Alert administrators when  Regularly investigate
+Detect instructions
+treat it as data  it need.  dangerous  the AI access unexpected  recorded interactions for
+attempting to bypass rules
+to read, not as  phrases before  system, data or tools  injection attempts and
+and manipulate AI
+instructions to  AI reads them.  data leakage.
+follow.

@@ -1,0 +1,88 @@
+AI Coding Agent  Malicious instructions in third-​party code or documentation
+could redirect the agent from its original task.
+It can delete files, useful code, run harmful commands,
+delete important information in the codebase.
+An autonomous coding agent can
+This AI agent has powerful access rights that could be
+analyze, modify, and write code directly to  Development  Develope  Main  misused.
+the company's production codebase. It  tools and
+programming
+r-​level  company
+Companys
+It has data on
+actions  databases  company's
+can use development tools and execute  environments  main
+production
+vulnerabilities
+and access to
+code as part of its work.  codebase  main database  AI agent may install malicious third-​party libraries,
+development tools or software.
+It remembers
+the tasks, the
+previous code,
+the issues
+The agent can be tricked by an untrusted/malicious input
+into writing and executing unintended code
+Speed up
+software  Scale  Reduce software
+development  software  development and
+Manipulated poisoned history like a malicious instruction
+development  maintenance
+costs  could influence future code changes
+capacity
+Improve
+software  It depends on the setup. If several AI coding agents
+quality
+communicate with each other, this could be a serious risk. If
+other agents cannot modify the codebase, the risk is lower.
+One code failure may lead to broken builds. A bad code
+Security  change could break other systems.
+Development team  Customers
+team
+It doesn't need to persuade users or developers to perform
+coding tasks.
+Company
+Can
+managers  It may
+communicate
+It performs direct
+commands or
+It receives  autonomously
+No human
+with other
+analyses  reports on  decide to  approval
+performance  issues and  implement
+internal agents or  data and makes
+modifies the  needed
+Autonomous actions can exceed the intended scope.
+customer-​facing  decisions  code changes
+agents  code
+Can use
+development
+tools and
+execute code
+ASI02 - Tool Misuse and  ASI05 - Unexpected code  ASI06-​Memory & context  Because the agent has access to
+ASI02 - Tool Misuse and  ASI05 - Unexpected code  ASI06-​Memory & context
+Exploitation  execution  poisoning  important company
+Exploitaion  execution  poisoning
+infrastructure and could cause
+ASI02 - Tool misuse  immediate damage to the
+production database. If we
+and exploitation  require human approval for any
+important decisions, reduce
+Poisoned input data can lead to agent writing
+A malevolent command may lead agent to  External code may be inserted in company  several related risks.
+faulty code leading to failure or sending
+cause failures in company's software. Someone  codebase by external or internal actors.
+sensitive data to third parties.
+Treat external data as
+may also try to benefit from company's
+resources.
+Requires human approval  Scan code and  untrusted data (e.g.
+for destructive or high-​  dependencies before  Comments, respository
+impact changes  execution  files) verify instructions
+before using them.
+Because agent has access to important
+Because agent writes and runs code.  Because agent runs code routinely.
+resources
+5 minutes

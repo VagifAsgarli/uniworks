@@ -1,0 +1,87 @@
+Group 1 - AI University Student Assistant
+Scenario: TechUniversity has launched a public AI assistant for students. It
+answers questions about courses, exams, university rules and campus services.
+Logged-​in students can also ask about their own timetable and study
+information. The assistant searches university documents and connects to
+several internal systems. Thousands of students use it every day, and the
+university has recently made the service available to prospective students
+without requiring authentication.
+AI Attack Surface  Threat Actors  CIA risks
+TRAINING DATA  C - Confidentiality
+Choose 2:
+How could it be targeted/manipulated?  What information could be exposed?
+Nation-​state
+Insider
+Student didn't
+get the right
+Hacktivist  Personal
+Script kiddie
+answer due to
+data
+wrong  Organized crime
+database
+ACTOR 1:
+I - Integrity
+PROMPT/INPUT  Nation state  What could be manipulated or made
+How could input be abused?  -> influence
+inncorect?
+on students
+Creating fake
+student ID, to
+overwhelm  Grades
+the system  ACTOR 1:
+Insider -> to get
+admited in
+MODEL OUTPUT  UNI/help
+A - Availability
+his/her relative
+What if the output is wrong or automatically  with courses  How could the service be disrupted?
+trusted?
+Overload the system that
+AI can't handle all
+Student goes to wrong  requests
+classes; Wrong info about
+their grades, classes;  Can't log in system; check
+Wrong info about study  your schedule, the
+requirements;  website, overwhelmed
+MIssing deadlines for  with inputs
+exams, assignments
+TOOLS/PLUGINS
+What systems could the AI access or affect?
+Student register
+and change info
+about students;
+student internal
+email account;
+student finacial
+information
+Mitigations
+Not allow
+C risk - >  unauthorised
+students;
+limiting access
+for certain data
+bases
+AI can't access to
+I risk - >
+grades data base,
+can only read, not
+edit, only
+authorised student
+can see his/her
+grades
+Limit request
+A risk ->  amount, put it
+on a timer, only
+active students
+can use it
+Threat Actor -> Attack Surface -> Attack/Abuse-> Impact -> Control
+Manipulate AI  Students are
+National  into
+not evalued  Same
+Prompt  preferring
+state  certain
+equally,
+there is bias
+opinion
+students

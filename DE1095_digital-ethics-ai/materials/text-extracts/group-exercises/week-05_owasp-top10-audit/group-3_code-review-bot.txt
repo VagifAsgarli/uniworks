@@ -1,0 +1,21 @@
+AI Code-​Review Bot
+An AI assistant reviews CVs and job applications and ranks candidates based on
+their suitability for a role. Recruiters use its recommendations to decide which
+applicants should progress to the next stage.
+Prompt injection  Sensitive info disclosure  Improper output handling
+Users may try to manipulate the  The chatbot has access to
+Validate all inputs and  Without human review, the AI can  Require mandatory human
+chatbot into ignoring rules,
+customer information and  Limit data access and  automatically run bad code that  code review before merging or
+revealing sensitive information,  restrict the chatbot to
+or performing unauthorized
+could accidentally reveal  filter outputs  crashes your live app or exposes  executing any AI-​generated
+approved actions only.  database files.  code fixes.
+actions.  personal or account data.
+LLM06 - Excessive Agency
+Improper output handling &
+Because the system can move from generating text to
+performing real-​world actions involving the user's money.
+sensitive info disclosure
+Limiting its permissions and requiring confirmation creates
+an important boundary even if another control fails.

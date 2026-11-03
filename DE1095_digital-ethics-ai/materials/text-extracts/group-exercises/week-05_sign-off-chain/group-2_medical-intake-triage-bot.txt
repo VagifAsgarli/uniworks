@@ -1,0 +1,40 @@
+AI Medical Intake Triage Bot
+A clinic uses an AI bot to collect information about a patient's symptoms, medical history, and
+We  reason for visiting. It assesses urgency and recommends how quickly the patient should be seen
+sincerely  and where they should be directed.
+apologize to
+group 1! <3
+Check that all  set of symptoms/
+Assess if the  check if the data  signed off by  security and
+data is  their
+database and  used was
+anonymous  combinations  a panel of  safety tests
+algorithms are  inclusive and not  A nurse or doctor  High-​risk  The reviwer must see
+(especially if  especially those  subject matter  (data leakage  Keeping track of
+appropriate for  biased towards  can review or  the patient's  Records of
+reusing patient  that require  symptoms are  Consent forms to  Log
+triaging patients  certain groups  experts  for privacy)  override the AI's
+symptoms, risks flags,
+incidents and
+data)  urgent treatment  always  AI's reccomendation  use data, training  reviewer/human
+triage  and  patient/reviewer
+escalated to a  and model  overrides
+reccomendation  reason/confidence  feedback
+doctor or nurse  versions
+at any time  behind it
+Data owner who  Patients have
+approves new  Functionality -​
+approved the  Urgent warning
+training and  if the bot
+use of their  signs are send
+approves that  collects all the  Keep audit trail of
+data for  directly to  who, what, when
+data has passed  required info
+reviews  training  a healthcare  and why
+professional  decided/signed
+off on everything
+If there was mistake in tracking or connecting data, patient can receive wrong
+recommendations from the chatbot regarding the urgency of his or her case.
+Human oversight would be the crucial one as it would help to define mistakes if such
+occures and teach to make the right decision.
+30

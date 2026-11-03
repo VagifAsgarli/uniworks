@@ -1,0 +1,21 @@
+AI Resume-​Screening Assistant
+An AI assistant reviews CVs and job applications and ranks candidates based on
+their suitability for a role. Recruiters use its recommendations to decide which
+applicants should progress to the next stage.
+LLM01: Prompt Injection  LLM02: Sensitive Information Disclosure  LLM09: Misinformation
+Securely store and delete personal data
+CVs contain personal information (names,  AI can misread or misinterpret information  Use human review for end decision.
+A CV might contain a harmful instruction to  Treat CV content as untrusted data, not  according to the policy.
+addresses, phone numbers, sensitive  in a CV and then give the recruiter an  Provide source reference when
+manipulate AI to get higher ranking score.  instructions.  Minimize the personal information sent
+information, employment history and jobs).  inaccurate assessment.  possible.
+to the model.
+LLM06 - Excessive Agency
+LLM01: Prompt Injection
+Because the system can move from generating text to
+because candidates control the CV content and it
+performing real-​world actions involving the user's money.
+might contain harmful instruction. A successful injection
+Limiting its permissions and requiring confirmation creates
+could directly manipulate their ranking.
+an important boundary even if another control fails.

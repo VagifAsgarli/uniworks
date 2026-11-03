@@ -1,0 +1,42 @@
+AI Tutor
+Students ask questions and receive explanations, examples,
+Data poisoning  and study guidance. The AI uses course materials provided
+by the university to help answer questions.
+AI would learn
+Insider,
+professor&/Admin
+incorrect
+patterns and  Stealing  The system is trained
+on a dataset provided
+The system is trusted
+by the students,
+give wrong
+student
+by university - the  because it is provided
+inserted  answers  dataset can be  by the university.
+manipulated;
+instruction  Behave
+incorrectly for  malicious prompts can
+Students may not take
+data
+precautions because
+to course  specific inputs  be inserted.
+they trust the system.
+chosen by the
+data  attacker.
+Limit who  Monitor dataflow  Run a script to
+Identify
+Record who  Test the AI with
+check the training  added, changed,  known inputs to
+has access  and make sure
+data to make sure  unusual or  or removed data  identify unexpected
+the AI model is
+to training  not sending data
+there are is no
+malicious
+suspicious  so suspicious  behavior or
+potential
+activity can be
+to third parties.  training data.
+data.  information.
+traced  backdoors.
