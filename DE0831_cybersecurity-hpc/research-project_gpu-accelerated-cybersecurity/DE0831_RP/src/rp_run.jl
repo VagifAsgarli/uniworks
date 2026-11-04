@@ -384,7 +384,8 @@ if !QUICK
         g1_pred_max = g1_per_group * cld(Nmax, MAXPAT)
         cross = findfirst(N -> !isnan(A[N][:t_g1]) && A[N][:t_pipe] < A[N][:t_g1] + A[N][:t_lt], LISTS)
         cross_txt = cross === nothing ? "the per-indicator kernel (plus the line table it needs) stayed faster than the hash-set pipeline up to $(commas(g1_N[end])) indicators" :
-                    "the hash-set pipeline overtakes the per-indicator kernel (plus the line table it needs) between $(commas(cross > 1 ? LISTS[cross - 1] : 0)) and $(commas(LISTS[cross])) indicators"
+                    cross == 1 ? "the hash-set pipeline is already faster than the per-indicator kernel (plus the line table it needs) at the smallest list, $(commas(LISTS[1])) indicators" :
+                    "the hash-set pipeline overtakes the per-indicator kernel (plus the line table it needs) between $(commas(LISTS[cross - 1])) and $(commas(LISTS[cross])) indicators"
         hs_N = filter(N -> !isnan(A[N][:t_hs]), LISTS)
         hs_txt = isempty(hs_N) ? "" : "With the keys in shared memory the match kernel takes " * join(["$(ms(A[N][:t_hs])) ms at $(commas(N))" for N in hs_N], ", ") * " against " * join(["$(ms(A[N][:t_hg])) ms" for N in hs_N], ", ") * " from global memory: " *
                  (sum(A[N][:t_hs] for N in hs_N) < 0.9 * sum(A[N][:t_hg] for N in hs_N) ? "the table's placement matters while it fits." : "the placement of the table does not matter at these sizes; the probes are served from L1/L2 anyway.")
@@ -412,7 +413,7 @@ if !QUICK
         $(f2(MAIN_N / cpuT[end] / 1e6)) M lines/s at $(commas(Nmax)) ($(f2(MAIN_N / cpu1[end] / 1e6)) with one task), so the GPU is **$(f1(cpuT[end] / A[Nmax][:t_pipe]))×** the
         $Tmax-task CPU on the device and **$(f1(cpuT[end] / (A[Nmax][:t_pipe] + B[MAIN_N in keys(B) ? MAIN_N : SIZES[end]][:t_h2d])))×** once the host-to-device copy is added.
         The per-indicator GPU kernel, one launch per 32 indicators, costs $(ms(g1_per_group)) ms per group on this corpus: measured
-        $(join(["$(ms(A[N][:t_g1])) ms at $(commas(N))" for N in g1_N], ", ")), i.e. **$(f1(g1_pred_max / 1e3)) s predicted at $(commas(Nmax))**, $(f0(g1_pred_max / A[Nmax][:t_pipe]))× the hash-set pipeline.
+        $(join(["$(ms(A[N][:t_g1])) ms at $(commas(N))" for N in g1_N], ", ")), i.e. **$(f2(g1_pred_max)) s predicted at $(commas(Nmax))**, $(f0(g1_pred_max / A[Nmax][:t_pipe]))× the hash-set pipeline.
 
         ## 2. Scaling with the list size
 
@@ -454,7 +455,7 @@ if !QUICK
         ## 5. The defensive conclusion
 
         A per-indicator scan is only viable for small lists: on this GPU it costs $(ms(g1_per_group)) ms per 32 indicators and
-        $(commas(MAIN_N)) lines, so a threat feed of $(commas(Nmax)) entries would take $(f1(g1_pred_max / 1e3)) s per million lines, $(f0(g1_pred_max / A[Nmax][:t_pipe]))× the
+        $(commas(MAIN_N)) lines, so a threat feed of $(commas(Nmax)) entries would take $(f2(g1_pred_max)) s per $(commas(MAIN_N)) lines, $(f0(g1_pred_max / A[Nmax][:t_pipe]))× the
         hash-set method; a list-independent method (hash set of whole tokens, or an automaton for substring
         semantics) is required for a real feed.  With it, the list size is free: a SOC can match $(commas(Nmax))
         indicators at the same rate as $(commas(Nmin)).  Sizing for $(commas(Nmax)) indicators: one CPU task of this host handles
