@@ -64,6 +64,13 @@ file ──read──> corpus (host) ──copyto!──> corpus (device)
    [K8] flags → scan → scatter    flagged tokens (H ≥ threshold) with their line (binary search)
 ```
 
+The threshold is not the brief's ~5.0 hint but is read off the data: `entropy_hist!` (privatised
+128-bin histogram of all token entropies, 0.05 bits per bin) and the host picks the midpoint of
+the widest empty band **above the median token**.  On the 1M corpus the ordinary tokens end at
+3.78 bits and the payloads start at 4.49, so the band is 3.80–4.45 and the threshold 4.125;
+a 5.0 threshold would miss 49 of the 243 payloads.  Bands below the median are excluded
+because the zero-entropy spike of one-symbol tokens leaves an equally wide empty band near 0.
+
 K3 in detail (one block = one tile of `TILE` bytes, 256 threads, 4 bytes per thread in the
 load phase, or `TILE = 256` with one byte per thread; decided by measurement):
 
@@ -104,7 +111,7 @@ against a naive loop.
 | match set | the set of (line, indicator) from `line_mask` **equals** `truth_<ID>.csv` exactly (894 rows for 1M); also equals the CPU baseline's set |
 | extracted lines | the packed buffer, split, equals the corpus lines at those indices |
 | tokens | token starts equal the CPU tokeniser's; entropies of the truth tokens equal `entropy_truth` to 1e-3 |
-| flagging | at the chosen threshold, flagged set equals `entropy_truth` (precision = recall = 1); the table of precision/recall at 4.5, 4.8, 5.0, 5.2, 5.5 shows why |
+| flagging | at the chosen threshold, flagged set equals `entropy_truth` (precision = recall = 1); the table of precision/recall at 3.5, 4.0, the chosen value, 4.5, 5.0, 5.5 shows why |
 | small cases | hand-made corpora: empty, one line without newline at the end, a pattern at byte 1, at the last byte, across a tile boundary, two patterns in one line, pattern as a substring of a longer token (must not match) |
 
 Every check prints `Correct!` only when all pass; `test/runtests.jl` runs them.

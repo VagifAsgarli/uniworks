@@ -98,7 +98,9 @@ otherwise), prints `Correct!`, then measures every step on every corpus size and
 - Throughput = corpus lines or bytes divided by the time (M lines/s, MB/s = 10⁶ bytes/s);
   copies in GB/s = 10⁹ bytes/s.
 - The entropy threshold is chosen from the measured distribution (the midpoint of the widest
-  empty band of the GPU histogram), then checked against `entropy_truth`.
+  empty band of the GPU histogram above the median token; the zero-entropy spike of one-symbol
+  tokens leaves an equally wide empty band near 0 bits, which is why bands below the median are
+  not candidates), then checked against `entropy_truth`.
 - Evidence in the analysis (operation counts, registers, occupancy, the PTX instruction
   counts) is produced by the script itself.
 

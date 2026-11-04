@@ -57,6 +57,7 @@ end
 # CUDA.jl's `accumulate`, `map`, broadcasting and indexing on CuArray are
 # plain Base operations here because CuArray === Array.
 unsafe_free!(x) = nothing
+reclaim(args...; kwargs...) = nothing
 macro allowscalar(ex)
     esc(ex)
 end

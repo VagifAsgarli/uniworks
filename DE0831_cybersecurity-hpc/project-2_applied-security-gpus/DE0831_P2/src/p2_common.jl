@@ -118,8 +118,12 @@ function device_attr(name::Symbol)
     return nothing
 end
 
-"Number of streaming multiprocessors (falls back to 32 if unknown)."
-sm_count() = something(device_attr(:MULTIPROCESSOR_COUNT), 32)
+const SM_COUNT = Ref(0)
+"Number of streaming multiprocessors (queried once; falls back to 32 if unknown)."
+function sm_count()
+    SM_COUNT[] == 0 && (SM_COUNT[] = something(device_attr(:MULTIPROCESSOR_COUNT), 32))
+    return SM_COUNT[]
+end
 
 "Maximum threads resident on one SM (falls back to 1024 if unknown)."
 max_threads_per_sm() = something(device_attr(:MAX_THREADS_PER_MULTIPROCESSOR), 1024)

@@ -203,7 +203,7 @@ if !QUICK
     for nl in SIZES
         ensure_corpus(nl)
         path = corpus_path(nl)
-        t_read = time_cpu(() -> read(path); reps = CPU_REPS).mean
+        t_read = time_cpu(() -> read(path); reps = CPU_REPS).min
         c = read(path); n = length(c)
         println("\n[$(commas(nl)) lines, $(f1(n / 1e6)) MB]")
         cd = CuVector{UInt8}(undef, n)
@@ -215,7 +215,7 @@ if !QUICK
             NaN
         end
         flags = CuVector{UInt32}(undef, n)
-        t_lt  = time_kernel(() -> gpu_line_starts(cd, flags))
+        t_lt  = time_kernel(() -> free_all!(gpu_line_starts(cd, flags)))
         ls_d  = gpu_line_starts(cd, flags)
         nlines = length(ls_d) - 1
         mask_d = CUDA.zeros(UInt32, nlines)
@@ -223,27 +223,30 @@ if !QUICK
         s_mt = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; tiled = true); reset = reset)
         s_mg = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; tiled = false); reset = reset)
         reset(); launch_match!(mask_d, cd, dp, ls_d)
-        t_ex  = time_kernel(() -> extract_matched_lines(cd, ls_d, mask_d))
-        t_ts  = time_kernel(() -> gpu_token_starts(cd, flags, dp))
+        t_ex  = time_kernel(() -> free_all!(extract_matched_lines(cd, ls_d, mask_d)...))
+        t_ts  = time_kernel(() -> free_all!(gpu_token_starts(cd, flags, dp)))
         ts_d  = gpu_token_starts(cd, flags, dp)
-        t_en  = time_kernel(() -> gpu_token_entropies(cd, ts_d, dp))
+        t_en  = time_kernel(() -> free_all!(gpu_token_entropies(cd, ts_d, dp)...))
         H_d, L_d = gpu_token_entropies(cd, ts_d, dp)
         t_hi  = time_kernel(() -> gpu_entropy_histogram(H_d))
-        t_fl  = time_kernel(() -> gpu_flagged_tokens(H_d, thr))
-        s_pipe = time_stats(() -> gpu_pipeline(cd, dp; threshold = thr); reps = min(REPS, 20))
+        t_fl  = time_kernel(() -> free_all!(gpu_flagged_tokens(H_d, thr)))
+        s_pipe = time_stats(() -> free_results!(gpu_pipeline(cd, dp; threshold = thr)); reps = min(REPS, 20))
         res = gpu_pipeline(cd, dp; threshold = thr)
         t_d2h = time_stats(() -> (Array(res.packed); Array(res.off); Array(res.len); Array(res.flagged))).mean
         # CPU baseline, same computation
-        t_cl  = time_cpu(() -> cpu_line_starts(c); reps = CPU_REPS).mean
+        t_cl  = time_cpu(() -> cpu_line_starts(c); reps = CPU_REPS).min
         lsc   = cpu_line_starts(c)
-        t_cm  = time_cpu(() -> cpu_match(c, pt, lsc); reps = CPU_REPS).mean
+        t_cm  = time_cpu(() -> cpu_match(c, pt, lsc); reps = CPU_REPS).min
         lns   = corpus_lines(c, lsc)
-        t_co  = time_cpu(() -> cpu_match_occursin(lns, inds); reps = CPU_REPS).mean
-        t_ct  = time_cpu(() -> cpu_token_starts(c); reps = CPU_REPS).mean
+        t_co  = time_cpu(() -> cpu_match_occursin(lns, inds); reps = CPU_REPS).min
+        t_ct  = time_cpu(() -> cpu_token_starts(c); reps = CPU_REPS).min
         tsc   = cpu_token_starts(c)
-        t_ce  = time_cpu(() -> cpu_token_entropies(c, tsc); reps = CPU_REPS).mean
-        t_cp  = time_cpu(() -> cpu_pipeline(c, pt, thr); reps = CPU_REPS).mean
-        CUDA.unsafe_free!(flags); CUDA.unsafe_free!(cd)
+        t_ce  = time_cpu(() -> cpu_token_entropies(c, tsc); reps = CPU_REPS).min
+        t_cp  = time_cpu(() -> cpu_pipeline(c, pt, thr); reps = CPU_REPS).min
+        # release this size's device and host buffers before the next size
+        free_all!(flags, cd, ls_d, mask_d, ts_d, H_d, L_d); free_results!(res)
+        lsc = lns = tsc = nothing
+        GC.gc(); CUDA.reclaim()
         push!(csv, join(string.([nl, n, t_read, t_h2d, t_h2d_pin, t_lt, s_mt.mean, s_mg.mean, t_ex, t_ts, t_en, t_hi, t_fl, s_pipe.mean, t_d2h, t_cl, t_cm, t_co, t_ct, t_ce, t_cp]), ","))
         push!(rows, (commas(nl), f1(n / 1e6),
                      f2(nl / s_mt.mean / 1e6), f1(mbps(n, s_mt.mean)),
@@ -339,7 +342,7 @@ if !QUICK
     Token entropies of all $(commas(length(ts_gpu))) tokens were histogrammed on the GPU (0.05-bit
     bins, `results/entropy_hist.csv`).  The ordinary tokens end at $(f2(bulk_max)) bits (the highest
     entropy of any token shorter than 32 characters), the $(count(>=(32), L_gpu)) long tokens start at
-    $(f2(long_min)) bits; the widest empty band of the histogram is $(f2(r.band[1]))–$(f2(r.band[2])) bits and
+    $(f2(long_min)) bits; the widest empty band of the histogram above the median token is $(f2(r.band[1]))–$(f2(r.band[2])) bits and
     its midpoint, **$(f2(thr)) bits/char**, is the threshold.  A token of *n* characters has at most
     log2(*n*) bits of entropy, so a threshold of $(f2(thr)) can only be exceeded by tokens of
     $(ceil(Int, 2^thr))+ characters, which is why ordinary log fields never reach it.
@@ -375,8 +378,19 @@ if !QUICK
     limiter_txt = if bw_tiled / copy_bw >= 0.6
         "**memory bandwidth**: the tiled kernel streams the corpus at $(f1(bw_tiled)) GB/s, $(pct(bw_tiled / copy_bw)) of the device-to-device copy rate, so most of its time is the one read of the corpus; the first-byte filter keeps the compare work small ($(f3(cmp_per_byte)) compares per byte)."
     else
-        "**instruction throughput, not bandwidth**: the tiled kernel reads the corpus at only $(f1(bw_tiled)) GB/s ($(pct(bw_tiled / copy_bw)) of the copy rate) although every byte is loaded exactly once and coalesced; with about $(f1(int_per_byte)) integer operations per byte the integer model predicts $(ms(t_int_bound)) ms against $(ms(t_bw_bound)) ms for the bandwidth model, i.e. the kernel is bound by the per-byte instruction work (table lookups, index arithmetic, the candidate loop with its data-dependent branches: $(pc.bra) branches in the PTX)."
+        "**instruction throughput, not bandwidth**: the tiled kernel reads the corpus at only $(f1(bw_tiled)) GB/s ($(pct(bw_tiled / copy_bw)) of the copy rate) although every byte is loaded exactly once and coalesced; the bandwidth model predicts $(ms(t_bw_bound)) ms, the integer model with the estimated $(f1(int_per_byte)) operations per byte $(ms(t_int_bound)) ms, and the measured time is $(ms(b.s_mt.mean)) ms, i.e. the kernel is bound by the per-byte instruction work (table lookups, index arithmetic, the candidate loop with its data-dependent branches: $(pc.bra) branches in the PTX)."
     end
+    # which step of the pipeline is the largest, from the directly timed steps
+    steps_main = [("the line table (newline flags, scan, scatter)", b.t_lt), ("the match kernel", b.s_mt.mean),
+                  ("the extraction of the matched lines", b.t_ex), ("the token-start flags, scan and scatter", b.t_ts),
+                  ("the token entropy kernel", b.t_en), ("the histogram and the flagging", b.t_hi + b.t_fl)]
+    step_sum = sum(last.(steps_main))
+    largest_name, largest_t = steps_main[argmax(last.(steps_main))]
+    scan_note = largest_name == "the match kernel" ? "" :
+        "  The scan steps read and write a 4-byte flag per corpus byte (the lecture-7 scan on `UInt32` flags), so they move more bytes than the match kernel, which reads each byte once; the end-to-end rate is set by them, the match kernel is analysed below."
+    read_rate = mbps(big.n, big.t_read)
+    read_slower = read_rate < mbps(big.n, big.s_pipe.mean + big.t_h2d)
+    best_i = argmax([mbps(breakdown[nl].n, breakdown[nl].s_pipe.mean) for nl in SIZES])
     tiled_vs_global = b.s_mg.mean > b.s_mt.mean ?
         "The shared-memory tile makes the kernel $(f2(b.s_mg.mean / b.s_mt.mean))× faster than the global-memory variant ($(ms(b.s_mg.mean)) vs $(ms(b.s_mt.mean)) ms): the global variant re-reads up to 32 bytes per candidate position from L1/L2, the tiled one from shared memory." :
         "The shared-memory tile does not beat the global-memory variant here ($(ms(b.s_mt.mean)) vs $(ms(b.s_mg.mean)) ms): the candidate re-reads are served by L1 anyway, so the tile only adds a barrier and the halo load; the limiter is not the memory path."
@@ -396,15 +410,20 @@ if !QUICK
     runs at $(f1(mbps(big.n, big.s_mt.mean))) MB/s.  Converted to a day: **$(gb(V_cpu_day)) GB/day is where one CPU core
     stops keeping up** ($(f1(mbps(big.n, big.t_cp))) MB/s single-threaded, same algorithm), while one GPU keeps up to
     **$(gb(V_gpu_day)) GB/day** including the copy.  Assumptions: 20 indicators (12 addresses, 8 domains),
-    lines of about $(f0(big.n / maximum(SIZES))) bytes, the corpus already in host memory (reading it from disk took
-    $(ms(big.t_read)) ms = $(f1(mbps(big.n, big.t_read))) MB/s on this machine and is the next wall), batch processing of
+    lines of about $(f0(big.n / maximum(SIZES))) bytes, the corpus already in host memory (reading the file took
+    $(ms(big.t_read)) ms = $(f1(read_rate)) MB/s on this machine, $(read_slower ? "slower than the GPU, so the storage is the next wall" : "from the page cache after the generator wrote it, so not a limit here")), batch processing of
     whole files, results small enough that the device-to-host copy is negligible ($(ms(big.t_d2h)) ms).
 
     ## 2. The limiter
 
-    The dominant kernel is `match_tiled!` ($(pct(b.s_mt.mean / b.s_pipe.mean)) of the pipeline at $(commas(MAIN_N)) lines; the token
-    entropy kernel is $(pct(b.t_en / b.s_pipe.mean)), the scans and scatters the rest).  Its operational intensity is low
-    and integer: about $(f1(int_per_byte)) integer operations per byte against 1 byte moved, so on the integer roofline
+    Shares of the pipeline at $(commas(MAIN_N)) lines, each step timed on its own: line table $(pct(b.t_lt / b.s_pipe.mean)),
+    match kernel $(pct(b.s_mt.mean / b.s_pipe.mean)), extraction $(pct(b.t_ex / b.s_pipe.mean)), token starts $(pct(b.t_ts / b.s_pipe.mean)),
+    token entropies $(pct(b.t_en / b.s_pipe.mean)), histogram and flagging $(pct((b.t_hi + b.t_fl) / b.s_pipe.mean)) (the steps sum to
+    $(ms(step_sum)) ms, the end-to-end timing is $(ms(b.s_pipe.mean)) ms).  The largest step is $(largest_name)
+    ($(pct(largest_t / b.s_pipe.mean))).$(scan_note)
+
+    The match kernel's operational intensity is low and integer: about $(f1(int_per_byte)) integer operations per byte
+    (an estimate built from the measured candidate and compare counts) against 1 byte moved, so on the integer roofline
     ($(int_ops === nothing ? "n/a" : f2(int_ops / 1e12)) × 10¹² ops/s against $(f1(theo_bw === nothing ? copy_bw : theo_bw)) GB/s) the balance point is
     $(int_ops === nothing ? "n/a" : f1(int_ops / ((theo_bw === nothing ? copy_bw : theo_bw) * 1e9))) ops/byte: the kernel sits $(int_per_byte > (int_ops === nothing ? 0 : int_ops / ((theo_bw === nothing ? copy_bw : theo_bw) * 1e9)) ? "to the right of it (compute side)" : "to the left of it (memory side)").
     The limiter is $limiter_txt
@@ -422,13 +441,14 @@ if !QUICK
     $(md_table(["lines", "match kernel (MB/s)", "GPU pipeline (MB/s)", "H2D copy (ms)", "pipeline (ms)", "copy / pipeline", "file read (ms)"],
                [(commas(nl), f1(mbps(breakdown[nl].n, breakdown[nl].s_mt.mean)), f1(mbps(breakdown[nl].n, breakdown[nl].s_pipe.mean)),
                  ms(breakdown[nl].t_h2d), ms(breakdown[nl].s_pipe.mean), f2(breakdown[nl].t_h2d / breakdown[nl].s_pipe.mean), ms(breakdown[nl].t_read)) for nl in SIZES]))
-    The rate rises with the corpus size until the launch and scan overheads are amortised
-    (from $(f1(mbps(breakdown[SIZES[1]].n, breakdown[SIZES[1]].s_pipe.mean))) MB/s at $(commas(SIZES[1])) lines to
-    $(f1(mbps(big.n, big.s_pipe.mean))) MB/s at $(commas(maximum(SIZES)))) and then stays flat: the kernels are streaming
-    kernels whose time grows linearly with the bytes.  The host-to-device copy costs $(f2(big.t_h2d / big.s_pipe.mean))× the whole
+    The pipeline rate goes from $(f1(mbps(breakdown[SIZES[1]].n, breakdown[SIZES[1]].s_pipe.mean))) MB/s at $(commas(SIZES[1])) lines to
+    $(f1(mbps(big.n, big.s_pipe.mean))) MB/s at $(commas(maximum(SIZES))); the best rate over the sizes is
+    $(f1(mbps(breakdown[SIZES[best_i]].n, breakdown[SIZES[best_i]].s_pipe.mean))) MB/s at $(commas(SIZES[best_i])) lines.  The kernels are
+    streaming kernels: once the launch and scan overheads are amortised their time grows with the bytes (see the
+    table).  The host-to-device copy costs $(f2(big.t_h2d / big.s_pipe.mean))× the whole
     GPU pipeline at the largest size ($(f1(gbps(big.n, big.t_h2d))) GB/s pageable$(isnan(big.t_h2d_pin) ? "" : ", $(f1(gbps(big.n, big.t_h2d_pin))) GB/s pinned")):
     the transfer wall is $(big.t_h2d > big.s_pipe.mean ? "real: for one-shot scans the copy, not the kernel, sets the rate, and only overlapping copy and compute (streams, chunks) or keeping the logs on the device removes it" : "not reached: the pipeline is slower than the copy, so the GPU work still dominates end to end").
-    Reading the file from disk ($(f1(mbps(big.n, big.t_read))) MB/s here) is slower than both.
+    $(read_slower ? "Reading the file from storage ($(f1(read_rate)) MB/s here) is slower than both." : "Reading the file ($(f1(read_rate)) MB/s here, page cache) was faster than both on this machine; a disk slower than the pipeline would become the wall.")
 
     ## 4. CPU comparison
 
@@ -445,8 +465,8 @@ if !QUICK
     producing 2 TB/day that is **$(cores_needed) CPU core$(cores_needed > 1 ? "s" : "") or $(gpus_needed) GPU$(gpus_needed > 1 ? "s" : "")** (2 × 10¹² / (86,400 × $(f1(R_cpu / 1e6)) × 10⁶) and
     2 × 10¹² / (86,400 × $(f1(R_gpu_h2d / 1e6)) × 10⁶)); below $(gb(V_cpu_day)) GB/day a single core keeps up and a GPU is not needed.
     The crossover moves with the indicator count (the research project measures 10 to 10,000) and with the storage
-    rate: at $(f1(mbps(big.n, big.t_read))) MB/s disk reads the GPU is starved, so the logs must be streamed to it as they arrive
-    or kept in device memory.  Entropy flagging at $(f2(thr)) bits/char produced $(length(fl)) flags in $(commas(MAIN_N)) lines
+    rate: $(read_slower ? "at $(f1(read_rate)) MB/s file reads the GPU is starved, so the logs must be streamed to it as they arrive or kept in device memory" : "the file read here ($(f1(read_rate)) MB/s, page cache) was not a limit, but storage slower than the pipeline would be, so logs should be streamed to the device as they arrive or kept in device memory").
+    Entropy flagging at $(f2(thr)) bits/char produced $(length(fl)) flags in $(commas(MAIN_N)) lines
     with precision $(thr_rows[3][6]) and recall $(thr_rows[3][7]) on the planted payloads, i.e. about
     $(f1(length(fl) / MAIN_N * 1e6)) flags per million lines for an analyst to look at: the threshold is chosen from the
     measured distribution, not from the generator's hint, because the payloads of this corpus start at $(f2(long_min)) bits.

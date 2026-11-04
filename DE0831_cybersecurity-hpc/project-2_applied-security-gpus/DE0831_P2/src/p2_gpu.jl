@@ -45,7 +45,12 @@ function scatter_positions!(out, flags, pos)
     return nothing
 end
 
-"Grid size for a grid-stride kernel over n elements: a few blocks per SM (at least one block)."
+"""
+Grid size for a grid-stride kernel over n elements: enough blocks for the
+elements, capped at 32 × the SM count (at least one block).  This is the
+number of blocks launched; how many are resident at once per SM is the
+occupancy question (`resident_blocks_per_sm`, `CUDA.active_blocks`).
+"""
 grid_for(n; threads = 256) = max(1, min(cld(n, threads), 32 * sm_count()))
 
 """
@@ -53,8 +58,9 @@ Positions (1-based) of the elements with flags[i] != 0, packed, via scan and
 scatter.  Returns the device vector of positions and the count.
 """
 function compact_positions(flags::CuVector{UInt32})
+    isempty(flags) && return CuVector{Int32}(undef, 0), 0
     pos   = accumulate(+, flags)                          # inclusive scan (lecture 7)
-    count = length(pos) == 0 ? 0 : Int(CUDA.@allowscalar pos[end])
+    count = Int(CUDA.@allowscalar pos[end])
     out   = CuVector{Int32}(undef, count)
     count > 0 && @cuda threads=256 blocks=grid_for(length(flags)) scatter_positions!(out, flags, pos)
     CUDA.unsafe_free!(pos)
@@ -488,18 +494,23 @@ end
 
 """
 Choose the entropy threshold from the measured distribution: the midpoint of
-the widest empty band of the histogram that separates the main mass (low
-bins, all the ordinary tokens) from the upper cluster.  Returns the threshold
-and the (lower, upper) bin edges of the band in bits.
+the widest empty band of the histogram above the median token, i.e. the gap
+that separates the main mass (the ordinary tokens) from the upper cluster.
+Bands below the median are not candidates (the zero-entropy spike of
+one-symbol tokens leaves an empty band just above 0 bits that is as wide as
+the real gap); equal widths go to the higher band.  Returns the threshold and
+the (lower, upper) bin edges of the band in bits.
 """
 function choose_threshold(hist::Vector{UInt32})
     nonempty = findall(!=(0), hist)
     isempty(nonempty) && return 5.0, (0.0, 0.0)
+    half = sum(hist) / 2
+    median_bin = findfirst(>=(half), cumsum(hist))          # bin that holds the median token
     best = (0, 0, 0)                                      # (width, lo, hi) in bins
     prev = nonempty[1]
     for b in nonempty[2:end]
         gap = b - prev - 1
-        gap > best[1] && (best = (gap, prev, b))
+        prev >= median_bin && gap >= best[1] && gap > 0 && (best = (gap, prev, b))
         prev = b
     end
     best[1] == 0 && return 5.0, (0.0, 0.0)
@@ -529,3 +540,11 @@ function gpu_pipeline(corpus::CuVector{UInt8}, dp::DevicePatterns; threshold = n
     flagged = gpu_flagged_tokens(H, thr)
     return (; line_start, line_mask, matched, off, len, packed, token_start, H, L, hist, threshold = thr, band, flagged)
 end
+
+# The benchmark loops run the steps hundreds of times; freeing their outputs at
+# once keeps the device pool small, so no garbage collection lands inside a
+# timed launch.  (`unsafe_free!` only returns the block to the pool.)
+"Free every device array among the arguments."
+free_all!(xs...) = (foreach(x -> x isa CuArray && CUDA.unsafe_free!(x), xs); nothing)
+"Free every device array in a `gpu_pipeline` result."
+free_results!(r::NamedTuple) = free_all!(values(r)...)
