@@ -84,11 +84,17 @@ Topic 5 (file integrity checking) fits Project 2 track A (SHA-256 kernel), not t
 
 - [x] Brief, lectures 1–10, labs 2, 3, 7 and the reference documents collected and extracted
       (`../materials/`); scanned for hidden text: clean.
-- [ ] Partner confirmed (or "alone by agreement" with the instructor).
-- [ ] Topic chosen in ORTUS; objective, baseline and data agreed with an instructor.
-- [ ] Baseline and measurement script first (weeks 10–13), GPU version after lecture 13.
-- [ ] Full measurement runs and the report (weeks 14–15); report + code by 11.12.
-- [ ] Presentation with live demo, 14.12.
+- [x] Working alone, by agreement with the instructor.
+- [ ] Topic 10 chosen in ORTUS ("Log indicator matching", not "IDS training speed"); objective,
+      baseline and data agreed with an instructor (`notes/proposal.md` is the text to send).
+- [x] Design (`notes/design.md`): data (course corpus + indicator lists of 10–10,000 built from
+      the seed), four methods (GPU hash-set, GPU per-indicator, tuned multithreaded CPU,
+      `occursin`), measurement matrix, expected results, validation.
+- [x] Code (`DE0831_RP/`): kernels, CPU matcher, validation against the ground truth for every
+      list size, both sweeps, results/analysis generators, plots, tests, README, Colab notebook.
+- [ ] Emulator and PTX checks; Colab T4 run; CPU-only run on the 4-core machine.
+- [ ] Report (6–10 pages, RTU format) and code by 11.12; presentation with live demo, speaker
+      notes and Q&A, 14.12.
 
 ## Layout
 
@@ -96,7 +102,9 @@ Topic 5 (file integrity checking) fits Project 2 track A (SHA-256 kernel), not t
 research-project_gpu-accelerated-cybersecurity/
 ├── README.md        this file
 ├── materials/       the brief (+ text extract)
-├── notes/           design and research notes
+├── notes/           proposal, design and research notes
+├── DE0831_RP/       the project (code, tests, results; data/ is regenerated from the ID)
+├── tools/           Colab notebook and checks without a GPU
 └── outputs/         runs, report, slides, feedback
 ```
 
