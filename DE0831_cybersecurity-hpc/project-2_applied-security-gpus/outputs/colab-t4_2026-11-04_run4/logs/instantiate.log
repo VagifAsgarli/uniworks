@@ -1,0 +1,42 @@
+Precompiling packages...
+              ✗ libwebp_jll
+              ✗ WebP
+  0 dependencies successfully precompiled in 9 seconds. 378 already precompiled.
+  24 dependencies precompiled but different versions are currently loaded (ArgTools, Base64, Dates, Downloads, JuliaSyntaxHighlighting, LibCURL, LibCURL_jll, LibGit2, LibGit2_jll, LibSSH2_jll, Logging, Markdown, MozillaCACerts_jll, NetworkOptions, OpenSSL_jll, Pkg, Printf, StyledStrings, TOML, Tar, UUIDs, Zlib_jll, nghttp2_jll and p7zip_jll). Restart julia to access the new versions. Otherwise, 245 dependents of these packages may trigger further precompilation to work with the unexpected versions.
+CUDA toolchain: 
+- runtime 13.0.0, local installation
+- driver 580.82.7 for CUDA 13.3, forward-compatible
+- compiler 13.0.88, local installation
+
+CUDA libraries: 
+- cuBLAS: 13.1.1
+- cuSPARSE: 12.6.3
+- cuSOLVER: 12.0.4
+- cuFFT: 12.0.0
+- cuRAND: 10.4.0
+- CUPTI: 2025.3.1 (API 13.0.1)
+- NVML: 13.0.0+580.82.7
+
+Julia packages: 
+- CUDACore: 6.5.1
+- GPUArrays: 12.2.0
+- GPUCompiler: 2.20.0
+- KernelInterface: 0.4.3
+- CUDA_Driver_jll: 13.3.6+0
+- CUDA_Compiler_jll: 0.6.3+2
+- CUDA_Runtime_jll: 0.25.0+3
+- CUDA_Runtime_Discovery: 2.1.1
+- NVPTX_LLVM_Backend_jll: 23.1.2+2
+- KernelAbstractions: 0.10.4
+
+Toolchain:
+- Julia: 1.12.7
+- LLVM: 18.1.7
+
+Preferences:
+- CUDA_Runtime_jll.version: 13.0.3
+- CUDA_Runtime_jll.local: true
+
+1 device:
+  0: Tesla T4 (sm_75, 14.560 GiB / 15.000 GiB available)
+     compiles to sm_75 / PTX 9.0

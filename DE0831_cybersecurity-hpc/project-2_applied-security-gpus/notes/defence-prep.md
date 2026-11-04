@@ -40,43 +40,43 @@ would miss 49 of the 243 payloads; at 4.12 precision and recall are both 1.
 
 Measurement: one warm-up, then one `CUDA.@elapsed` per launch over 100 launches; every step is
 timed on its own; nothing is a difference of timings.  The headline: 18 million lines per
-second on the device, 12 million including the host-to-device copy, about 110× one CPU core
-with the same algorithm.
+second on the device, 12.5 million including the host-to-device copy, about 105× one CPU core
+with the same algorithm, 71× including the copy.
 
-The most interesting result is the limiter.  My first match kernel ran at 9 GB/s, 4 % of the
+The most interesting result is the limiter.  My first match kernel ran at 9.5 GB/s, 4 % of the
 device-to-device copy rate, although it reads each byte once.  Its integer model predicts half
-a millisecond, it took thirteen.  The reason is warp-level: the first-byte filter lets 20 % of
-the positions through, so every warp of 32 lanes has a candidate and runs the candidate loop at
-the pace of its slowest lane.  I tested that diagnosis with a second kernel: a three-byte prefix
-filter in shared memory, 0.95 % candidates, 71 % of the warps skip the loop, plus a 4 KB tile
-to amortise the table copy.  It is 1.97× faster, 6.6 ms.  So the limiter was control flow at
-warp level, not bandwidth and not arithmetic.
+a millisecond, it took twelve and a half.  The reason is warp-level: the first-byte filter lets
+20 % of the positions through, so every warp of 32 lanes has a candidate and runs the candidate
+loop at the pace of its slowest lane.  I tested that diagnosis with a second kernel: a three-byte
+prefix filter in shared memory, 0.95 % candidates, 71 % of the warps skip the loop, plus a 4 KB
+tile to amortise the table copy.  It is 1.91× faster, 6.6 ms.  So the limiter was control flow
+at warp level, not bandwidth and not arithmetic.
 
-The defensive conclusion: one CPU core keeps up with about 1.7 TB of logs per day; one T4
-including the copy with about 127 TB per day.  For a 2 TB/day site two cores are enough; the
+The defensive conclusion: one CPU core keeps up with about 1.8 TB of logs per day; one T4
+including the copy with about 129 TB per day.  For a 2 TB/day site two cores are enough; the
 GPU pays off when the indicator list grows, which is my research project."
 
 ## 3. Numbers to remember (1,000,000 lines, 119.2 MB, Tesla T4)
 
 | what | value |
 |---|---|
-| match kernel v2 (`match_tiled_tri!`) | 6.6 ms, 18.0 GB/s, 151 M lines/s |
-| match kernel v1 (`match_tiled!`) | 13.1 ms, 9.1 GB/s |
-| global-memory variant | 15.5 ms |
-| line table (flags, scan, scatter) | 13.0 ms |
+| match kernel v2 (`match_tiled_tri!`) | 6.6 ms, 18.2 GB/s, 152 M lines/s |
+| match kernel v1 (`match_tiled!`) | 12.5 ms, 9.5 GB/s |
+| global-memory variant | 14.6 ms |
+| line table (flags, scan, scatter) | 13.1 ms |
 | token starts | 15.8 ms (largest step, 32 %) |
-| token entropies (22.35 M tokens) | 11.4 ms |
-| GPU pipeline end to end | 49.7 ms = 2.4 GB/s; with pageable copy 76 ms |
-| host→device copy | 26.7 ms pageable (4.5 GB/s), 10.4 ms pinned (11.4 GB/s) |
+| token entropies (22.35 M tokens) | 11.2 ms |
+| GPU pipeline end to end | 49.5 ms = 2.4 GB/s; with pageable copy 74.6 ms |
+| host→device copy | 25.1 ms pageable (4.7 GB/s), 10.1 ms pinned (11.9 GB/s) |
 | device→device copy reference | 231 GB/s (read + write); theoretical DRAM 320 GB/s |
-| CPU pipeline, one core | 5.66 s = 21 MB/s; CPU match 0.87 s; `occursin` 2.6 s |
-| speed-up (4M lines) | 109× on the device, 74× with the copy |
+| CPU pipeline, one core | 5.50 s = 21.7 MB/s; CPU match 0.79 s; `occursin` 2.5 s |
+| speed-up (4M lines) | 105× on the device, 71× with the copy; 4M lines: 18.4 M lines/s, 12.5 M with the copy |
 | filters | first byte: 20.3 % candidates, 0 % of warps skip; three bytes: 0.95 %, 71.5 % skip |
 | candidate loop | up to 7 patterns behind the busiest first byte |
 | resources v2 | 26 registers, 10.7 KB shared per block, occupancy 100 %, 4 blocks/SM |
 | threshold | 4.12 bits (band 3.80–4.45); ordinary tokens end at 3.78, payloads start at 4.49 |
 | precision/recall at 4.12 | 1.000 / 1.000; at 5.0 recall 0.80 |
-| daily volume | 1.7 TB/day per CPU core, 127 TB/day per GPU incl. copy |
+| daily volume | 1.8 TB/day per CPU core, 129 TB/day per GPU incl. copy |
 
 ## 4. Likely questions and answers
 
@@ -89,7 +89,7 @@ reads each byte once and tests all patterns from a shared-memory table; the firs
 
 **Why shared memory for the tile?  The global variant exists, how much does the tile give?**
 A candidate position compares up to 32 bytes; from global memory those are L1/L2 re-reads,
-from shared memory they are broadcast reads.  Measured: 15.5 ms global vs 13.1 ms tiled (1.19×).
+from shared memory they are broadcast reads.  Measured: 14.6 ms global vs 12.5 ms tiled (1.17×).
 The tile matters less than the warp-level loop, which is why v2 attacks the loop.
 
 **How do you handle a pattern that crosses a tile edge?**
@@ -165,11 +165,11 @@ question.
 
 **What limits the match kernel?**
 Not bandwidth (v1 at 4 %, v2 at 8 % of the copy rate) and not the lane-counted integer work
-(the model gives 0.5 ms, measured 13 ms).  The limiter is warp-level control flow: a warp runs
+(the model gives 0.5 ms, measured 12.5 ms).  The limiter is warp-level control flow: a warp runs
 the candidate loop whenever one lane has a candidate, for as long as its slowest lane needs.
 With 20 % candidates per byte no warp is free of candidates (measured 0.00 %; independent bytes
 would give 0.8³² = 0.07 %).  The three-byte filter makes 71 % of the warps skip the loop and the
-kernel is 1.97× faster: the prediction and the measurement agree.
+kernel is 1.91× faster: the prediction and the measurement agree.
 
 **Why is v2 still at 8 % of bandwidth?**
 Every position still pays the filter: three shared loads, the hash, the bitmap test; 29 % of the
@@ -190,7 +190,7 @@ built from lane counts is an upper bound, because lanes of a warp do not work in
 ### Security conclusion
 
 **What does a SOC do with these numbers?**
-Size the job: one core handles about 1.7 TB/day, so a 2 TB/day site needs two cores or one GPU.
+Size the job: one core handles about 1.8 TB/day, so a 2 TB/day site needs two cores or one GPU.
 The GPU pays off when the indicator list grows (hundreds to thousands) or when the logs are
 already on the device; it does not pay off when the logs come from a disk slower than the
 pipeline, so streaming or keeping logs on the device is the architecture question.

@@ -106,5 +106,8 @@ From the Project 1 feedback (9.75/10):
 - [x] Colab T4 runs (`tools/DE0831_P2_colab.ipynb`): run 1 stopped at the threshold check
       (threshold heuristic fixed), run 2 complete with the first match kernel (diagnosed the
       warp-level limiter), run 3 complete with both kernels (`outputs/colab-t4_2026-11-04_run*/`).
-- [ ] Final run with the corrected analysis template → `DE0831_P2/results/`; archive built;
-      upload by 27.11.2026; defence week 14 (`notes/defence-prep.md`).
+- [x] Final run (run 4) with the corrected analysis template → `DE0831_P2/results/` and the
+      device block in `DE0831_P2/README.md`; archive `outputs/submission/DE0831_P2_Asgarli_251ADM047.zip`
+      (built by the notebook from the run); logs in `outputs/colab-t4_2026-11-04_run4/`.
+- [ ] Fill in the "Declared AI use" paragraph of `DE0831_P2/README.md` in the archive, upload to
+      ORTUS by 27.11.2026; defence week 14 (`notes/defence-prep.md`).

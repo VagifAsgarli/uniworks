@@ -1,0 +1,30 @@
+Student: Vagif Asgarli, ID: 251ADM047
+Track: E (log mining), full route: one multi-pattern kernel, scan and compaction
+Derived parameters: generator seed = 5175890676511383715 (SHA-256 of the ID), validation corpus = 1,000,000 lines, sizes = 125,000, 250,000, 500,000, 1,000,000, 2,000,000, 4,000,000
+Device: Tesla T4
+Compute capability: 7.5.0
+Corpus: 119,177,563 bytes, 1,000,000 lines; 20 indicators; truth: 894 indicator lines, 243 payload tokens
+Entropy: 22,350,735 tokens; max H of tokens shorter than 32 chars = 3.784; min H of the 243 tokens of 32+ chars = 4.488; threshold from the histogram's empty band 3.80–4.45 bits: 4.12
+Validation passed: line table, match set (tiled and global kernels, CPU, occursin) == truth, extraction, 22,350,735 tokens, entropies, flagging, boundary cases
+Correct!
+
+[125,000 lines, 14.9 MB]
+  match 0.754 ms (19779.7 MB/s; 1-byte filter 1.534 ms, global 1.394 ms), pipeline 6.483 ms, +H2D 9.475 ms; CPU pipeline 0.619 s
+
+[250,000 lines, 29.8 MB]
+  match 1.536 ms (19397.5 MB/s; 1-byte filter 2.931 ms, global 2.549 ms), pipeline 12.668 ms, +H2D 18.668 ms; CPU pipeline 1.324 s
+
+[500,000 lines, 59.6 MB]
+  match 3.206 ms (18586.7 MB/s; 1-byte filter 6.369 ms, global 6.282 ms), pipeline 24.433 ms, +H2D 36.797 ms; CPU pipeline 2.520 s
+
+[1,000,000 lines, 119.2 MB]
+  match 6.565 ms (18153.9 MB/s; 1-byte filter 12.516 ms, global 14.621 ms), pipeline 49.471 ms, +H2D 74.612 ms; CPU pipeline 5.500 s
+
+[2,000,000 lines, 238.3 MB]
+  match 12.877 ms (18508.4 MB/s; 1-byte filter 26.400 ms, global 47.860 ms), pipeline 102.254 ms, +H2D 153.600 ms; CPU pipeline 11.484 s
+
+[4,000,000 lines, 476.6 MB]
+  match 29.144 ms (16354.8 MB/s; 1-byte filter 56.919 ms, global 173.492 ms), pipeline 217.012 ms, +H2D 320.055 ms; CPU pipeline 22.691 s
+
+Results written to /content/DE0831_P2/results/benchmarks.md and /content/DE0831_P2/results/analysis.md
+Plots written to /content/DE0831_P2/results

@@ -47,5 +47,5 @@ CUDA", Gadler 2019); plain text of every file in `materials/text-extracts/`.
 | # | Assignment | Due | Status |
 |---|---|---|---|
 | 1 | [Project 1: GPU Programming Fundamentals in Julia](project-1_gpu-fundamentals-julia/) | 23.10.2026 | **graded 9.75/10**, defence passed 02.11.2026 |
-| 2 | [Project 2: Applied Security on GPUs](project-2_applied-security-gpus/) | 27.11.2026 | track E implemented and validated (emulator, PTX, mutation tests); T4 run pending |
+| 2 | [Project 2: Applied Security on GPUs](project-2_applied-security-gpus/) | 27.11.2026 | done on a Tesla T4 (18.4 M lines/s, 105× one core); archive ready, upload pending |
 | 3 | [Research Project: GPU-Accelerated Cybersecurity](research-project_gpu-accelerated-cybersecurity/) (in pairs, 30 %, the defence is the exam) | report 11.12.2026, defence 14.12.2026 | topic to choose (recommendation 10, log indicator matching) |
