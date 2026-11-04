@@ -36,6 +36,7 @@ before and after it are not word characters `[A-Za-z0-9.-]`); every method appli
 | | method | file | cost model |
 |---|---|---|---|
 | G2 | **GPU hash-set** (the method): token starts by flags → scan → scatter (lecture 7); one thread per token hashes its bytes (FNV-1a) and probes an open-addressing table of the indicators (global memory, or the keys in shared memory while the table fits); hits compacted to (line, indicator) | `src/rp_gpu.jl` | one pass, independent of the list size |
+| G3 | **GPU hash-set, no compaction**: the same match with one thread per byte (a thread whose byte starts a token walks, hashes and probes it); hits appended with one atomic counter; measures what the compaction costs and saves | `src/rp_gpu.jl` | one pass, independent of the list size |
 | G1 | **GPU per-indicator** (unoptimised GPU baseline): the Project 2 kernel (4 KB shared-memory tile, three-byte prefix filter, atomic OR of the pattern bit into the line's mask), one launch per group of 32 indicators | `src/rp_gpu.jl` | passes ∝ ⌈N/32⌉ |
 | C1 | **CPU tuned**: the G2 algorithm in Julia, hand-written open-addressing table, no allocation per token, one task per newline-aligned chunk (`Threads.@threads`; 1, 2, 4 tasks) | `src/rp_cpu.jl` | one pass |
 | C2 | **CPU library**: `occursin` per indicator over the lines (lists up to 300) | `src/rp_cpu.jl` | lines × N |
@@ -74,7 +75,7 @@ plots (`results/*.png`).  A CPU-only run writes `results/list_sweep_cpu_<host>.c
 | File | Contents |
 |---|---|
 | `src/rp_run.jl` | header block; validation (`Correct!`); the list-size, corpus-size and CPU-task sweeps; results and analysis generation |
-| `src/rp_gpu.jl` | kernels: `newline_flags!`, `word_flags!`, `scatter_positions!` (compaction), `hash_match!`, `hash_match_shared!`, `probe_counts!` (measurement), `hit_pairs!`, `match_tiled_tri!` (Project 2 kernel for the per-indicator baseline); the pipeline |
+| `src/rp_gpu.jl` | kernels: `newline_flags!`, `word_flags!`, `scatter_positions!` (compaction), `hash_match!`, `hash_match_shared!`, `probe_counts!` (measurement), `hit_pairs!`, `hash_match_direct!` and `pos_lines!` (no compaction), `match_tiled_tri!` (Project 2 kernel for the per-indicator baseline); the pipelines |
 | `src/rp_cpu.jl` | the word alphabet, FNV-1a, the open-addressing indicator table, the tuned multithreaded CPU matcher, the `occursin` baseline |
 | `src/rp_data.jl` | generator wrapper, loaders, the indicator lists |
 | `src/rp_common.jl` | timing harness (warm-up, `CUDA.@elapsed` per launch, mean/min/max), device information, Markdown tables |

@@ -27,6 +27,8 @@ jobs = [
     ("hash_match_shared!", hash_match_shared!, (I32, U8, I32, U8, U32, I32, I32, I32, U8, UInt32)),
     ("probe_counts!", probe_counts!, (U64, U8, I32, U8, U32, I32, UInt32)),
     ("hit_pairs!", hit_pairs!, (I32, I32, I32, I32, I32, I32)),
+    ("hash_match_direct!", hash_match_direct!, (I32, I32, I32, U8, U8, U32, I32, I32, I32, U8, UInt32)),
+    ("pos_lines!", pos_lines!, (I32, I32, I32)),
     ("match_tiled_tri!", match_tiled_tri!, (U32, U8, U8, I32, U32, U8, U8, I32)),
 ]
 failed = false

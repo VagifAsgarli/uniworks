@@ -300,6 +300,83 @@ end
 free_results!(r::NamedTuple) = free_all!(values(r)...)
 
 # ---------------------------------------------------------------------------
+# G3: the same hash-set match without the token compaction
+# ---------------------------------------------------------------------------
+
+# One thread per byte, grid-stride: a thread whose byte starts a token walks
+# it, hashes it and probes the table; a hit is appended to the (position,
+# indicator) buffers with one atomic counter (hits are rare, 0.09 % of lines).
+# No flags, no scan, no scatter: the question is whether the compaction's
+# traffic (8 bytes per corpus byte) costs more than the divergence it removes
+# (only about one byte in five starts a token, and the lanes of a warp walk
+# tokens of different lengths).
+function hash_match_direct!(hit_pos, hit_ind, nhits, corpus, is_word, keys, ind, off, len, buf, mask)
+    i      = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+    stride = gridDim().x * blockDim().x
+    n      = length(corpus)
+    cap    = length(hit_pos)
+    while i <= n
+        @inbounds t = is_word[corpus[i] + 1]
+        @inbounds prev = i > 1 ? is_word[corpus[i - 1] + 1] : 0x00
+        if t == 0x01 && prev == 0x00
+            h, L, toolong = token_hash(corpus, i, is_word)
+            if !toolong
+                r = hash_probe(corpus, i, L, h, keys, ind, off, len, buf, mask)
+                if r != Int32(0)
+                    slot = CUDA.@atomic nhits[1] += Int32(1)          # the old value: this hit's slot
+                    if slot < cap
+                        @inbounds hit_pos[slot + 1] = Int32(i)
+                        @inbounds hit_ind[slot + 1] = r
+                    end
+                end
+            end
+        end
+        i += stride
+    end
+    return nothing
+end
+
+"Line numbers of hit positions (binary search over the line table)."
+function pos_lines!(lines, hit_pos, line_start)
+    k = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+    k > length(hit_pos) && return nothing
+    @inbounds lines[k] = Int32(line_of_device(line_start, hit_pos[k]))
+    return nothing
+end
+
+const HIT_CAP = 1 << 20     # hit buffer entries; the pipeline retries with a larger buffer if exceeded
+
+"Launch the direct kernel; returns the hit count (the buffers hold min(count, capacity) entries)."
+function launch_hash_direct!(hit_pos, hit_ind, nhits, corpus, dt::DeviceTable)
+    fill!(nhits, Int32(0))
+    @cuda threads=256 blocks=grid_for(length(corpus)) hash_match_direct!(hit_pos, hit_ind, nhits, corpus, dt.is_word, dt.keys, dt.ind, dt.off, dt.len, dt.buf, dt.mask)
+    return Int(CUDA.@allowscalar nhits[1])
+end
+
+"""
+The G3 pipeline: line table, direct match (no compaction), line lookup of
+the hits.  Returns device results; the pairs are unordered (atomic append)
+and sorted on the host by `host_pairs`.
+"""
+function gpu_direct_pipeline(corpus::CuVector{UInt8}, dt::DeviceTable; cap::Int = HIT_CAP)
+    n = length(corpus)
+    flags = CuVector{UInt32}(undef, n)
+    line_start = gpu_line_starts(corpus, flags)
+    CUDA.unsafe_free!(flags)
+    hit_pos = CuVector{Int32}(undef, cap); hit_ind = CuVector{Int32}(undef, cap); nhits = CuVector{Int32}(undef, 1)
+    count = launch_hash_direct!(hit_pos, hit_ind, nhits, corpus, dt)
+    if count > cap                                           # more hits than the buffer: once more with room
+        free_all!(hit_pos, hit_ind, nhits, line_start)
+        return gpu_direct_pipeline(corpus, dt; cap = 2count)
+    end
+    lines = CuVector{Int32}(undef, count)
+    count > 0 && @cuda threads=256 blocks=cld(count, 256) pos_lines!(lines, view(hit_pos, 1:count), line_start)
+    inds = hit_ind[1:count]
+    free_all!(hit_pos, hit_ind, nhits)
+    return (; line_start, lines, inds)
+end
+
+# ---------------------------------------------------------------------------
 # G1: the per-indicator baseline (Project 2 kernel, one launch per 32 patterns)
 # ---------------------------------------------------------------------------
 

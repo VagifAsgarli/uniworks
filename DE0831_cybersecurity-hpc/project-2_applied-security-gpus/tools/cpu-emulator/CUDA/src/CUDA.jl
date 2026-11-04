@@ -50,8 +50,10 @@ macro atomic(ex)
     quote
         local A = $arr
         local I = ($(idx...),)
-        A[I...] = $op(A[I...], convert(eltype(A), $(esc(val))))
-        nothing
+        let old = A[I...]                        # CUDA.@atomic returns the old value
+            A[I...] = $op(old, convert(eltype(A), $(esc(val))))
+            old
+        end
     end
 end
 # CUDA.jl's `accumulate`, `map`, broadcasting and indexing on CuArray are

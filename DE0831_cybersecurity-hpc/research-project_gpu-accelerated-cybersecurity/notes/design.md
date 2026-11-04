@@ -47,6 +47,14 @@ G1 is the "unoptimised GPU version" baseline of the brief: it shows the linear l
 list size at which G2 overtakes it.  G2 is the method; C1 the tuned CPU baseline; C2 the
 library baseline for N ≤ 300.
 
+| G3 | **GPU hash-set without compaction**: one thread per byte, grid-stride; a thread whose byte starts a token walks it, hashes and probes exactly as G2; hits appended to (position, indicator) buffers with one atomic counter (hits are 0.09 % of lines); line numbers of the hits by binary search afterwards | bytes (one pass), with warp divergence instead of the scan traffic | same table |
+
+G3 answers a question the first CPU measurements raised: the tuned CPU matcher reaches about
+1.1 GB/s on four cores because it does one pass with no compaction, while G2 pays the
+lecture-7 scan twice (line table and token starts: 8 bytes of flag traffic per corpus byte).
+G3 keeps the line table (needed only to name the lines of the few hits) and drops the token
+scan; the measured difference between G2 and G3 is what the compaction costs or saves.
+
 Hash table: capacity = next power of two ≥ 2N (load ≤ 0.5), linear probing; entry = `UInt32`
 hash, `Int32` offset into a packed pattern byte buffer, `Int32` length (12 B); a token is
 hashed once (FNV-1a 32-bit over its bytes, same function on CPU and GPU), probed until an

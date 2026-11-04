@@ -25,8 +25,9 @@ function make_plots(results_dir, threads)
     rate(t) = main_lines ./ t ./ 1e6
     f = Figure(size = (1000, 520))
     ax = Axis(f[1, 1]; xlabel = "indicators in the list", ylabel = "million lines / s", xscale = log10, yscale = log10,
-              xticks = (N, sizelabel.(N)), title = "Log indicator matching: rate against the list size (1M lines)")
-    series = [("GPU hash-set pipeline", rate(col("pipeline_s"))),
+              xticks = (N, sizelabel.(N)), title = "Log indicator matching: rate against the list size ($(sizelabel(main_lines)) lines)")
+    series = [("GPU hash-set pipeline (scan + compaction)", rate(col("pipeline_s"))),
+              ("GPU hash-set pipeline, no compaction", rate(col("pipeline_direct_s"))),
               ("GPU hash-match kernel alone", rate(col("hash_global_s"))),
               ("GPU per-indicator (Project 2 kernel, per 32)", rate(col("g1_s"))),
               ("CPU hash-set, $Tmax tasks", rate(col("cpu_t$(Tmax)_s"))),
@@ -58,7 +59,8 @@ function make_plots(results_dir, threads)
     f3 = Figure(size = (1000, 500))
     ax3 = Axis(f3[1, 1]; xlabel = "corpus size (lines)", ylabel = "MB/s", xscale = log10, yscale = log10,
                xticks = (lines_, sizelabel.(lines_)), title = "Data rate against the corpus size (list of $(sizelabel(parse(Float64, get(ENV, "RP_SIZE_LIST", "1000")))) indicators)")
-    for (label, y) in [("GPU pipeline", mbps(col2("pipeline_s"))),
+    for (label, y) in [("GPU pipeline (scan + compaction)", mbps(col2("pipeline_s"))),
+                       ("GPU pipeline, no compaction", mbps(col2("pipeline_direct_s"))),
                        ("GPU pipeline + host-to-device copy", mbps(col2("pipeline_s") .+ col2("h2d_s"))),
                        ("CPU hash-set, $Tmax tasks", mbps(col2("cpu_t$(Tmax)_s"))),
                        ("CPU hash-set, 1 task", mbps(col2("cpu_t1_s")))]

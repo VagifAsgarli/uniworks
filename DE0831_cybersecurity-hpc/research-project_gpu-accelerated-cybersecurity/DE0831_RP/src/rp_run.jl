@@ -82,6 +82,9 @@ if !CPU_ONLY
     hit_s = CuVector{Int32}(undef, length(r20.token_start))
     launch_hash_match!(hit_s, corpus_d, r20.token_start, dt20; variant = :shared)
     require(Array(hit_s) == Array(r20.hit), "GPU hash matcher (shared keys) != global")
+    r20d = gpu_direct_pipeline(corpus_d, dt20)
+    require(host_pairs(r20d) == hits1, "GPU direct matcher (no compaction) != CPU")
+    free_results!(r20d)
     groups20 = device_groups(base)
     masks20 = [CUDA.zeros(UInt32, MAIN_N) for _ in groups20]
     launch_groups!(masks20, corpus_d, groups20, r20.line_start)
@@ -102,6 +105,9 @@ for N in LISTS
         dtN = DeviceTable(tN)
         rN = gpu_hash_pipeline(corpus_d, dtN; variant = :global)
         require(host_pairs(rN) == hN, "list $N: GPU hash matcher != CPU")
+        rNd = gpu_direct_pipeline(corpus_d, dtN)
+        require(host_pairs(rNd) == hN, "list $N: GPU direct matcher != CPU")
+        free_results!(rNd)
         if dtN.capacity <= SHARED_CAP
             hs = CuVector{Int32}(undef, length(rN.token_start))
             launch_hash_match!(hs, corpus_d, rN.token_start, dtN; variant = :shared)
@@ -134,6 +140,9 @@ function small_case(text, list; expect)
         r = gpu_hash_pipeline(CuVector(c), dt; variant = :global)
         require(Array(r.line_start) == ls, "small case line table: $(repr(text[1:min(end, 40)]))")
         require(pairs_to_set(host_pairs(r), list) == Set(expect), "small case $(repr(text[1:min(end, 40)])) (GPU): expected $expect")
+        rd = gpu_direct_pipeline(CuVector(c), dt)
+        require(pairs_to_set(host_pairs(rd), list) == Set(expect), "small case $(repr(text[1:min(end, 40)])) (GPU direct): expected $expect")
+        free_results!(rd)
         if all(length(codeunits(s)) <= MAXPLEN for s in list)      # the per-indicator kernel takes patterns up to MAXPLEN bytes
             g = device_groups(list); m = [CUDA.zeros(UInt32, nlines_of(ls)) for _ in g]
             launch_groups!(m, CuVector(c), g, r.line_start)
@@ -207,7 +216,7 @@ if !QUICK
     # ---- sweep A: list size at MAIN_N -----------------------------------------
     A = Dict{Int,Any}()
     csvA = String["N,capacity,table_bytes,buf_bytes" *
-                  (CPU_ONLY ? "" : ",line_table_s,token_starts_s,hash_global_s,hash_shared_s,extract_s,pipeline_s,g1_s,g1_groups,probes_per_token,equal_per_token") *
+                  (CPU_ONLY ? "" : ",line_table_s,token_starts_s,hash_global_s,hash_shared_s,extract_s,pipeline_s,direct_s,pipeline_direct_s,g1_s,g1_groups,probes_per_token,equal_per_token") *
                   join([",cpu_t$(T)_s" for T in THREADS]) * ",occursin_s"]
     for N in LISTS
         list = lists[N]; tN = IndicatorTable(list)
@@ -229,6 +238,11 @@ if !QUICK
             row[:t_ex] = time_kernel(() -> free_all!(gpu_extract_hits(hit_d, ts_d, ls_d)...))
             s_pipe = time_stats(() -> free_results!(gpu_hash_pipeline(corpus_d, dtN; variant = :global)); reps = min(REPS, 20))
             row[:t_pipe] = s_pipe.mean; row[:s_pipe] = s_pipe
+            hp = CuVector{Int32}(undef, HIT_CAP); hi = CuVector{Int32}(undef, HIT_CAP); nh = CuVector{Int32}(undef, 1)
+            row[:t_hd] = time_kernel(() -> launch_hash_direct!(hp, hi, nh, corpus_d, dtN))
+            s_pdir = time_stats(() -> free_results!(gpu_direct_pipeline(corpus_d, dtN)); reps = min(REPS, 20))
+            row[:t_pdir] = s_pdir.mean; row[:s_pdir] = s_pdir
+            free_all!(hp, hi, nh)
             counters = CUDA.zeros(UInt64, 2)
             @cuda threads=HASH_THREADS blocks=cld(length(ts_d), HASH_THREADS) probe_counts!(counters, corpus_d, ts_d, dtN.is_word, dtN.keys, dtN.len, dtN.mask)
             probes, equal = Int.(Array(counters))
@@ -244,7 +258,7 @@ if !QUICK
             end
             free_all!(flags, ls_d, ts_d, hit_d, counters)
             GC.gc(); CUDA.reclaim()
-            println("  GPU: tokens $(ms(row[:t_ts])) ms, hash match $(ms(row[:t_hg])) ms (shared keys $(isnan(row[:t_hs]) ? "n/a" : ms(row[:t_hs]) * " ms")), pipeline $(ms(row[:t_pipe])) ms; per-indicator $(isnan(row[:t_g1]) ? "n/a" : ms(row[:t_g1]) * " ms") ($(row[:groups]) groups); $(f2(row[:probes])) probes/token")
+            println("  GPU: tokens $(ms(row[:t_ts])) ms, hash match $(ms(row[:t_hg])) ms (shared keys $(isnan(row[:t_hs]) ? "n/a" : ms(row[:t_hs]) * " ms")), pipeline $(ms(row[:t_pipe])) ms; direct $(ms(row[:t_hd])) ms, pipeline $(ms(row[:t_pdir])) ms; per-indicator $(isnan(row[:t_g1]) ? "n/a" : ms(row[:t_g1]) * " ms") ($(row[:groups]) groups); $(f2(row[:probes])) probes/token")
         end
         for T in THREADS
             row[Symbol("cpu_t", T)] = time_cpu(() -> cpu_hash_match(corpus, tN; T); reps = CPU_REPS).min
@@ -253,7 +267,7 @@ if !QUICK
         println("  CPU: " * join(["$T chunk$(T > 1 ? "s" : "") $(f3(row[Symbol("cpu_t", T)])) s" for T in THREADS], ", ") * "; occursin $(isnan(row[:t_c2]) ? "n/a" : f3(row[:t_c2]) * " s")")
         A[N] = row
         push!(csvA, join(string.(vcat([N, tN.capacity, tb, bb],
-                                      CPU_ONLY ? [] : [row[:t_lt], row[:t_ts], row[:t_hg], row[:t_hs], row[:t_ex], row[:t_pipe], row[:t_g1], row[:groups], row[:probes], row[:equal]],
+                                      CPU_ONLY ? [] : [row[:t_lt], row[:t_ts], row[:t_hg], row[:t_hs], row[:t_ex], row[:t_pipe], row[:t_hd], row[:t_pdir], row[:t_g1], row[:groups], row[:probes], row[:equal]],
                                       [row[Symbol("cpu_t", T)] for T in THREADS], [row[:t_c2]])), ","))
     end
     write(joinpath(RESULTS_DIR, CPU_ONLY ? "list_sweep_cpu_$(hostname).csv" : "list_sweep.csv"), join(csvA, "\n") * "\n")
@@ -262,7 +276,7 @@ if !QUICK
     Nb = SIZE_LIST_N
     listB = indicator_list(Nb, base); tB = IndicatorTable(listB)
     B = Dict{Int,Any}()
-    csvB = String["lines,bytes,read_s" * (CPU_ONLY ? "" : ",h2d_s,h2d_pinned_s,pipeline_s,d2h_s") * join([",cpu_t$(T)_s" for T in THREADS])]
+    csvB = String["lines,bytes,read_s" * (CPU_ONLY ? "" : ",h2d_s,h2d_pinned_s,pipeline_s,pipeline_direct_s,d2h_s") * join([",cpu_t$(T)_s" for T in THREADS])]
     for nl in SIZES
         ensure_corpus(nl)
         path = corpus_path(nl)
@@ -282,6 +296,7 @@ if !QUICK
             end
             s_pipe = time_stats(() -> free_results!(gpu_hash_pipeline(cd, dtB; variant = :global)); reps = min(REPS, 20))
             rowb[:t_pipe] = s_pipe.mean; rowb[:s_pipe] = s_pipe
+            rowb[:t_pdir] = time_stats(() -> free_results!(gpu_direct_pipeline(cd, dtB)); reps = min(REPS, 20)).mean
             res = gpu_hash_pipeline(cd, dtB; variant = :global)
             rowb[:t_d2h] = time_stats(() -> (Array(res.lines); Array(res.inds))).mean
             free_results!(res); free_all!(cd)
@@ -291,9 +306,9 @@ if !QUICK
             rowb[Symbol("cpu_t", T)] = time_cpu(() -> cpu_hash_match(c, tB; T); reps = CPU_REPS).min
         end
         B[nl] = rowb
-        push!(csvB, join(string.(vcat([nl, n, t_read], CPU_ONLY ? [] : [rowb[:t_h2d], rowb[:t_h2d_pin], rowb[:t_pipe], rowb[:t_d2h]],
+        push!(csvB, join(string.(vcat([nl, n, t_read], CPU_ONLY ? [] : [rowb[:t_h2d], rowb[:t_h2d_pin], rowb[:t_pipe], rowb[:t_pdir], rowb[:t_d2h]],
                                       [rowb[Symbol("cpu_t", T)] for T in THREADS])), ","))
-        println("  " * (CPU_ONLY ? "" : "GPU pipeline $(ms(rowb[:t_pipe])) ms ($(f1(mbps(n, rowb[:t_pipe]))) MB/s), +H2D $(ms(rowb[:t_pipe] + rowb[:t_h2d])) ms; ") * "CPU $(THREADS[end]) chunks $(f3(rowb[Symbol("cpu_t", THREADS[end])])) s ($(f1(mbps(n, rowb[Symbol("cpu_t", THREADS[end])]))) MB/s)")
+        println("  " * (CPU_ONLY ? "" : "GPU pipeline $(ms(rowb[:t_pipe])) ms ($(f1(mbps(n, rowb[:t_pipe]))) MB/s), direct $(ms(rowb[:t_pdir])) ms, +H2D $(ms(rowb[:t_pipe] + rowb[:t_h2d])) ms; ") * "CPU $(THREADS[end]) chunks $(f3(rowb[Symbol("cpu_t", THREADS[end])])) s ($(f1(mbps(n, rowb[Symbol("cpu_t", THREADS[end])]))) MB/s)")
         c = nothing; GC.gc()
     end
     write(joinpath(RESULTS_DIR, CPU_ONLY ? "size_sweep_cpu_$(hostname).csv" : "size_sweep.csv"), join(csvB, "\n") * "\n")
@@ -321,14 +336,17 @@ if !QUICK
         Tmax = THREADS[end]
         rate(t) = f2(MAIN_N / t / 1e6)                         # M lines/s
         hdrA = ["N", "table (KB)", "GPU hash-set: pipeline (ms)", "M lines/s", "hash kernel (ms)", "shared keys (ms)", "probes/token",
+                "GPU direct: pipeline (ms)", "M lines/s", "direct kernel (ms)",
                 "GPU per-indicator (ms)", "groups", "M lines/s", "CPU hash-set $Tmax thr. (s)", "M lines/s", "CPU 1 thr. (s)", "occursin (s)"]
         rowsA = [(commas(N), f1((A[N][:table_bytes] + A[N][:buf_bytes]) / 1024), ms(A[N][:t_pipe]), rate(A[N][:t_pipe]), ms(A[N][:t_hg]),
                   isnan(A[N][:t_hs]) ? "n/a" : ms(A[N][:t_hs]), f2(A[N][:probes]),
+                  ms(A[N][:t_pdir]), rate(A[N][:t_pdir]), ms(A[N][:t_hd]),
                   isnan(A[N][:t_g1]) ? "n/a" : ms(A[N][:t_g1]), A[N][:groups], isnan(A[N][:t_g1]) ? "n/a" : rate(A[N][:t_g1]),
                   f3(A[N][Symbol("cpu_t", Tmax)]), rate(A[N][Symbol("cpu_t", Tmax)]), f3(A[N][:cpu_t1]),
                   isnan(A[N][:t_c2]) ? "n/a" : f3(A[N][:t_c2])) for N in LISTS]
-        hdrB = ["lines", "MB", "GPU pipeline (ms)", "MB/s", "+ H2D pageable (ms)", "MB/s", "H2D pinned (ms)", "CPU $Tmax thr. (s)", "MB/s", "speed-up (GPU)", "speed-up (GPU + H2D)"]
+        hdrB = ["lines", "MB", "GPU pipeline (ms)", "MB/s", "GPU direct pipeline (ms)", "MB/s", "+ H2D pageable (ms)", "MB/s", "H2D pinned (ms)", "CPU $Tmax thr. (s)", "MB/s", "speed-up (GPU)", "speed-up (GPU + H2D)"]
         rowsB = [(commas(nl), f1(B[nl][:n] / 1e6), ms(B[nl][:t_pipe]), f1(mbps(B[nl][:n], B[nl][:t_pipe])),
+                  ms(B[nl][:t_pdir]), f1(mbps(B[nl][:n], B[nl][:t_pdir])),
                   ms(B[nl][:t_pipe] + B[nl][:t_h2d]), f1(mbps(B[nl][:n], B[nl][:t_pipe] + B[nl][:t_h2d])),
                   isnan(B[nl][:t_h2d_pin]) ? "n/a" : ms(B[nl][:t_h2d_pin]),
                   f3(B[nl][Symbol("cpu_t", Tmax)]), f1(mbps(B[nl][:n], B[nl][Symbol("cpu_t", Tmax)])),
@@ -414,6 +432,9 @@ if !QUICK
         $Tmax-task CPU on the device and **$(f1(cpuT[end] / (A[Nmax][:t_pipe] + B[MAIN_N in keys(B) ? MAIN_N : SIZES[end]][:t_h2d])))×** once the host-to-device copy is added.
         The per-indicator GPU kernel, one launch per 32 indicators, costs $(ms(g1_per_group)) ms per group on this corpus: measured
         $(join(["$(ms(A[N][:t_g1])) ms at $(commas(N))" for N in g1_N], ", ")), i.e. **$(f2(g1_pred_max)) s predicted at $(commas(Nmax))**, $(f0(g1_pred_max / A[Nmax][:t_pipe]))× the hash-set pipeline.
+        The same hash-set match without the token compaction (one thread per byte, hits appended with an atomic
+        counter) takes $(ms(A[Nmax][:t_pdir])) ms instead of $(ms(A[Nmax][:t_pipe])) ms at $(commas(Nmax)) (kernel alone $(ms(A[Nmax][:t_hd])) ms against
+        token scan + hash match $(ms(A[Nmax][:t_ts] + A[Nmax][:t_hg])) ms): $(A[Nmax][:t_pdir] < A[Nmax][:t_pipe] ? "the compaction costs more than it saves here, because only about one byte in five starts a token and the scan moves 8 bytes per corpus byte" : "the compaction pays off here: the one-thread-per-byte kernel loses more to divergence (lanes walking tokens of different lengths, most lanes idle) than the scan costs").
 
         ## 2. Scaling with the list size
 
@@ -442,8 +463,8 @@ if !QUICK
 
         ## 4. The data rate: when the GPU is needed and how long it keeps up
 
-        $(md_table(["lines", "GPU pipeline (MB/s)", "+ H2D (MB/s)", "CPU $Tmax tasks (MB/s)", "CPU 1 task (MB/s)", "H2D / pipeline"],
-                   [(commas(nl), f1(mbps(B[nl][:n], B[nl][:t_pipe])), f1(mbps(B[nl][:n], B[nl][:t_pipe] + B[nl][:t_h2d])),
+        $(md_table(["lines", "GPU pipeline (MB/s)", "GPU direct pipeline (MB/s)", "+ H2D (MB/s)", "CPU $Tmax tasks (MB/s)", "CPU 1 task (MB/s)", "H2D / pipeline"],
+                   [(commas(nl), f1(mbps(B[nl][:n], B[nl][:t_pipe])), f1(mbps(B[nl][:n], B[nl][:t_pdir])), f1(mbps(B[nl][:n], B[nl][:t_pipe] + B[nl][:t_h2d])),
                      f1(mbps(B[nl][:n], B[nl][Symbol("cpu_t", Tmax)])), f1(mbps(B[nl][:n], B[nl][:cpu_t1])), f2(B[nl][:t_h2d] / B[nl][:t_pipe])) for nl in SIZES]))
         With a list of $(commas(Nb)) indicators the tuned CPU keeps up with **$(f1(R_cpu / 1e6)) MB/s** on $Tmax tasks ($(f1(R_cpu1 / 1e6)) MB/s per task,
         $(vol(R_cpu * day))); above that rate a GPU is needed, and one GPU keeps up with **$(f1(R_gpu_h2d / 1e6)) MB/s** including the pageable
