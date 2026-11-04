@@ -1,0 +1,13 @@
+Student: Vagif Asgarli, ID: 251ADM047
+Research project, topic 10: log lines per second as the indicator list grows from 10 to 10,000
+Derived parameters: generator seed = 5175890676511383715 (SHA-256 of the ID), validation corpus = 1,000,000 lines, list sizes = 10, 30, 100, 300, 1,000, 3,000, 10,000, corpus sizes = 125,000, 250,000, 500,000, 1,000,000, 2,000,000, 4,000,000
+Host: Intel(R) Xeon(R) CPU @ 2.00GHz, 2 hardware threads; Julia threads: 2; CPU chunk counts: 1, 2
+Device: Tesla T4
+Compute capability: 7.5.0
+Corpus: 119,177,563 bytes, 1,000,000 lines; 20 generator indicators; truth: 894 (line, indicator) pairs
+Validation on the generator's 20 indicators: all methods equal the truth (894 pairs)
+Validation on every list size: hit sets equal across methods (hits stay at 894 pairs: the cold indicators never occur)
+Validation passed: 11 hand-made cases
+Correct!
+Test Summary:                     | Pass  Total     Time
+DE0831 research project, topic 10 |    1      1  1m34.7s

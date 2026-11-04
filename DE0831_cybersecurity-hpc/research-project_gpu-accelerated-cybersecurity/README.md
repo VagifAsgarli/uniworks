@@ -94,9 +94,14 @@ Topic 5 (file integrity checking) fits Project 2 track A (SHA-256 kernel), not t
       `occursin`), measurement matrix, expected results, validation.
 - [x] Code (`DE0831_RP/`): kernels, CPU matcher, validation against the ground truth for every
       list size, both sweeps, results/analysis generators, plots, tests, README, Colab notebook.
-- [ ] Emulator and PTX checks; Colab T4 run; CPU-only run on the 4-core machine.
-- [ ] Report (6–10 pages, RTU format) and code by 11.12; presentation with live demo, speaker
-      notes and Q&A, 14.12.
+- [x] Emulator validation (`Correct!`), all ten kernels compiled to PTX, Colab T4 run
+      (`outputs/colab-t4_2026-11-04/`, results in `DE0831_RP/results/`), CPU sweeps on the
+      4-core machine (`outputs/cpu-xeon4_2026-11-04/`).  Headline: the GPU hash-set pipeline is
+      flat from 10 to 10,000 indicators (30 M lines/s with compaction, 49 M without); the
+      per-indicator kernel grows linearly (5.9 ms per 32 indicators); the tuned CPU reaches
+      1.1–1.4 GB/s on 4 cores, the GPU 1.9 GB/s with the copy and 5.8 GB/s on the device.
+- [ ] Report (6–10 pages, RTU format): draft in `outputs/report/`; code and report by 11.12.
+- [ ] Presentation (10 min, live demo on Colab), speaker notes and Q&A, 14.12.
 
 ## Layout
 

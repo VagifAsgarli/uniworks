@@ -1,0 +1,108 @@
+Student: Vagif Asgarli, ID: 251ADM047
+Research project, topic 10: log lines per second as the indicator list grows from 10 to 10,000
+Derived parameters: generator seed = 5175890676511383715 (SHA-256 of the ID), validation corpus = 1,000,000 lines, list sizes = 10, 30, 100, 300, 1,000, 3,000, 10,000, corpus sizes = 125,000, 250,000, 500,000, 1,000,000, 2,000,000, 4,000,000
+Host: Intel(R) Xeon(R) CPU @ 2.00GHz, 2 hardware threads; Julia threads: 2; CPU chunk counts: 1, 2
+Device: Tesla T4
+Compute capability: 7.5.0
+Generating 1,000,000 lines with gen_logs.jl into /content/DE0831_RP/data/lines_1000000 ...
+corpus_251ADM047.log            1000000 lines, 119.2 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             894 lines carry an indicator (0.0894 %)
+entropy_truth_251ADM047.csv     243 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+Corpus: 119,177,563 bytes, 1,000,000 lines; 20 generator indicators; truth: 894 (line, indicator) pairs
+Validation on the generator's 20 indicators: all methods equal the truth (894 pairs)
+Validation on every list size: hit sets equal across methods (hits stay at 894 pairs: the cold indicators never occur)
+Validation passed: 11 hand-made cases
+Correct!
+
+[list of 10 indicators, table 512 B + buffer 172 B]
+  GPU: tokens 15.595 ms, hash match 2.098 ms (shared keys 2.216 ms), pipeline 32.881 ms; direct 7.791 ms, pipeline 24.775 ms; per-indicator 5.588 ms (1 groups); 1.43 probes/token
+  CPU: 1 chunk 0.395 s, 2 chunks 0.315 s; occursin 1.069 s
+
+[list of 30 indicators, table 1,024 B + buffer 505 B]
+  GPU: tokens 15.791 ms, hash match 2.534 ms (shared keys 2.580 ms), pipeline 33.231 ms; direct 8.181 ms, pipeline 20.722 ms; per-indicator 7.657 ms (1 groups); 2.37 probes/token
+  CPU: 1 chunk 0.527 s, 2 chunks 0.403 s; occursin 3.121 s
+
+[list of 100 indicators, table 4,096 B + buffer 1,662 B]
+  GPU: tokens 15.683 ms, hash match 2.565 ms (shared keys 2.630 ms), pipeline 33.040 ms; direct 8.026 ms, pipeline 20.815 ms; per-indicator 23.661 ms (4 groups); 2.05 probes/token
+  CPU: 1 chunk 0.439 s, 2 chunks 0.634 s; occursin 11.101 s
+
+[list of 300 indicators, table 16,384 B + buffer 5,271 B]
+  GPU: tokens 17.527 ms, hash match 1.890 ms (shared keys 2.465 ms), pipeline 33.014 ms; direct 7.300 ms, pipeline 19.826 ms; per-indicator 58.598 ms (10 groups); 1.41 probes/token
+  CPU: 1 chunk 0.434 s, 2 chunks 0.382 s; occursin 33.239 s
+
+[list of 1,000 indicators, table 32,768 B + buffer 17,787 B]
+  GPU: tokens 15.725 ms, hash match 2.664 ms (shared keys 3.106 ms), pipeline 33.287 ms; direct 8.010 ms, pipeline 20.434 ms; per-indicator 186.605 ms (32 groups); 2.28 probes/token
+  CPU: 1 chunk 0.651 s, 2 chunks 0.380 s; occursin n/a
+
+[list of 3,000 indicators, table 131,072 B + buffer 52,451 B]
+  GPU: tokens 15.706 ms, hash match 2.724 ms (shared keys n/a), pipeline 33.252 ms; direct 7.830 ms, pipeline 20.279 ms; per-indicator 561.365 ms (94 groups); 1.70 probes/token
+  CPU: 1 chunk 0.424 s, 2 chunks 0.338 s; occursin n/a
+
+[list of 10,000 indicators, table 524,288 B + buffer 176,388 B]
+  GPU: tokens 15.745 ms, hash match 2.583 ms (shared keys n/a), pipeline 33.109 ms; direct 7.650 ms, pipeline 20.224 ms; per-indicator n/a (313 groups); 1.53 probes/token
+  CPU: 1 chunk 0.427 s, 2 chunks 0.535 s; occursin n/a
+Generating 125,000 lines with gen_logs.jl into /content/DE0831_RP/data/lines_125000 ...
+corpus_251ADM047.log            125000 lines, 14.9 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             102 lines carry an indicator (0.0816 %)
+entropy_truth_251ADM047.csv     28 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[125,000 lines, 14.9 MB, list of 1,000]
+  GPU pipeline 4.340 ms (3433.8 MB/s), direct 2.846 ms, +H2D 7.367 ms; CPU 2 chunks 0.047 s (318.2 MB/s)
+Generating 250,000 lines with gen_logs.jl into /content/DE0831_RP/data/lines_250000 ...
+corpus_251ADM047.log            250000 lines, 29.8 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             219 lines carry an indicator (0.0876 %)
+entropy_truth_251ADM047.csv     57 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[250,000 lines, 29.8 MB, list of 1,000]
+  GPU pipeline 12.771 ms (2332.6 MB/s), direct 5.322 ms, +H2D 19.126 ms; CPU 2 chunks 0.095 s (314.7 MB/s)
+Generating 500,000 lines with gen_logs.jl into /content/DE0831_RP/data/lines_500000 ...
+corpus_251ADM047.log            500000 lines, 59.6 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             440 lines carry an indicator (0.0880 %)
+entropy_truth_251ADM047.csv     125 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[500,000 lines, 59.6 MB, list of 1,000]
+  GPU pipeline 16.461 ms (3619.6 MB/s), direct 10.528 ms, +H2D 29.270 ms; CPU 2 chunks 0.216 s (275.8 MB/s)
+
+[1,000,000 lines, 119.2 MB, list of 1,000]
+  GPU pipeline 33.316 ms (3577.2 MB/s), direct 20.527 ms, +H2D 59.024 ms; CPU 2 chunks 0.411 s (289.6 MB/s)
+Generating 2,000,000 lines with gen_logs.jl into /content/DE0831_RP/data/lines_2000000 ...
+corpus_251ADM047.log            2000000 lines, 238.3 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             1760 lines carry an indicator (0.0880 %)
+entropy_truth_251ADM047.csv     460 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[2,000,000 lines, 238.3 MB, list of 1,000]
+  GPU pipeline 67.283 ms (3542.3 MB/s), direct 41.140 ms, +H2D 120.469 ms; CPU 2 chunks 0.788 s (302.3 MB/s)
+Generating 4,000,000 lines with gen_logs.jl into /content/DE0831_RP/data/lines_4000000 ...
+corpus_251ADM047.log            4000000 lines, 476.6 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             3628 lines carry an indicator (0.0907 %)
+entropy_truth_251ADM047.csv     883 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[4,000,000 lines, 476.6 MB, list of 1,000]
+  GPU pipeline 144.976 ms (3287.7 MB/s), direct 82.745 ms, +H2D 249.723 ms; CPU 2 chunks 1.510 s (315.6 MB/s)
+
+Results written to /content/DE0831_RP/results/benchmarks.md and /content/DE0831_RP/results/analysis.md
+Plots written to /content/DE0831_RP/results
