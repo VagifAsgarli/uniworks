@@ -17,9 +17,10 @@ function make_plots(results_dir, threshold)
     mbps(t) = bytes ./ t ./ 1e6
 
     # 1. throughput vs corpus size
-    f = Figure(size = (900, 500))
+    sizelabel(n) = n >= 1e6 ? string(round(n / 1e6; digits = 2), "M") : string(round(Int, n / 1e3), "k")
+    f = Figure(size = (1000, 500))
     ax = Axis(f[1, 1]; xlabel = "corpus size (lines)", ylabel = "throughput (MB/s)", xscale = log10, yscale = log10,
-              title = "Track E: throughput against corpus size")
+              xticks = (lines_, sizelabel.(lines_)), title = "Track E: throughput against corpus size")
     series = [("match kernel (GPU)", mbps(col("match_tiled_s"))),
               ("GPU pipeline", mbps(col("pipeline_s"))),
               ("GPU pipeline + host-to-device copy", mbps(col("pipeline_s") .+ col("h2d_s"))),
@@ -28,7 +29,7 @@ function make_plots(results_dir, threshold)
     for (label, y) in series
         scatterlines!(ax, lines_, y; label)
     end
-    axislegend(ax; position = :rb)
+    Legend(f[1, 2], ax)
     save(joinpath(results_dir, "throughput_vs_size.png"), f; px_per_unit = 2)
 
     # 2. time breakdown at every size (stacked)
@@ -68,6 +69,7 @@ function make_plots(results_dir, threshold)
     ax4 = Axis(f4[1, 1]; xlabel = "threshold (bits/char)", ylabel = "precision / recall", title = "Flagging quality against the threshold")
     scatterlines!(ax4, T[:, 1], T[:, 6]; label = "precision")
     scatterlines!(ax4, T[:, 1], T[:, 7]; label = "recall")
+    vlines!(ax4, [threshold]; color = :red, linestyle = :dash, label = "chosen $(round(threshold, digits = 2))")
     axislegend(ax4; position = :lb)
     save(joinpath(results_dir, "threshold_precision_recall.png"), f4; px_per_unit = 2)
     return nothing
