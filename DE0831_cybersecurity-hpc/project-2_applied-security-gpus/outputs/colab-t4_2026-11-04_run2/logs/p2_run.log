@@ -1,0 +1,78 @@
+Student: Vagif Asgarli, ID: 251ADM047
+Track: E (log mining), full route: one multi-pattern kernel, scan and compaction
+Derived parameters: generator seed = 5175890676511383715 (SHA-256 of the ID), validation corpus = 1,000,000 lines, sizes = 125,000, 250,000, 500,000, 1,000,000, 2,000,000, 4,000,000
+Device: Tesla T4
+Compute capability: 7.5.0
+Generating 1,000,000 lines with gen_logs.jl into /content/DE0831_P2/data/lines_1000000 ...
+corpus_251ADM047.log            1000000 lines, 119.2 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             894 lines carry an indicator (0.0894 %)
+entropy_truth_251ADM047.csv     243 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+Corpus: 119,177,563 bytes, 1,000,000 lines; 20 indicators; truth: 894 indicator lines, 243 payload tokens
+Entropy: 22,350,735 tokens; max H of tokens shorter than 32 chars = 3.784; min H of the 243 tokens of 32+ chars = 4.488; threshold from the histogram's empty band 3.80–4.45 bits: 4.12
+Validation passed: line table, match set (tiled and global kernels, CPU, occursin) == truth, extraction, 22,350,735 tokens, entropies, flagging, boundary cases
+Correct!
+Generating 125,000 lines with gen_logs.jl into /content/DE0831_P2/data/lines_125000 ...
+corpus_251ADM047.log            125000 lines, 14.9 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             102 lines carry an indicator (0.0816 %)
+entropy_truth_251ADM047.csv     28 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[125,000 lines, 14.9 MB]
+  match 1.545 ms (9644.7 MB/s), pipeline 7.157 ms, +H2D 10.140 ms; CPU pipeline 0.614 s
+Generating 250,000 lines with gen_logs.jl into /content/DE0831_P2/data/lines_250000 ...
+corpus_251ADM047.log            250000 lines, 29.8 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             219 lines carry an indicator (0.0876 %)
+entropy_truth_251ADM047.csv     57 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[250,000 lines, 29.8 MB]
+  match 3.165 ms (9412.9 MB/s), pipeline 13.975 ms, +H2D 19.995 ms; CPU pipeline 1.253 s
+Generating 500,000 lines with gen_logs.jl into /content/DE0831_P2/data/lines_500000 ...
+corpus_251ADM047.log            500000 lines, 59.6 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             440 lines carry an indicator (0.0880 %)
+entropy_truth_251ADM047.csv     125 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[500,000 lines, 59.6 MB]
+  match 6.384 ms (9333.8 MB/s), pipeline 28.116 ms, +H2D 40.478 ms; CPU pipeline 2.523 s
+
+[1,000,000 lines, 119.2 MB]
+  match 12.894 ms (9242.6 MB/s), pipeline 55.972 ms, +H2D 81.717 ms; CPU pipeline 5.151 s
+Generating 2,000,000 lines with gen_logs.jl into /content/DE0831_P2/data/lines_2000000 ...
+corpus_251ADM047.log            2000000 lines, 238.3 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             1760 lines carry an indicator (0.0880 %)
+entropy_truth_251ADM047.csv     460 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[2,000,000 lines, 238.3 MB]
+  match 26.439 ms (9014.5 MB/s), pipeline 115.147 ms, +H2D 167.912 ms; CPU pipeline 12.017 s
+Generating 4,000,000 lines with gen_logs.jl into /content/DE0831_P2/data/lines_4000000 ...
+corpus_251ADM047.log            4000000 lines, 476.6 MB
+indicators_251ADM047.txt        20 indicators (12 addresses, 8 domains)
+truth_251ADM047.csv             3628 lines carry an indicator (0.0907 %)
+entropy_truth_251ADM047.csv     883 encoded payloads, entropy ~5.5-6.0 bits/char
+
+Normal log tokens sit near 3.5-4.5 bits/char, so a threshold around 5.0
+separates them. Justify whatever threshold you choose from your own data.
+
+[4,000,000 lines, 476.6 MB]
+  match 54.938 ms (8676.0 MB/s), pipeline 234.535 ms, +H2D 337.580 ms; CPU pipeline 23.108 s
+
+Results written to /content/DE0831_P2/results/benchmarks.md and /content/DE0831_P2/results/analysis.md
+Plots written to /content/DE0831_P2/results

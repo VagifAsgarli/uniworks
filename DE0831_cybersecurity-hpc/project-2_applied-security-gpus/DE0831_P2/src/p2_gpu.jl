@@ -182,6 +182,92 @@ function match_tiled!(line_mask, corpus, pat, plen, first_mask, is_word, line_st
     return nothing
 end
 
+const MATCH_TILE_TRI = 4096   # bytes per block of the second tiled kernel: 16 positions per thread
+
+# Second tiled kernel, built from the measurements of the first one.  Two
+# changes: (1) a three-byte prefix filter in front of the first-byte mask: a
+# 4 KB bitmap in shared memory indexed by a 12-bit hash of the three bytes at
+# the position.  It rejects far more positions than the first byte alone, and
+# what matters on a GPU is that most *warps* then have no candidate in any of
+# their 32 lanes and skip the candidate loop entirely (a warp runs the loop
+# whenever one lane needs it, for as long as its slowest lane needs it).
+# (2) A 4 KB tile, so that the per-block copy of the tables into shared
+# memory (6.5 KB with the bitmap) is amortised over four times more bytes.
+# Boundary handling, word boundaries and the atomic OR are those of
+# `match_tiled!`; the three bytes of the hash are always inside the tile plus
+# its halo, and beyond the corpus end they are zero, which can only reject a
+# position that no pattern of three or more bytes could match anyway.
+function match_tiled_tri!(line_mask, corpus, pat, plen, first_mask, is_word, tri, line_start)
+    tile  = CuStaticSharedArray(UInt8, MATCH_TILE_TRI + MAXPLEN)
+    spat  = CuStaticSharedArray(UInt8, MAXPLEN * MAXPAT)
+    splen = CuStaticSharedArray(Int32, MAXPAT)
+    sfm   = CuStaticSharedArray(UInt32, 256)
+    sword = CuStaticSharedArray(UInt8, 256)
+    stri  = CuStaticSharedArray(UInt8, TRI_SLOTS)
+    tid  = threadIdx().x
+    base = (blockIdx().x - 1) * MATCH_TILE_TRI
+    n    = length(corpus)
+
+    k = tid                                               # 1. tables into shared memory
+    while k <= MAXPLEN * MAXPAT
+        @inbounds spat[k] = pat[k]
+        k += MATCH_THREADS
+    end
+    if tid <= MAXPAT
+        @inbounds splen[tid] = plen[tid]
+    end
+    @inbounds sfm[tid] = first_mask[tid]
+    @inbounds sword[tid] = is_word[tid]
+    k = tid
+    while k <= TRI_SLOTS
+        @inbounds stri[k] = tri[k]
+        k += MATCH_THREADS
+    end
+    k = tid                                               # 2. tile + halo (coalesced)
+    while k <= MATCH_TILE_TRI + MAXPLEN
+        g = base + k
+        @inbounds tile[k] = g <= n ? corpus[g] : 0x00
+        k += MATCH_THREADS
+    end
+    sync_threads()
+
+    k = tid                                               # 3. match at 16 positions per thread
+    while k <= MATCH_TILE_TRI
+        g = base + k
+        if g <= n
+            @inbounds b0 = tile[k]
+            @inbounds h  = tri_hash(b0, tile[k + 1], tile[k + 2])
+            @inbounds passes = stri[h + 1] != 0x00
+            if passes
+                @inbounds m = sfm[b0 + 1]
+                while m != 0x00000000
+                    p = trailing_zeros(m) + 1
+                    m &= m - 0x00000001
+                    @inbounds L = splen[p]
+                    if g + L - 1 <= n
+                        ok = true
+                        j = 1
+                        while ok && j <= L
+                            @inbounds ok = tile[k + j - 1] == spat[(p - 1) * MAXPLEN + j]
+                            j += 1
+                        end
+                        if ok
+                            @inbounds before = k > 1 ? tile[k - 1] : (g > 1 ? corpus[g - 1] : 0x00)
+                            @inbounds after  = g + L <= n ? tile[k + L] : 0x00
+                            @inbounds if sword[before + 1] == 0x00 && sword[after + 1] == 0x00
+                                ln = line_of_device(line_start, g)
+                                CUDA.@atomic line_mask[ln] |= UInt32(1) << (p - 1)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        k += MATCH_THREADS
+    end
+    return nothing
+end
+
 # Variant for the analysis: the same matching with every byte read directly
 # from global memory (no shared-memory tile).  One position per thread,
 # grid-stride.
@@ -238,16 +324,19 @@ function match_global!(line_mask, corpus, pat, plen, first_mask, is_word, line_s
     return nothing
 end
 
-# Measurement-only kernel for the integer-operation count: how many positions
-# pass the first-byte filter and how many byte comparisons the candidates
-# cost.  Per-warp counts are reduced with shared-memory atomics first and
-# added to the two global counters once per block (privatisation, as in the
-# Project 1 histogram), so the counting itself does not distort the numbers.
-function match_counts!(counters, corpus, pat, plen, first_mask)
+# Measurement-only kernel for the operation counts of both filters: how many
+# positions pass the first-byte filter and how many byte comparisons their
+# candidates cost (counters 1, 2), and the same for the positions that also
+# pass the three-byte filter (counters 3, 4).  Per-thread counts are reduced
+# with shared-memory atomics first and added to the global counters once per
+# block (privatisation, as in the Project 1 histogram), so the counting itself
+# does not distort the numbers.
+function match_counts!(counters, corpus, pat, plen, first_mask, tri)
     spat  = CuStaticSharedArray(UInt8, MAXPLEN * MAXPAT)
     splen = CuStaticSharedArray(Int32, MAXPAT)
     sfm   = CuStaticSharedArray(UInt32, 256)
-    local_counts = CuStaticSharedArray(UInt32, 2)
+    stri  = CuStaticSharedArray(UInt8, TRI_SLOTS)
+    local_counts = CuStaticSharedArray(UInt32, 4)
     tid = threadIdx().x
     k = tid
     while k <= MAXPLEN * MAXPAT
@@ -262,7 +351,12 @@ function match_counts!(counters, corpus, pat, plen, first_mask)
         @inbounds sfm[k] = first_mask[k]
         k += blockDim().x
     end
-    if tid <= 2
+    k = tid
+    while k <= TRI_SLOTS
+        @inbounds stri[k] = tri[k]
+        k += blockDim().x
+    end
+    if tid <= 4
         @inbounds local_counts[tid] = 0x00000000
     end
     sync_threads()
@@ -270,33 +364,44 @@ function match_counts!(counters, corpus, pat, plen, first_mask)
     n = length(corpus)
     g = (blockIdx().x - 1) * blockDim().x + threadIdx().x
     stride = gridDim().x * blockDim().x
-    candidates = 0x00000000
-    compares   = 0x00000000
+    cand1 = 0x00000000; cmp1 = 0x00000000
+    cand3 = 0x00000000; cmp3 = 0x00000000
     while g <= n
-        @inbounds m = sfm[corpus[g] + 1]
-        m != 0x00000000 && (candidates += 0x00000001)
-        while m != 0x00000000
-            p = trailing_zeros(m) + 1
-            m &= m - 0x00000001
-            @inbounds L = splen[p]
-            if g + L - 1 <= n
-                ok = true
-                j = 1
-                while ok && j <= L
-                    @inbounds ok = corpus[g + j - 1] == spat[(p - 1) * MAXPLEN + j]
-                    j += 1
-                    compares += 0x00000001
+        @inbounds b0 = corpus[g]
+        @inbounds m = sfm[b0 + 1]
+        if m != 0x00000000
+            cand1 += 0x00000001
+            @inbounds b1 = g + 1 <= n ? corpus[g + 1] : 0x00
+            @inbounds b2 = g + 2 <= n ? corpus[g + 2] : 0x00
+            @inbounds tri_ok = stri[tri_hash(b0, b1, b2) + 1] != 0x00
+            tri_ok && (cand3 += 0x00000001)
+            c = 0x00000000
+            while m != 0x00000000
+                p = trailing_zeros(m) + 1
+                m &= m - 0x00000001
+                @inbounds L = splen[p]
+                if g + L - 1 <= n
+                    ok = true
+                    j = 1
+                    while ok && j <= L
+                        @inbounds ok = corpus[g + j - 1] == spat[(p - 1) * MAXPLEN + j]
+                        j += 1
+                        c += 0x00000001
+                    end
                 end
             end
+            cmp1 += c
+            tri_ok && (cmp3 += c)
         end
         g += stride
     end
-    CUDA.@atomic local_counts[1] += candidates
-    CUDA.@atomic local_counts[2] += compares
+    CUDA.@atomic local_counts[1] += cand1
+    CUDA.@atomic local_counts[2] += cmp1
+    CUDA.@atomic local_counts[3] += cand3
+    CUDA.@atomic local_counts[4] += cmp3
     sync_threads()
-    if tid == 1
-        @inbounds CUDA.@atomic counters[1] += UInt64(local_counts[1])
-        @inbounds CUDA.@atomic counters[2] += UInt64(local_counts[2])
+    if tid <= 4
+        @inbounds CUDA.@atomic counters[tid] += UInt64(local_counts[tid])
     end
     return nothing
 end
@@ -442,20 +547,32 @@ struct DevicePatterns
     pat::CuVector{UInt8}          # MAXPLEN * MAXPAT, column-major (pattern p at (p-1)*MAXPLEN + j)
     plen::CuVector{Int32}
     first_mask::CuVector{UInt32}
+    tri::CuVector{UInt8}          # TRI_SLOTS: three-byte prefix filter
     is_word::CuVector{UInt8}
     is_tok::CuVector{UInt8}
     tok_symbol::CuVector{UInt8}
 end
 DevicePatterns(pt::PatternTable) = DevicePatterns(CuVector(vec(pt.pat)), CuVector(pt.plen), CuVector(pt.first_mask),
-                                                  CuVector(IS_WORD), CuVector(IS_TOK), CuVector(TOK_SYMBOL))
+                                                  CuVector(pt.tri), CuVector(IS_WORD), CuVector(IS_TOK), CuVector(TOK_SYMBOL))
 
-"Launch the tiled match kernel over the whole corpus (line_mask must be zero)."
-function launch_match!(line_mask, corpus, dp::DevicePatterns, line_start; tiled::Bool = true)
+const MATCH_VARIANTS = (:tri, :tiled, :global)
+
+"""
+Launch one of the match kernels over the whole corpus (line_mask must be
+zero): `:tri` is `match_tiled_tri!` (4 KB tile, three-byte filter; the
+pipeline's kernel), `:tiled` is `match_tiled!` (1 KB tile, first-byte filter)
+and `:global` is `match_global!` (no tile).
+"""
+function launch_match!(line_mask, corpus, dp::DevicePatterns, line_start; variant::Symbol = :tri)
     n = length(corpus)
-    if tiled
+    if variant === :tri
+        @cuda threads=MATCH_THREADS blocks=max(1, cld(n, MATCH_TILE_TRI)) match_tiled_tri!(line_mask, corpus, dp.pat, dp.plen, dp.first_mask, dp.is_word, dp.tri, line_start)
+    elseif variant === :tiled
         @cuda threads=MATCH_THREADS blocks=max(1, cld(n, MATCH_TILE)) match_tiled!(line_mask, corpus, dp.pat, dp.plen, dp.first_mask, dp.is_word, line_start)
-    else
+    elseif variant === :global
         @cuda threads=256 blocks=grid_for(n) match_global!(line_mask, corpus, dp.pat, dp.plen, dp.first_mask, dp.is_word, line_start)
+    else
+        error("unknown match kernel variant $variant")
     end
     return nothing
 end
@@ -525,12 +642,12 @@ matched-line extraction, tokens, entropies, histogram, threshold, flagged
 tokens.  Returns a named tuple with device results.  Used both for the
 end-to-end timing and for validation.
 """
-function gpu_pipeline(corpus::CuVector{UInt8}, dp::DevicePatterns; threshold = nothing, tiled::Bool = true)
+function gpu_pipeline(corpus::CuVector{UInt8}, dp::DevicePatterns; threshold = nothing, variant::Symbol = :tri)
     n = length(corpus)
     flags = CuVector{UInt32}(undef, n)
     line_start = gpu_line_starts(corpus, flags)
     line_mask  = CUDA.zeros(UInt32, length(line_start) - 1)
-    launch_match!(line_mask, corpus, dp, line_start; tiled)
+    launch_match!(line_mask, corpus, dp, line_start; variant)
     matched, off, len, packed = extract_matched_lines(corpus, line_start, line_mask)
     token_start = gpu_token_starts(corpus, flags, dp)
     CUDA.unsafe_free!(flags)

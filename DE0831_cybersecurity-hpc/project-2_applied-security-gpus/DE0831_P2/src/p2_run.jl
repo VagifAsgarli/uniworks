@@ -60,9 +60,11 @@ mask_gpu = Array(r.line_mask)
 require(mask_gpu == mask_cpu, "line masks: GPU != CPU")
 mset = match_set(mask_gpu, inds)
 require(mset == truth, "match set != truth: $(length(mset)) found, $(length(truth)) expected, $(length(setdiff(truth, mset))) missing, $(length(setdiff(mset, truth))) extra")
-let m2 = CUDA.zeros(UInt32, MAIN_N)
-    launch_match!(m2, corpus_d, dp, r.line_start; tiled = false)
-    require(Array(m2) == mask_cpu, "match_global! != CPU")
+for v in (:tiled, :global)                        # the pipeline ran :tri; the other two kernels must agree
+    m2 = CUDA.zeros(UInt32, MAIN_N)
+    launch_match!(m2, corpus_d, dp, r.line_start; variant = v)
+    require(Array(m2) == mask_cpu, "match kernel variant $v != CPU")
+    CUDA.unsafe_free!(m2)
 end
 lines = corpus_lines(corpus, ls_cpu)
 mask_lib = cpu_match_occursin(lines, inds)
@@ -115,6 +117,11 @@ function small_case(text, patterns; expect)
     got2 = match_set(Array(r2.line_mask), patterns)
     require(got2 == Set(expect), "small case $(repr(text[1:min(end, 40)])): got $got2, expected $expect")
     require(Array(r2.line_mask) == cpu_match(c, pt2, ls2), "small case CPU != GPU: $(repr(text[1:min(end, 40)]))")
+    for v in (:tiled, :global)                    # every kernel variant on every small case
+        m2 = CUDA.zeros(UInt32, length(ls2) - 1)
+        launch_match!(m2, CuVector(c), dp2, r2.line_start; variant = v)
+        require(Array(m2) == Array(r2.line_mask), "small case variant $v: $(repr(text[1:min(end, 40)]))")
+    end
 end
 small_case("", ["abc"]; expect = [])
 small_case("abc", ["abc"]; expect = [(1, "abc")])                                   # one line, no newline, pattern at byte 1
@@ -122,11 +129,14 @@ small_case("x abc\nabc y\n", ["abc"]; expect = [(1, "abc"), (2, "abc")])
 small_case("abcd\nxabc\nab\n", ["abc"]; expect = [])                                # inside longer words: no match
 small_case("a.b\n192.0.2.24 x\n192.0.2.248\n", ["192.0.2.24", "192.0.2.248"]; expect = [(2, "192.0.2.24"), (3, "192.0.2.248")])
 small_case("one two\nthree one two\n", ["one", "two"]; expect = [(1, "one"), (1, "two"), (2, "one"), (2, "two")])
-small_case("x"^(MATCH_TILE - 3) * " abcdef " * "y"^20 * "\n", ["abcdef"]; expect = [(1, "abcdef")])   # crosses the tile edge
-small_case("y"^(MATCH_TILE - 1) * " abcdef\n", ["abcdef"]; expect = [(1, "abcdef")])                   # starts at the tile edge
-small_case("y"^(MATCH_TILE - 7) * " abcdef\n", ["abcdef"]; expect = [(1, "abcdef")])                   # ends at the tile edge
-small_case("abc\n" * "z"^MATCH_TILE * " abc", ["abc"]; expect = [(1, "abc"), (2, "abc")])             # last byte of the corpus
-small_case("abc\n" * "z"^MATCH_TILE * "abc", ["abc"]; expect = [(1, "abc")])                           # glued to a word: no match
+for T in (MATCH_TILE, MATCH_TILE_TRI)              # tile edges of both tiled kernels
+    small_case("x"^(T - 3) * " abcdef " * "y"^20 * "\n", ["abcdef"]; expect = [(1, "abcdef")])   # crosses the tile edge
+    small_case("y"^(T - 1) * " abcdef\n", ["abcdef"]; expect = [(1, "abcdef")])                   # starts at the tile edge
+    small_case("y"^(T - 7) * " abcdef\n", ["abcdef"]; expect = [(1, "abcdef")])                   # ends at the tile edge
+    small_case("abc\n" * "z"^T * " abc", ["abc"]; expect = [(1, "abc"), (2, "abc")])             # last byte of the corpus
+    small_case("abc\n" * "z"^T * "abc", ["abc"]; expect = [(1, "abc")])                           # glued to a word: no match
+    small_case("y"^(T - 2) * " ab\n", ["ab"]; expect = [(1, "ab")])                               # 2-byte pattern: three-byte filter disabled
+end
 println("Validation passed: line table, match set (tiled and global kernels, CPU, occursin) == truth, extraction, $(commas(length(ts_gpu))) tokens, entropies, flagging, boundary cases")
 println("Correct!")
 
@@ -198,7 +208,7 @@ if !QUICK
 
     # ---- per-size timings ---------------------------------------------------
     rows = Any[]                       # markdown rows
-    csv  = String["lines,bytes,read_s,h2d_s,h2d_pinned_s,line_table_s,match_tiled_s,match_global_s,extract_s,token_starts_s,entropy_s,hist_s,flag_s,pipeline_s,d2h_s,cpu_line_s,cpu_match_s,cpu_occursin_s,cpu_tokens_s,cpu_entropy_s,cpu_pipeline_s"]
+    csv  = String["lines,bytes,read_s,h2d_s,h2d_pinned_s,line_table_s,match_tri_s,match_tiled_s,match_global_s,extract_s,token_starts_s,entropy_s,hist_s,flag_s,pipeline_s,d2h_s,cpu_line_s,cpu_match_s,cpu_occursin_s,cpu_tokens_s,cpu_entropy_s,cpu_pipeline_s"]
     breakdown = Dict{Int,Any}()
     for nl in SIZES
         ensure_corpus(nl)
@@ -220,8 +230,9 @@ if !QUICK
         nlines = length(ls_d) - 1
         mask_d = CUDA.zeros(UInt32, nlines)
         reset = () -> fill!(mask_d, UInt32(0))
-        s_mt = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; tiled = true); reset = reset)
-        s_mg = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; tiled = false); reset = reset)
+        s_mt3 = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; variant = :tri); reset = reset)
+        s_mt  = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; variant = :tiled); reset = reset)
+        s_mg  = time_stats(() -> launch_match!(mask_d, cd, dp, ls_d; variant = :global); reset = reset)
         reset(); launch_match!(mask_d, cd, dp, ls_d)
         t_ex  = time_kernel(() -> free_all!(extract_matched_lines(cd, ls_d, mask_d)...))
         t_ts  = time_kernel(() -> free_all!(gpu_token_starts(cd, flags, dp)))
@@ -247,14 +258,14 @@ if !QUICK
         free_all!(flags, cd, ls_d, mask_d, ts_d, H_d, L_d); free_results!(res)
         lsc = lns = tsc = nothing
         GC.gc(); CUDA.reclaim()
-        push!(csv, join(string.([nl, n, t_read, t_h2d, t_h2d_pin, t_lt, s_mt.mean, s_mg.mean, t_ex, t_ts, t_en, t_hi, t_fl, s_pipe.mean, t_d2h, t_cl, t_cm, t_co, t_ct, t_ce, t_cp]), ","))
+        push!(csv, join(string.([nl, n, t_read, t_h2d, t_h2d_pin, t_lt, s_mt3.mean, s_mt.mean, s_mg.mean, t_ex, t_ts, t_en, t_hi, t_fl, s_pipe.mean, t_d2h, t_cl, t_cm, t_co, t_ct, t_ce, t_cp]), ","))
         push!(rows, (commas(nl), f1(n / 1e6),
-                     f2(nl / s_mt.mean / 1e6), f1(mbps(n, s_mt.mean)),
+                     f2(nl / s_mt3.mean / 1e6), f1(mbps(n, s_mt3.mean)),
                      f2(nl / s_pipe.mean / 1e6), f1(mbps(n, s_pipe.mean)),
                      f2(nl / (s_pipe.mean + t_h2d) / 1e6), f1(mbps(n, s_pipe.mean + t_h2d)),
                      f3(nl / t_cp / 1e6), f1(mbps(n, t_cp)), f1(t_cp / s_pipe.mean), f1(t_cp / (s_pipe.mean + t_h2d))))
-        breakdown[nl] = (; n, t_read, t_h2d, t_h2d_pin, t_lt, s_mt, s_mg, t_ex, t_ts, t_en, t_hi, t_fl, s_pipe, t_d2h, t_cl, t_cm, t_co, t_ct, t_ce, t_cp, nlines)
-        println("  match $(ms(s_mt.mean)) ms ($(f1(mbps(n, s_mt.mean))) MB/s), pipeline $(ms(s_pipe.mean)) ms, +H2D $(ms(s_pipe.mean + t_h2d)) ms; CPU pipeline $(f3(t_cp)) s")
+        breakdown[nl] = (; n, t_read, t_h2d, t_h2d_pin, t_lt, s_mt3, s_mt, s_mg, t_ex, t_ts, t_en, t_hi, t_fl, s_pipe, t_d2h, t_cl, t_cm, t_co, t_ct, t_ce, t_cp, nlines)
+        println("  match $(ms(s_mt3.mean)) ms ($(f1(mbps(n, s_mt3.mean))) MB/s; 1-byte filter $(ms(s_mt.mean)) ms, global $(ms(s_mg.mean)) ms), pipeline $(ms(s_pipe.mean)) ms, +H2D $(ms(s_pipe.mean + t_h2d)) ms; CPU pipeline $(f3(t_cp)) s")
     end
     write(joinpath(RESULTS_DIR, "timings.csv"), join(csv, "\n") * "\n")
     write(joinpath(RESULTS_DIR, "entropy_hist.csv"), "bin_lo_bits,count\n" * join(["$(f2((k - 1) * 0.05)),$(r.hist[k])" for k in 1:HIST_BINS], "\n") * "\n")
@@ -262,30 +273,43 @@ if !QUICK
           join([join(string.(replace.(string.(collect(row)), "**" => "", " (chosen)" => "")), ",") for row in thr_rows], "\n") * "\n")
 
     # ---- integer-operation count and kernel resources at the main size ------
-    counters = CUDA.zeros(UInt64, 2)
-    @cuda threads=256 blocks=grid_for(length(corpus_d)) match_counts!(counters, corpus_d, dp.pat, dp.plen, dp.first_mask)
-    candidates, compares = Int.(Array(counters))
+    counters = CUDA.zeros(UInt64, 4)
+    @cuda threads=256 blocks=grid_for(length(corpus_d)) match_counts!(counters, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.tri)
+    candidates, compares, candidates3, compares3 = Int.(Array(counters))
     nbytes = length(corpus)
-    cand_frac = candidates / nbytes
-    cmp_per_byte = compares / nbytes
-    # integer operations per byte of the tiled kernel: the filter (index
-    # arithmetic, shared load, mask test: ~6) plus, per candidate, the loop
-    # over set bits and the byte compares (~5 per compare: loads, compare,
-    # branch, counter)
-    int_per_byte = 6 + cmp_per_byte * 5 + cand_frac * 8
-    kt = @cuda launch=false match_tiled!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, r.line_start)
-    kg = @cuda launch=false match_global!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, r.line_start)
-    ke = @cuda launch=false token_entropy!(r.H, r.L, corpus_d, r.token_start, dp.is_tok, dp.tok_symbol)
-    res_t = kernel_resources(kt, MATCH_THREADS); res_g = kernel_resources(kg, 256); res_e = kernel_resources(ke, ENT_THREADS)
-    ptx = dump_ptx(() -> @cuda launch=false match_tiled!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, r.line_start))
-    isempty(ptx) || write(joinpath(RESULTS_DIR, "match_tiled.ptx"), ptx)
-    pc = ptx_counts(ptx)
+    cand_frac = candidates / nbytes;  cmp_per_byte = compares / nbytes       # first-byte filter (match_tiled!)
+    cand3_frac = candidates3 / nbytes; cmp3_per_byte = compares3 / nbytes    # three-byte filter (match_tiled_tri!)
+    fstats = cpu_filter_stats(corpus, pt)             # warp-level view of the same filters (CPU, same tables)
+    # integer operations per byte, counted per lane: the filter (index
+    # arithmetic, shared loads, mask test: ~6, one more shared load for the
+    # three-byte hash: ~9) plus, per candidate, the loop over set bits and the
+    # byte compares (~5 per compare: loads, compare, branch, counter)
+    int_per_byte  = 6 + cmp_per_byte * 5 + cand_frac * 8
+    int3_per_byte = 9 + cmp3_per_byte * 5 + cand3_frac * 8
+    kt  = @cuda launch=false match_tiled!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, r.line_start)
+    kt3 = @cuda launch=false match_tiled_tri!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, dp.tri, r.line_start)
+    kg  = @cuda launch=false match_global!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, r.line_start)
+    ke  = @cuda launch=false token_entropy!(r.H, r.L, corpus_d, r.token_start, dp.is_tok, dp.tok_symbol)
+    res_t = kernel_resources(kt, MATCH_THREADS); res_t3 = kernel_resources(kt3, MATCH_THREADS)
+    res_g = kernel_resources(kg, 256); res_e = kernel_resources(ke, ENT_THREADS)
+    ptx  = dump_ptx(() -> @cuda launch=false match_tiled!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, r.line_start))
+    ptx3 = dump_ptx(() -> @cuda launch=false match_tiled_tri!(r.line_mask, corpus_d, dp.pat, dp.plen, dp.first_mask, dp.is_word, dp.tri, r.line_start))
+    isempty(ptx)  || write(joinpath(RESULTS_DIR, "match_tiled.ptx"), ptx)
+    isempty(ptx3) || write(joinpath(RESULTS_DIR, "match_tiled_tri.ptx"), ptx3)
+    pc = ptx_counts(ptx); pc3 = ptx_counts(ptx3)
 
     b = breakdown[MAIN_N]
     bw_tiled  = gbps(nbytes, b.s_mt.mean)            # useful bytes: the corpus read once
+    bw_tri    = gbps(nbytes, b.s_mt3.mean)
     bw_global = gbps(nbytes, b.s_mg.mean)
-    t_bw_bound  = nbytes / ((theo_bw === nothing ? copy_bw : theo_bw) * 1e9)
-    t_int_bound = int_ops === nothing ? NaN : nbytes * int_per_byte / int_ops
+    roof_bw = theo_bw === nothing ? copy_bw : theo_bw
+    t_bw_bound   = nbytes / (roof_bw * 1e9)
+    t_int_bound  = int_ops === nothing ? NaN : nbytes * int_per_byte / int_ops
+    t_int3_bound = int_ops === nothing ? NaN : nbytes * int3_per_byte / int_ops
+    tables_bytes = MAXPLEN * MAXPAT + 4 * MAXPAT + 4 * 256 + 256              # per-block table copy of match_tiled!
+    tables3_bytes = tables_bytes + TRI_SLOTS                                  # ... of match_tiled_tri!
+    p_warp_skip1 = (1 - cand_frac)^32                                         # if candidates were independent per byte
+    p_warp_skip3 = (1 - cand3_frac)^32
 
     # ---- benchmarks.md -----------------------------------------------------
     header = ["lines", "MB", "match kernel (M lines/s)", "match (MB/s)", "GPU pipeline (M lines/s)", "pipeline (MB/s)",
@@ -295,8 +319,9 @@ if !QUICK
         ("host → device copy, pageable", ms(b.t_h2d), f1(gbps(b.n, b.t_h2d))),
         ("host → device copy, pinned", isnan(b.t_h2d_pin) ? "n/a" : ms(b.t_h2d_pin), isnan(b.t_h2d_pin) ? "n/a" : f1(gbps(b.n, b.t_h2d_pin))),
         ("line table: newline flags, scan, scatter", ms(b.t_lt), f1(mbps(b.n, b.t_lt))),
-        ("match kernel, tiled (shared memory)", ms(b.s_mt.mean) * " (min $(ms(b.s_mt.min)), max $(ms(b.s_mt.max)))", f1(mbps(b.n, b.s_mt.mean))),
-        ("match kernel, global memory variant", ms(b.s_mg.mean), f1(mbps(b.n, b.s_mg.mean))),
+        ("match kernel `match_tiled_tri!`: 4 KB tile, three-byte filter (the pipeline's)", ms(b.s_mt3.mean) * " (min $(ms(b.s_mt3.min)), max $(ms(b.s_mt3.max)))", f1(mbps(b.n, b.s_mt3.mean))),
+        ("match kernel `match_tiled!`: 1 KB tile, first-byte filter", ms(b.s_mt.mean) * " (min $(ms(b.s_mt.min)), max $(ms(b.s_mt.max)))", f1(mbps(b.n, b.s_mt.mean))),
+        ("match kernel `match_global!`: no tile, first-byte filter", ms(b.s_mg.mean), f1(mbps(b.n, b.s_mg.mean))),
         ("matched lines: compaction + gather", ms(b.t_ex), ""),
         ("token starts: flags, scan, scatter", ms(b.t_ts), f1(mbps(b.n, b.t_ts))),
         ("token entropy kernel", ms(b.t_en), f1(mbps(b.n, b.t_en))),
@@ -313,7 +338,7 @@ if !QUICK
     ]
     res_rows = [(name, fmt_opt(get(rr, :registers, nothing)), fmt_opt(get(rr, :shared, nothing)), fmt_opt(get(rr, :local, nothing)),
                  get(rr, :occupancy, nothing) === nothing ? "n/a" : pct(rr[:occupancy]), fmt_opt(get(rr, :blocks_per_sm, nothing)))
-                for (name, rr) in (("match_tiled! (256 threads)", res_t), ("match_global! (256 threads)", res_g), ("token_entropy! (256 threads)", res_e))]
+                for (name, rr) in (("match_tiled_tri! (256 threads)", res_t3), ("match_tiled! (256 threads)", res_t), ("match_global! (256 threads)", res_g), ("token_entropy! (256 threads)", res_e))]
     section = """
     ## Track E: log mining (full route)
 
@@ -328,7 +353,7 @@ if !QUICK
     ### Throughput across corpus sizes
 
     Lines/s and MB/s = lines or bytes of the corpus divided by the time.  "Match kernel" is the
-    multi-pattern kernel alone (the corpus already on the device, line table built); "GPU pipeline"
+    multi-pattern kernel `match_tiled_tri!` alone (the corpus already on the device, line table built); "GPU pipeline"
     is one timing around line table + matching + extraction + tokens + entropies + histogram +
     flagging; "+ H2D" adds the pageable host-to-device copy of the corpus; "CPU pipeline" is the
     single-threaded baseline doing the same steps.
@@ -348,18 +373,24 @@ if !QUICK
     $(ceil(Int, 2^thr))+ characters, which is why ordinary log fields never reach it.
 
     $(md_table(["threshold (bits/char)", "flagged", "true positives", "false positives", "false negatives", "precision", "recall"], thr_rows))
-    ### Match kernel: operation counts and resources ($(commas(MAIN_N)) lines)
+    ### Match kernels: operation counts and resources ($(commas(MAIN_N)) lines)
 
-    Measured with `match_counts!`: $(commas(candidates)) of $(commas(nbytes)) byte positions pass the
-    first-byte filter ($(f2(100cand_frac)) %), costing $(commas(compares)) byte comparisons in total
-    ($(f3(cmp_per_byte)) per corpus byte).  Estimated integer operations per corpus byte in the tiled
-    kernel: $(f1(int_per_byte)).  Useful bytes moved per corpus byte: 1 (the corpus is read once;
-    the pattern tables are read from shared memory).
+    Measured with `match_counts!` on the device: $(commas(candidates)) of $(commas(nbytes)) byte positions pass the
+    first-byte filter ($(f2(100cand_frac)) %), costing $(commas(compares)) byte comparisons ($(f3(cmp_per_byte)) per corpus
+    byte); $(commas(candidates3)) positions ($(f3(100cand3_frac)) %) also pass the three-byte filter, costing
+    $(commas(compares3)) comparisons ($(f3(cmp3_per_byte)) per byte).  Seen per warp of 32 consecutive positions
+    (computed on the CPU from the same tables): $(f2(100fstats.skip1)) % of the warps have no candidate under the
+    first-byte filter and skip the candidate loop, $(f2(100fstats.skip3)) % under the three-byte filter.
+    Estimated integer operations per corpus byte, counted per lane: $(f1(int_per_byte)) (`match_tiled!`),
+    $(f1(int3_per_byte)) (`match_tiled_tri!`).  Useful bytes moved per corpus byte: 1 (the corpus is read once; the
+    tables are read from shared memory); per block the table copy is $(commas(tables_bytes)) B for a $(commas(MATCH_TILE)) B tile
+    and $(commas(tables3_bytes)) B for a $(commas(MATCH_TILE_TRI)) B tile.
 
     $(md_table(["kernel", "registers / thread", "shared memory / block (B)", "local memory (B)", "occupancy", "resident blocks / SM"], res_rows))
-    PTX of `match_tiled!` written by this script to `results/match_tiled.ptx`: $(pc.total) instructions,
-    $(pc.ld_global) global loads, $(pc.ld_shared) shared loads, $(pc.st_shared) shared stores, $(pc.atom) atomics,
-    $(pc.bar) barriers, $(pc.bra) branches.
+    PTX written by this script: `results/match_tiled_tri.ptx` has $(pc3.total) instructions, $(pc3.ld_global) global loads,
+    $(pc3.ld_shared) shared loads, $(pc3.st_shared) shared stores, $(pc3.atom) atomics, $(pc3.bar) barriers, $(pc3.bra) branches;
+    `results/match_tiled.ptx` has $(pc.total) instructions, $(pc.ld_global) global loads, $(pc.ld_shared) shared loads,
+    $(pc.st_shared) shared stores, $(pc.atom) atomics, $(pc.bar) barriers, $(pc.bra) branches.
 
     Reference bandwidths: device-to-device copy $(f1(copy_bw)) GB/s (read + write)$(theo_bw === nothing ? "" : "; theoretical DRAM $(f1(theo_bw)) GB/s"); INT32 throughput $(int_ops === nothing ? "n/a" : f2(int_ops / 1e12) * " × 10¹² ops/s").
     """
@@ -372,16 +403,20 @@ if !QUICK
     R_gpu_h2d = big.n / (big.s_pipe.mean + big.t_h2d)          # with the copy
     day = 86_400.0
     gb(x) = f1(x / 1e9)
+    vol(x) = x >= 1e13 ? f1(x / 1e12) * " TB/day" : f1(x / 1e9) * " GB/day"      # bytes/day, readable
     V_cpu_day = R_cpu * day; V_gpu_day = R_gpu_h2d * day
     example_V = 2e12                                           # 2 TB/day example site
     cores_needed = ceil(Int, example_V / V_cpu_day); gpus_needed = ceil(Int, example_V / V_gpu_day)
-    limiter_txt = if bw_tiled / copy_bw >= 0.6
-        "**memory bandwidth**: the tiled kernel streams the corpus at $(f1(bw_tiled)) GB/s, $(pct(bw_tiled / copy_bw)) of the device-to-device copy rate, so most of its time is the one read of the corpus; the first-byte filter keeps the compare work small ($(f3(cmp_per_byte)) compares per byte)."
+    balance = int_ops === nothing ? NaN : int_ops / (roof_bw * 1e9)       # ops/byte where the two roofs meet
+    gain = b.s_mt.mean / b.s_mt3.mean                                      # match_tiled! time / match_tiled_tri! time
+    busiest = maximum(count_ones, pt.first_mask)                           # patterns behind the busiest first byte
+    limiter_txt = if bw_tri / copy_bw >= 0.6
+        "**memory bandwidth**: `match_tiled_tri!` streams the corpus at $(f1(bw_tri)) GB/s, $(pct(bw_tri / copy_bw)) of the device-to-device copy rate, so most of its time is the one read of the corpus."
     else
-        "**instruction throughput, not bandwidth**: the tiled kernel reads the corpus at only $(f1(bw_tiled)) GB/s ($(pct(bw_tiled / copy_bw)) of the copy rate) although every byte is loaded exactly once and coalesced; the bandwidth model predicts $(ms(t_bw_bound)) ms, the integer model with the estimated $(f1(int_per_byte)) operations per byte $(ms(t_int_bound)) ms, and the measured time is $(ms(b.s_mt.mean)) ms, i.e. the kernel is bound by the per-byte instruction work (table lookups, index arithmetic, the candidate loop with its data-dependent branches: $(pc.bra) branches in the PTX)."
+        "**warp-level control flow, not bandwidth and not the lane-counted integer work**.  The first kernel, `match_tiled!`, reads the corpus at $(f1(bw_tiled)) GB/s ($(pct(bw_tiled / copy_bw)) of the copy rate) although every byte is loaded once and coalesced: the bandwidth model predicts $(ms(t_bw_bound)) ms and the integer model with $(f1(int_per_byte)) lane operations per byte $(ms(t_int_bound)) ms, yet it takes $(ms(b.s_mt.mean)) ms.  The gap is how a warp executes the candidate loop: the loop runs whenever one of the 32 lanes has a candidate, for as long as its slowest lane needs.  With $(f2(100cand_frac)) % candidate positions, a warp of 32 consecutive positions has none in only $(f2(100fstats.skip1)) % of the cases (independent bytes would give $(f2(100p_warp_skip1)) %), so practically every warp runs the loop, over up to $busiest patterns for the busiest first byte, with data-dependent shared-memory lookups ($(pc.bra) branches in its PTX).  `match_tiled_tri!` tests this diagnosis: its three-byte prefix filter leaves $(f3(100cand3_frac)) % candidates, so $(f2(100fstats.skip3)) % of the warps skip the loop entirely, and its 4 KB tile amortises the per-block table copy; it takes $(ms(b.s_mt3.mean)) ms, $(f2(gain))× $(gain >= 1 ? "faster" : "slower"), at $(f1(bw_tri)) GB/s ($(pct(bw_tri / copy_bw)) of the copy rate)$(gain > 1.2 ? ", which confirms that the warp-level loop, not the byte count, set the time" : gain >= 1 ? ", a small gain: the loop was only part of the cost" : ", so the warp-level loop was not the limiter after all").  What remains between $(ms(b.s_mt3.mean)) ms and the bandwidth roof ($(ms(t_bw_bound)) ms) is the per-position filter itself (three shared loads and the hash for every byte, $(pc3.bra) branches in the PTX) and the $(pct(1 - fstats.skip3)) of warps that still enter the loop."
     end
     # which step of the pipeline is the largest, from the directly timed steps
-    steps_main = [("the line table (newline flags, scan, scatter)", b.t_lt), ("the match kernel", b.s_mt.mean),
+    steps_main = [("the line table (newline flags, scan, scatter)", b.t_lt), ("the match kernel", b.s_mt3.mean),
                   ("the extraction of the matched lines", b.t_ex), ("the token-start flags, scan and scatter", b.t_ts),
                   ("the token entropy kernel", b.t_en), ("the histogram and the flagging", b.t_hi + b.t_fl)]
     step_sum = sum(last.(steps_main))
@@ -392,8 +427,8 @@ if !QUICK
     read_slower = read_rate < mbps(big.n, big.s_pipe.mean + big.t_h2d)
     best_i = argmax([mbps(breakdown[nl].n, breakdown[nl].s_pipe.mean) for nl in SIZES])
     tiled_vs_global = b.s_mg.mean > b.s_mt.mean ?
-        "The shared-memory tile makes the kernel $(f2(b.s_mg.mean / b.s_mt.mean))× faster than the global-memory variant ($(ms(b.s_mg.mean)) vs $(ms(b.s_mt.mean)) ms): the global variant re-reads up to 32 bytes per candidate position from L1/L2, the tiled one from shared memory." :
-        "The shared-memory tile does not beat the global-memory variant here ($(ms(b.s_mt.mean)) vs $(ms(b.s_mg.mean)) ms): the candidate re-reads are served by L1 anyway, so the tile only adds a barrier and the halo load; the limiter is not the memory path."
+        "The shared-memory tile alone (same first-byte filter) makes `match_tiled!` $(f2(b.s_mg.mean / b.s_mt.mean))× faster than the global-memory variant ($(ms(b.s_mg.mean)) vs $(ms(b.s_mt.mean)) ms): the global variant re-reads up to 32 bytes per candidate position from L1/L2, the tiled one from shared memory." :
+        "The shared-memory tile alone does not beat the global-memory variant here ($(ms(b.s_mt.mean)) vs $(ms(b.s_mg.mean)) ms): the candidate re-reads are served by L1 anyway, so the tile only adds a barrier and the halo load; the limiter is not the memory path."
     analysis = """
     # Track E: performance analysis
 
@@ -407,9 +442,9 @@ if !QUICK
     processes **$(f2(maximum(SIZES) / big.s_pipe.mean / 1e6)) million lines/s ($(f1(mbps(big.n, big.s_pipe.mean))) MB/s)**
     with the corpus resident on the device, and **$(f2(maximum(SIZES) / (big.s_pipe.mean + big.t_h2d) / 1e6)) million lines/s
     ($(f1(mbps(big.n, big.s_pipe.mean + big.t_h2d))) MB/s)** including the pageable host-to-device copy; the match kernel alone
-    runs at $(f1(mbps(big.n, big.s_mt.mean))) MB/s.  Converted to a day: **$(gb(V_cpu_day)) GB/day is where one CPU core
+    runs at $(f1(mbps(big.n, big.s_mt3.mean))) MB/s.  Converted to a day: **$(vol(V_cpu_day)) is where one CPU core
     stops keeping up** ($(f1(mbps(big.n, big.t_cp))) MB/s single-threaded, same algorithm), while one GPU keeps up to
-    **$(gb(V_gpu_day)) GB/day** including the copy.  Assumptions: 20 indicators (12 addresses, 8 domains),
+    **$(vol(V_gpu_day))** including the copy.  Assumptions: 20 indicators (12 addresses, 8 domains),
     lines of about $(f0(big.n / maximum(SIZES))) bytes, the corpus already in host memory (reading the file took
     $(ms(big.t_read)) ms = $(f1(read_rate)) MB/s on this machine, $(read_slower ? "slower than the GPU, so the storage is the next wall" : "from the page cache after the generator wrote it, so not a limit here")), batch processing of
     whole files, results small enough that the device-to-host copy is negligible ($(ms(big.t_d2h)) ms).
@@ -422,24 +457,28 @@ if !QUICK
     $(ms(step_sum)) ms, the end-to-end timing is $(ms(b.s_pipe.mean)) ms).  The largest step is $(largest_name)
     ($(pct(largest_t / b.s_pipe.mean))).$(scan_note)
 
-    The match kernel's operational intensity is low and integer: about $(f1(int_per_byte)) integer operations per byte
-    (an estimate built from the measured candidate and compare counts) against 1 byte moved, so on the integer roofline
-    ($(int_ops === nothing ? "n/a" : f2(int_ops / 1e12)) × 10¹² ops/s against $(f1(theo_bw === nothing ? copy_bw : theo_bw)) GB/s) the balance point is
-    $(int_ops === nothing ? "n/a" : f1(int_ops / ((theo_bw === nothing ? copy_bw : theo_bw) * 1e9))) ops/byte: the kernel sits $(int_per_byte > (int_ops === nothing ? 0 : int_ops / ((theo_bw === nothing ? copy_bw : theo_bw) * 1e9)) ? "to the right of it (compute side)" : "to the left of it (memory side)").
+    The match kernels' operational intensity is low and integer: about $(f1(int_per_byte)) (`match_tiled!`) and
+    $(f1(int3_per_byte)) (`match_tiled_tri!`) integer operations per byte, counted per lane from the measured candidate and
+    compare counts, against 1 byte moved, so on the integer roofline ($(int_ops === nothing ? "n/a" : f2(int_ops / 1e12)) × 10¹² ops/s
+    against $(f1(roof_bw)) GB/s) the balance point is $(isnan(balance) ? "n/a" : f1(balance)) ops/byte and both kernels sit
+    $(min(int_per_byte, int3_per_byte) > (isnan(balance) ? 0 : balance) ? "to the right of it (compute side)" : "to the left of it (memory side)").
+    A roofline built from lane counts is only an upper bound here, because the lanes of a warp do not work independently.
     The limiter is $limiter_txt
     $tiled_vs_global
 
-    Evidence (all produced by the script): achieved bandwidth $(f1(bw_tiled)) GB/s vs copy $(f1(copy_bw)) GB/s;
-    `CUDA.registers` $(fmt_opt(get(res_t, :registers, nothing))) per thread, $(fmt_opt(get(res_t, :shared, nothing))) B shared memory per block,
-    occupancy $(get(res_t, :occupancy, nothing) === nothing ? "n/a" : pct(res_t[:occupancy])), $(fmt_opt(get(res_t, :blocks_per_sm, nothing))) resident blocks per SM;
-    measured candidate fraction $(f2(100cand_frac)) % and $(f3(cmp_per_byte)) compares per byte; PTX (`results/match_tiled.ptx`)
-    with $(pc.ld_global) global and $(pc.ld_shared) shared loads, $(pc.bra) branches, $(pc.atom) atomics.  Nsight Compute counters were
-    not collected; the limiter is inferred from these measurements.
+    Evidence (all produced by the script): achieved bandwidth $(f1(bw_tiled)) GB/s (`match_tiled!`) and $(f1(bw_tri)) GB/s
+    (`match_tiled_tri!`) vs copy $(f1(copy_bw)) GB/s; `CUDA.registers` $(fmt_opt(get(res_t3, :registers, nothing))) per thread,
+    $(fmt_opt(get(res_t3, :shared, nothing))) B shared memory per block, occupancy $(get(res_t3, :occupancy, nothing) === nothing ? "n/a" : pct(res_t3[:occupancy])),
+    $(fmt_opt(get(res_t3, :blocks_per_sm, nothing))) resident blocks per SM for `match_tiled_tri!`; measured candidate fractions
+    $(f2(100cand_frac)) % and $(f3(100cand3_frac)) %, warps without a candidate $(f2(100fstats.skip1)) % and $(f2(100fstats.skip3)) %;
+    PTX (`results/match_tiled.ptx`, `results/match_tiled_tri.ptx`) with $(pc.bra) and $(pc3.bra) branches, $(pc.atom) and $(pc3.atom)
+    atomics.  Nsight Compute counters were not collected; the limiter is inferred from these measurements and from the
+    measured effect of the change between the two kernels.
 
     ## 3. Scaling and the transfer wall
 
     $(md_table(["lines", "match kernel (MB/s)", "GPU pipeline (MB/s)", "H2D copy (ms)", "pipeline (ms)", "copy / pipeline", "file read (ms)"],
-               [(commas(nl), f1(mbps(breakdown[nl].n, breakdown[nl].s_mt.mean)), f1(mbps(breakdown[nl].n, breakdown[nl].s_pipe.mean)),
+               [(commas(nl), f1(mbps(breakdown[nl].n, breakdown[nl].s_mt3.mean)), f1(mbps(breakdown[nl].n, breakdown[nl].s_pipe.mean)),
                  ms(breakdown[nl].t_h2d), ms(breakdown[nl].s_pipe.mean), f2(breakdown[nl].t_h2d / breakdown[nl].s_pipe.mean), ms(breakdown[nl].t_read)) for nl in SIZES]))
     The pipeline rate goes from $(f1(mbps(breakdown[SIZES[1]].n, breakdown[SIZES[1]].s_pipe.mean))) MB/s at $(commas(SIZES[1])) lines to
     $(f1(mbps(big.n, big.s_pipe.mean))) MB/s at $(commas(maximum(SIZES))); the best rate over the sizes is
@@ -454,16 +493,16 @@ if !QUICK
 
     Against the single-threaded baseline with the same algorithm, the GPU pipeline is **$(f1(big.t_cp / big.s_pipe.mean))×** faster
     on the device and **$(f1(big.t_cp / (big.s_pipe.mean + big.t_h2d)))×** including the copy (largest corpus).  Per step at
-    $(commas(MAIN_N)) lines: matching $(f1(b.t_cm / b.s_mt.mean))× (the library `occursin` search is $(f1(b.t_co / b.s_mt.mean))× slower than the
+    $(commas(MAIN_N)) lines: matching $(f1(b.t_cm / b.s_mt3.mean))× (the library `occursin` search is $(f1(b.t_co / b.s_mt3.mean))× slower than the
     kernel), token entropies $(f1(b.t_ce / b.t_en))×, line table $(f1(b.t_cl / b.t_lt))×.  The CPU numbers are one core; a tuned
     multithreaded matcher would scale with the core count, which is the research project's question.
 
     ## 5. The defensive conclusion
 
     A SOC that must match $(length(inds)) indicators against its logs every day can size the job from these rates: one
-    CPU core covers up to **$(gb(V_cpu_day)) GB/day**, one GPU (including the copy) up to **$(gb(V_gpu_day)) GB/day**.  For a site
+    CPU core covers up to **$(vol(V_cpu_day))**, one GPU (including the copy) up to **$(vol(V_gpu_day))**.  For a site
     producing 2 TB/day that is **$(cores_needed) CPU core$(cores_needed > 1 ? "s" : "") or $(gpus_needed) GPU$(gpus_needed > 1 ? "s" : "")** (2 × 10¹² / (86,400 × $(f1(R_cpu / 1e6)) × 10⁶) and
-    2 × 10¹² / (86,400 × $(f1(R_gpu_h2d / 1e6)) × 10⁶)); below $(gb(V_cpu_day)) GB/day a single core keeps up and a GPU is not needed.
+    2 × 10¹² / (86,400 × $(f1(R_gpu_h2d / 1e6)) × 10⁶)); below $(vol(V_cpu_day)) a single core keeps up and a GPU is not needed.
     The crossover moves with the indicator count (the research project measures 10 to 10,000) and with the storage
     rate: $(read_slower ? "at $(f1(read_rate)) MB/s file reads the GPU is starved, so the logs must be streamed to it as they arrive or kept in device memory" : "the file read here ($(f1(read_rate)) MB/s, page cache) was not a limit, but storage slower than the pipeline would be, so logs should be streamed to the device as they arrive or kept in device memory").
     Entropy flagging at $(f2(thr)) bits/char produced $(length(fl)) flags in $(commas(MAIN_N)) lines

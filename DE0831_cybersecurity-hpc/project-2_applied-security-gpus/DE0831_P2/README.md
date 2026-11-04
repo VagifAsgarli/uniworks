@@ -48,15 +48,15 @@ The run prints the header block, validates every GPU result against the CPU base
 the generator's ground truth on the main corpus (it stops with `CHECK FAILED: ...`
 otherwise), prints `Correct!`, then measures every step on every corpus size and writes
 `results/benchmarks.md`, `results/analysis.md`, the raw timings (`results/timings.csv`,
-`entropy_hist.csv`, `threshold_table.csv`), the PTX of the match kernel
-(`results/match_tiled.ptx`) and the plots (`results/*.png`).
+`entropy_hist.csv`, `threshold_table.csv`), the PTX of the two tiled match kernels
+(`results/match_tiled_tri.ptx`, `results/match_tiled.ptx`) and the plots (`results/*.png`).
 
 ## Files
 
 | File | Contents |
 |---|---|
 | `src/p2_run.jl` | header block; validation (`Correct!`); benchmarks; results and analysis generation |
-| `src/p2_gpu.jl` | the kernels: newline/token flags, scatter (compaction), `match_tiled!` (shared-memory tile, first-byte filter, atomic OR into the line mask), `match_global!` (variant without the tile, for the analysis), `match_counts!` (operation counts), `gather_lines!`, `token_entropy!`, `entropy_hist!`; the pipeline |
+| `src/p2_gpu.jl` | the kernels: newline/token flags, scatter (compaction), `match_tiled!` (1 KB shared-memory tile, first-byte filter, atomic OR into the line mask), `match_tiled_tri!` (4 KB tile, three-byte prefix filter: the pipeline's kernel, built from the measurements of the first), `match_global!` (variant without the tile, for the analysis), `match_counts!` (operation counts of both filters), `gather_lines!`, `token_entropy!`, `entropy_hist!`; the pipeline |
 | `src/p2_cpu.jl` | the single-threaded CPU baseline with the same algorithm, the `occursin` baseline, the character classes and the pattern table |
 | `src/p2_common.jl` | timing harness (warm-up, `CUDA.@elapsed` per launch, mean/min/max, reset outside the timed region), device information, Markdown tables |
 | `src/p2_data.jl` | generator wrapper and loaders for the corpus, indicators and ground truth |
@@ -80,6 +80,14 @@ otherwise), prints `Correct!`, then measures every step on every corpus size and
   negligible). Boundary handling: the halo covers patterns that cross a tile edge, bounds
   checks cover the last tile and the corpus ends, and word boundaries prevent `192.0.2.24`
   from matching inside `192.0.2.248`. No races: the only shared write is the atomic OR.
+- `match_tiled_tri!`: the same kernel after the first measurement. On the T4 the first version ran
+  at about 4 % of the copy bandwidth although it reads each byte once: the first-byte filter lets
+  20 % of the positions through, so practically every warp of 32 lanes has a candidate and runs
+  the candidate loop (a warp runs it whenever one lane needs it). The second version adds a
+  three-byte prefix filter (a 4 KB bitmap in shared memory indexed by a 12-bit hash of the three
+  bytes at the position, built on the host from the patterns) and uses a 4 KB tile (16 positions
+  per thread) to amortise the per-block table copy. Both kernels are validated against the same
+  ground truth and both are timed; the pipeline uses the second.
 - `token_entropy!`: one thread per token with a private 64-bin histogram in shared memory,
   laid out so that a warp touches consecutive bytes (no bank conflicts); no atomics.
 - Design note with the full rationale: `notes/design.md` in the repository.

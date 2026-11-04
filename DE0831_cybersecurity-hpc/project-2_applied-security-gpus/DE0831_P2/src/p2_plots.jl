@@ -21,7 +21,8 @@ function make_plots(results_dir, threshold)
     f = Figure(size = (1000, 500))
     ax = Axis(f[1, 1]; xlabel = "corpus size (lines)", ylabel = "throughput (MB/s)", xscale = log10, yscale = log10,
               xticks = (lines_, sizelabel.(lines_)), title = "Track E: throughput against corpus size")
-    series = [("match kernel (GPU)", mbps(col("match_tiled_s"))),
+    series = [("match kernel, 3-byte filter (GPU)", mbps(col("match_tri_s"))),
+              ("match kernel, 1-byte filter (GPU)", mbps(col("match_tiled_s"))),
               ("GPU pipeline", mbps(col("pipeline_s"))),
               ("GPU pipeline + host-to-device copy", mbps(col("pipeline_s") .+ col("h2d_s"))),
               ("CPU pipeline, one core", mbps(col("cpu_pipeline_s"))),
@@ -33,12 +34,12 @@ function make_plots(results_dir, threshold)
     save(joinpath(results_dir, "throughput_vs_size.png"), f; px_per_unit = 2)
 
     # 2. time breakdown at every size (stacked)
-    steps = [("line table", "line_table_s"), ("match (tiled)", "match_tiled_s"), ("extraction", "extract_s"),
+    steps = [("line table", "line_table_s"), ("match (3-byte filter)", "match_tri_s"), ("extraction", "extract_s"),
              ("token starts", "token_starts_s"), ("token entropy", "entropy_s"), ("histogram + flags", nothing),
              ("host-to-device copy", "h2d_s")]
     f2 = Figure(size = (900, 500))
     ax2 = Axis(f2[1, 1]; xlabel = "corpus size (lines)", ylabel = "time (ms)", title = "Where the time goes",
-               xticks = (1:length(lines_), string.(round.(Int, lines_))))
+               xticks = (1:length(lines_), sizelabel.(lines_)))
     xs = Int[]; ys = Float64[]; grp = Int[]
     for (i, _) in enumerate(lines_)
         for (g, (label, c)) in enumerate(steps)

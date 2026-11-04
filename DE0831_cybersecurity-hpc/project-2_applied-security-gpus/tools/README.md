@@ -57,7 +57,7 @@ in the result).
 
 ## `ptx-check/`: compile every kernel for the GPU without a GPU
 
-`ptxcheck.jl` compiles the nine track-E kernels to PTX with the real CUDA.jl/GPUCompiler stack
+`ptxcheck.jl` compiles the ten track-E kernels to PTX with the real CUDA.jl/GPUCompiler stack
 (target sm_75) and prints their shared-memory allocations, atomic instructions, global-load and
 branch counts, which catches device-side compilation errors the emulator cannot (dynamic
 dispatch, unsupported types, `Int` vs `Int32` indexing).  Without a driver, CUDA.jl selects no

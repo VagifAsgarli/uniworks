@@ -1,4 +1,4 @@
-# Compile every track-E kernel to PTX with the real CUDA.jl/GPUCompiler stack (no GPU needed).
+# Compile every track-E kernel (ten) to PTX with the real CUDA.jl/GPUCompiler stack (no GPU needed).
 using CUDA
 const CC  = CUDA.CUDACore
 const GPC = CC.GPUCompiler
@@ -23,8 +23,9 @@ jobs = [
     ("newline_flags!", newline_flags!, (U32, U8)),
     ("scatter_positions!", scatter_positions!, (I32, U32, U32)),
     ("match_tiled!", match_tiled!, (U32, U8, U8, I32, U32, U8, I32)),
+    ("match_tiled_tri!", match_tiled_tri!, (U32, U8, U8, I32, U32, U8, U8, I32)),
     ("match_global!", match_global!, (U32, U8, U8, I32, U32, U8, I32)),
-    ("match_counts!", match_counts!, (U64, U8, U8, I32, U32)),
+    ("match_counts!", match_counts!, (U64, U8, U8, I32, U32, U8)),
     ("gather_lines!", gather_lines!, (U8, U8, I32, I32, I32, I32)),
     ("token_flags!", token_flags!, (U32, U8, U8)),
     ("token_entropy!", token_entropy!, (F32, I32, U8, I32, U8, U8)),

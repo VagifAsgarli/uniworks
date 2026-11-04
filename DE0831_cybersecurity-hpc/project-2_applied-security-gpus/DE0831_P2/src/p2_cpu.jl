@@ -45,16 +45,26 @@ end
 
 const NSYM = 64
 
+const TRI_SLOTS = 4096      # three-byte prefix filter: a 12-bit hash of the first three bytes
+
+"12-bit hash of three consecutive bytes (the same function on the host and in the kernel)."
+@inline tri_hash(b0::UInt8, b1::UInt8, b2::UInt8) =
+    ((UInt32(b0) << 7) ⊻ (UInt32(b1) << 3) ⊻ UInt32(b2)) & UInt32(TRI_SLOTS - 1)
+
 """
 Pattern table in the layout the kernels use: `pat[j, p]` is byte j of pattern
-p (zero-padded), `plen[p]` its length, and `first_mask[b+1]` has bit p-1 set
-if pattern p starts with byte value b (the first-byte filter).
+p (zero-padded), `plen[p]` its length, `first_mask[b+1]` has bit p-1 set if
+pattern p starts with byte value b (the first-byte filter), and `tri[h+1]` is
+1 if some pattern's first three bytes hash to h (the three-byte filter of the
+second tiled kernel; all ones if a pattern is shorter than three bytes, which
+disables that filter without changing the result).
 """
 struct PatternTable
     pat::Matrix{UInt8}            # MAXPLEN × MAXPAT
     plen::Vector{Int32}           # MAXPAT
     npat::Int
     first_mask::Vector{UInt32}    # 256
+    tri::Vector{UInt8}            # TRI_SLOTS
 end
 
 function PatternTable(indicators::AbstractVector{<:AbstractString})
@@ -63,14 +73,45 @@ function PatternTable(indicators::AbstractVector{<:AbstractString})
     pat  = zeros(UInt8, MAXPLEN, MAXPAT)
     plen = zeros(Int32, MAXPAT)
     fm   = zeros(UInt32, 256)
+    tri  = zeros(UInt8, TRI_SLOTS)
     for (p, s) in enumerate(indicators)
         b = Vector{UInt8}(codeunits(s))
         1 <= length(b) <= MAXPLEN || error("pattern $p has length $(length(b)); 1..$MAXPLEN supported")
         pat[1:length(b), p] = b
         plen[p] = length(b)
         fm[b[1] + 1] |= UInt32(1) << (p - 1)
+        if length(b) >= 3
+            tri[tri_hash(b[1], b[2], b[3]) + 1] = 0x01
+        else
+            fill!(tri, 0x01)
+        end
     end
-    return PatternTable(pat, plen, n, fm)
+    return PatternTable(pat, plen, n, fm, tri)
+end
+
+"""
+Filter statistics for the analysis, computed on the CPU from the same tables
+the kernels use: the fraction of byte positions that pass the first-byte
+filter and the three-byte filter, and the fraction of warps (32 consecutive
+positions, exactly the lanes of one warp in the tiled kernels) in which no
+lane has a candidate, so the whole warp skips the candidate loop.
+"""
+function cpu_filter_stats(corpus::AbstractVector{UInt8}, pt::PatternTable)
+    n = length(corpus); c1 = 0; c3 = 0; w1 = 0; w3 = 0; nw = 0
+    any1 = false; any3 = false
+    @inbounds for g in 1:n
+        b0 = corpus[g]
+        a1 = pt.first_mask[b0 + 1] != 0
+        b1 = g + 1 <= n ? corpus[g + 1] : 0x00
+        b2 = g + 2 <= n ? corpus[g + 2] : 0x00
+        a3 = a1 && pt.tri[tri_hash(b0, b1, b2) + 1] != 0x00
+        c1 += a1; c3 += a3; any1 |= a1; any3 |= a3
+        if g % 32 == 0
+            nw += 1; w1 += !any1; w3 += !any3; any1 = false; any3 = false
+        end
+    end
+    nw = max(nw, 1)
+    return (cand1 = c1 / n, cand3 = c3 / n, skip1 = w1 / nw, skip3 = w3 / nw)
 end
 
 # ---------------------------------------------------------------------------

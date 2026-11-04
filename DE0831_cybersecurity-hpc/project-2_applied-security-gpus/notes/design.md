@@ -71,6 +71,26 @@ the widest empty band **above the median token**.  On the 1M corpus the ordinary
 a 5.0 threshold would miss 49 of the 243 payloads.  Bands below the median are excluded
 because the zero-entropy spike of one-symbol tokens leaves an equally wide empty band near 0.
 
+### K3, second version (`match_tiled_tri!`), from the first T4 measurement
+
+The first T4 run (4 November, `outputs/colab-t4_2026-11-04_run2/`) measured `match_tiled!` at
+9.2 GB/s on the 1M corpus: 4 % of the device-to-device copy rate although the kernel reads
+each byte once, and 25× slower than its own lane-counted integer model (17 ops/byte).  The
+cause is warp-level: the first-byte filter passes 20.3 % of the positions (the digits `1` and
+`2` start most addresses, letters start the domains), so a warp of 32 consecutive positions
+has no candidate in 0.0 % of the cases (measured on the CPU with the same tables; independent
+bytes would give 0.797³² = 0.07 %), and every warp runs the candidate loop at the length of its
+slowest lane, up to 7 patterns for the busiest first byte.
+
+Second version, same correctness contract and validation: (1) a three-byte prefix filter, a
+4 KB bitmap in shared memory indexed by a 12-bit hash of the three bytes at the position,
+built on the host from the patterns (all ones if a pattern is shorter than three bytes, which
+disables the filter without changing the result): 0.86 % candidates, 73 % of the warps skip
+the loop entirely; (2) a 4 KB tile, so that the per-block table copy (6.5 KB with the bitmap)
+is amortised over four times more corpus bytes.  Shared memory 10.7 KB per block, still four
+blocks per SM on the T4.  Both kernels are timed and both PTX dumps are written; the analysis
+reports the measured gain as the test of the diagnosis.
+
 K3 in detail (one block = one tile of `TILE` bytes, 256 threads, 4 bytes per thread in the
 load phase, or `TILE = 256` with one byte per thread; decided by measurement):
 

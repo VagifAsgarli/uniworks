@@ -29,7 +29,7 @@ println("match set OK: $(length(mset)) (line, indicator) pairs")
 
 # 2b. global-memory variant gives the same mask
 line_mask2 = CUDA.zeros(UInt32, length(ls_cpu) - 1)
-launch_match!(line_mask2, corpus_d, dp, r.line_start; tiled = false)
+launch_match!(line_mask2, corpus_d, dp, r.line_start; variant = :global)
 require(Array(line_mask2) == mask_cpu, "match_global! == cpu")
 println("match_global! OK")
 
