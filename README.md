@@ -8,6 +8,7 @@ academic year 2026/27.
 | Course | Assignment | Due | Status |
 |---|---|---|---|
 | [DE0831 Cybersecurity Solutions in High-Performance Computing Environments](DE0831_cybersecurity-hpc/) | [Project 1: GPU Programming Fundamentals in Julia](DE0831_cybersecurity-hpc/project-1_gpu-fundamentals-julia/) | 23.10.2026 | **graded 9.75/10**, defence passed |
+| [DE0831 Cybersecurity Solutions in High-Performance Computing Environments](DE0831_cybersecurity-hpc/) | [Project 2: Applied Security on GPUs](DE0831_cybersecurity-hpc/project-2_applied-security-gpus/) | 27.11.2026 | started; track to confirm |
 | [DE1095 Digital Ethics and Artificial Intelligence Interaction](DE1095_digital-ethics-ai/) | [Project work: secure and ethical AI system — HR assistant "Atlase"](DE1095_digital-ethics-ai/project-work_secure-ethical-hr-assistant/) | 9.11.2026, 10:00 | deck and notes ready; to upload |
 
 ## Repository layout

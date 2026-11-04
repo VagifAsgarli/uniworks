@@ -26,3 +26,4 @@ with CUDA.
 | # | Assignment | Due | Status |
 |---|---|---|---|
 | 1 | [Project 1: GPU Programming Fundamentals in Julia](project-1_gpu-fundamentals-julia/) | 23.10.2026 | **graded 9.75/10**, defence passed 02.11.2026 |
+| 2 | [Project 2: Applied Security on GPUs](project-2_applied-security-gpus/) | 27.11.2026 | started; track to confirm (recommendation E) |
