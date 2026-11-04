@@ -85,8 +85,10 @@ Topic 5 (file integrity checking) fits Project 2 track A (SHA-256 kernel), not t
 - [x] Brief, lectures 1–10, labs 2, 3, 7 and the reference documents collected and extracted
       (`../materials/`); scanned for hidden text: clean.
 - [x] Working alone, by agreement with the instructor.
-- [ ] Topic 10 chosen in ORTUS ("Log indicator matching", not "IDS training speed"); objective,
-      baseline and data agreed with an instructor (`notes/proposal.md` is the text to send).
+- [x] Topic 10 ("Log indicator matching") and working alone agreed with the instructor in person;
+      `notes/proposal.md` keeps the objective, baseline and data as a one-page statement for the
+      report (not sent).  Still to check: the ORTUS choice activity shows "Log indicator
+      matching" (not "IDS training speed").
 - [x] Design (`notes/design.md`): data (course corpus + indicator lists of 10–10,000 built from
       the seed), four methods (GPU hash-set, GPU per-indicator, tuned multithreaded CPU,
       `occursin`), measurement matrix, expected results, validation.
