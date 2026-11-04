@@ -1,0 +1,244 @@
+Institute of Information Technology
+Image Processing for Surveillance:
+Pixels, Convolution and Filters
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+26. 10. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Destination: A Motion Detector for a Camera
+Network
+Gradient
+Frame  Float32  Blur
+Sobel magnitude, the edge map
+Motion mask
+UInt8, 2 MB  4 bytes per pixel  separable 5 x 5
+Alarm
+and box
+difference of blurred frames
+A motion detector runs the given pipeline over the footage of every camera.
+The edge map and the motion mask both come from the blurred frame; the
+alarm comes from the mask.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+I. Images as Data
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+A Frame as a Matrix
+Pixel: one intensity from 0 (black) to 255
+(white), one byte, UInt8
+Frame: an H × W matrix F[r, c], row r
+down and column c across; 1080p is
+1080 × 1920 : 2.07 million pixels, 2 MB
+Colour: three such matrices (red, green,  F[r, c]: 270 rows, 480 columns, one byte per pixel
+blue), 6 MB; a greyscale frame
+0.299R + 0.587G + 0.114B is
+282 283 284 285 286 287
+205 145 147 145 132 48  49
+computed first
+206 133 136 134 97  45  46
+Video: 25 frames per second, 52 MB/s  207 158 160 168 67  44  48  0 = black
+per camera  208 148 143 136 49  50  47
+255 = white
+row r down,
+Column-major: F[r, c] and F[r+1, c]  209 134 147 109 47  49  48  column c across
+210 153 160 67  50  45  51
+are adjacent in memory, so a column is
+the contiguous direction
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+From Bytes to Float32
+Byte arithmetic wraps: in UInt8, 200 + 100 = 44, so a sum of
+neighbours overflows before it is divided
+Kernels compute in Float32: 4 bytes per pixel, 8.3 MB per 1080p
+frame, and convert back to bytes only for storage or display
+The conversion is a point operation: one broadcast, no kernel to
+write
+frame = Array{UInt8}(undef, 1080, 1920)  # one frame, 2 MB
+read!("footage_123456.raw", frame)
+f_d = CuArray(frame)  # UInt8 on the device
+x_d = Float32.(f_d)  # 8.3 MB, one kernel
+y_d = round.(UInt8, clamp.(x_d, 0f0, 255f0)) # back to bytes
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+Footage as Personal Data
+Video in which a person can be identified is personal data under
+the GDPR (General Data Protection Regulation). Processing it
+needs a lawful basis, a stated purpose, and no more data than that
+purpose requires.
+Latvia: the Personal Data Processing Law and the guidance of the
+Data State Inspectorate on video surveillance: signage, a stated
+purpose, a retention period
+EU AI Act (Regulation 2024/1689): real-time remote biometric
+identification in publicly accessible spaces for law enforcement is
+prohibited except in narrowly listed cases; emotion recognition at
+work and in education is prohibited; other remote biometric
+identification is high-risk
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Point and Neighbourhood Operations
+Point operation: the output pixel depends  Point operation
+on the one input pixel at the same position;  input  output
+threads share nothing
+Neighbourhood operation: the output
+depends on a window around the position;
+every thread reads what its neighbours  one input pixel per output
+read
+Consequences: boundary handling at the  Neighbourhood operation
+input  output
+frame edge, repeated reads of every pixel,
+and separate input and output arrays,
+because an in-place update races
+Convolution: the neighbourhood
+operation with fixed weights  a window per output
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+One Thread per Pixel
+2D grid: threads=(16, 16) and blocks=  the frame as a grid of blocks, each 16 x 16 pixels
+(cld(H, 16), cld(W, 16)): 8 160 blocks
+for 1080p
+Thread index x is the row: the first array
+index varies fastest in memory; a warp
+holds x = 1..16 for two adjacent y, so it
+reads 16 consecutive rows in each of two
+adjacent columns: two contiguous 64-byte  blockIdx() = (3, 3)
+threadIdx().x: row within
+runs for Float32, coalesced  the block, 1 to 16
+x
+threadIdx().y: column
+Bounds guard: the last row and column of  within the block, 1 to 16
+one thread per pixel
+blocks overhang the frame
+shaded: one warp, 32 threads
+y
+Point operations: threshold, inversion,
+brightness, the grey conversion
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+Point Operation Kernel
+function threshold!(out, F, τ)
+r = (blockIdx().x - Int32(1)) * blockDim().x + threadIdx().x
+c = (blockIdx().y - Int32(1)) * blockDim().y + threadIdx().y
+H, W = size(F)
+if r <= H && c <= W
+@inbounds out[r, c] = F[r, c] > τ ? 255f0 : 0f0
+end
+return nothing
+end
+bl = (cld(H, 16), cld(W, 16))
+@cuda threads=(16, 16) blocks=bl threshold!(out_d, x_d, 128f0)
+out_d .= ifelse.(x_d .> 128f0, 255f0, 0f0)  # as one broadcast
+The broadcast on the last line computes the same threshold in one
+fused kernel.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+II. Convolution
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+Convolution
+Output pixel as a weighted sum of its window
+input pixels  weights w (x 1/16)  one output pixel
+145  147  145  132  48  out[r, c] = (
+133  136  134  97  45  1  2  1  1·136 + 2·134 + 1·97
+158  160  168  67  44  x  2  4  2  2·160 + 4·168 + 2·67  131
+1·143 + 2·136 + 1·49
+148  143  136  49  50  1  2  1
+) / 16 = 2091 / 16 = 130.7
+134  147  109  47  49
+stored as 131
+R  R
+1
+out[r, c] =  ∑  ∑ w[i, j] in[r + i, c + j]
+S
+i=−R j=−R
+w is the filter kernel, a small matrix of weights (the GPU kernel function that
+applies it shares the name), R its radius (k = 2R + 1 pixels across) and S the
+normaliser, for a blur the sum of the weights. The code divides the weights by S
+beforehand, so the kernel only sums.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11
+Filter Gallery
+Different weights for smoothing, sharpening and derivatives
+Input  Box blur  Gaussian blur  Sharpen  Sobel magnitude
+0  0  0  1  1  1  1  2  1  0 -1 0  -1 0  1  -1 -2 -1
+0  1  0  1  1  1  2  4  2  -1 5 -1  -2 0  2  0  0  0
+0  0  0  1  1  1  1  2  1  0 -1 0  -1 0  1  1  2  1
+identity  weights x 1/9  weights x 1/16  weights sum to 1  Gx  Gy
+Blur and sharpen keep the scene recognisable. The Sobel panel
+combines the responses of Gx and Gy to the blurred frame into one
+magnitude (next slide) and leaves only the edges.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  12
+Sobel Gradient
+Two derivative filters combined into one edge strength
+change along c: vertical edges
+Gx
+-1 0 1
+-2 0 2  Magnitude G  Edge map
+-1 0 1
+change along r: horizontal edges
+Gy
+-1 -2 -1
+0 0 0
+edge strength in any direction  G above a threshold of 100
+1 2 1
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.
+Gx : the difference [−1 0 1] across the columns, smoothed by [1 2 1] down the
+rows; positive for dark-to-bright, negative for bright-to-dark
+Gy  : the transpose of Gx , the same filter turned by 90°
+−−−−−−−
+Magnitude: G = √G2x + G2y , the length of the gradient vector (Gx , Gy ) at each
+pixel; a threshold on G gives the edge map
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  13
+Boundary Handling
+Window of a border pixel beyond the frame edge
+image border
+Clamp to edge  92  92  92  95  131  180  184  183  repeat the border pixel
+Zero padding  0  0  92  95  131  180  184  183  treat the outside as black
+Mirror  131  95  92  95  131  180  184  183  reflect the row about the border
+outside  c = 1, 2, 3, ...
+Clamp to edge: repeats the border pixel; the usual choice, and texture memory does it in
+hardware
+Zero padding: treats the outside as black; leaves a dark rim after a blur and a false edge
+along the border after a gradient
+Mirror: reflects the row about the border; preserves local continuity, with more code
+Worked pixel in column c = 1, blur weights [1 4 6 4 1]/16: clamp
+(92 + 368 + 552 + 380 + 131)/16 = 95.2 , zero (552 + 380 + 131)/16 = 66.4 ,
+mirror (131 + 380 + 552 + 380 + 131)/16 = 98.4
+Every rule guesses the values outside the frame, so a motion detector ignores a band of R
+pixels (the filter radius) along
+DE0831  the border.
+Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  14
+Gaussian Blur
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  15
+Naive Convolution Kernel
+const R = 2  # radius 2: a 5 x 5 filter
+function convolve!(out, F, w)  # w: 5 x 5 weights, sum 1
+r = (blockIdx().x - Int32(1)) * blockDim().x + threadIdx().x
+c = (blockIdx().y - Int32(1)) * blockDim().y + threadIdx().y
+H, W = size(F)
+if r <= H && c <= W
+acc = 0f0
+for j in -R:R, i in -R:R
+rr = clamp(r + i, 1, H) # clamp to edge
+cc = clamp(c + j, 1, W)
+@inbounds acc += w[i + R + 1, j + R + 1] * F[rr, cc]
+end
+@inbounds out[r, c] = acc
+end
+return nothing
+end
+Each output pixel costs 25 loads of F and 25 of w. All threads of a
+warp read the same weight at the same time, so the cache serves it
+as a broadcast.DE0831
+clamp  implements
+Cybersecurity  clamp
+Solutions in HPC  to edge.
+Environment © A. Lektauers 2026.  16
+Cost of a Kernel
+Quadratic growth of multiply-adds with kernel size
+multiply-adds  121  full k x k kernel
+per output pixel
+two 1D passes
+81
+49  1080p frame, k = 5:
+25  52 M against 21 M
+18  22
+9  10  14  multiply-adds
+6
+k=3  k=5  k=7  k=9  k = 11
+At 1080p a 5 × 5 kernel costs 52 million multiply-adds per frame and
+1.3 billion per second per camera. This arithmetic is a small fraction
+of the GPU’s peak; the 25 loads per pixel are the likelier limit.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  17

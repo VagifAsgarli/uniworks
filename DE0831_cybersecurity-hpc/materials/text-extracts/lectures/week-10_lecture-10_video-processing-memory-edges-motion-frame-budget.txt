@@ -1,0 +1,513 @@
+Institute of Information Technology
+Image and Video Processing for
+Surveillance:
+Memory, Edges, Motion and the Frame
+Budget
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+The Pipeline So Far
+Gradient
+Frame  Float32  Blur
+Sobel magnitude, the edge map
+Motion mask
+UInt8, 2 MB  4 bytes per pixel  separable 5 x 5
+Alarm
+and box
+difference of blurred frames
+The chain runs from the raw UInt8 frame to the blurred Float32 frame and
+branches after the blur: the gradient of the blurred frame gives the edge map,
+the difference of two blurred frames gives the motion mask and the alarm. At
+25 frames per second the whole chain has 40 ms per frame.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+I. Memory for Images
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Separable Filters
+Rank-one kernel as two 1D passes
+10 multiply-adds per pixel instead of 25
+v  K  a temporary frame between the passes
+1  1  4  6  4  1
+T
+4  u  4  16 24 16  4  input  pass 1  pass 2
+output
+6  ×  1  4  6  4  1  =  6  24 36 24  6  frame  along rows (u)  along columns (v)
+4  4  16 24 16  4
+1  1  4  6  4  1  5 multiply-adds  5 multiply-adds
+every row of K is a multiple of uT
+Condition: K = v u⊤ , every row of K a multiple of one vector u: the Gaussian, the
+box filter and the Sobel pair qualify; a general kernel does not
+Two passes: along the rows with u, then along the columns with v : 2k multiply-adds
+and 2k loads instead of k2
+Price: a temporary frame, written and read once, and a second launch; the gain
+grows with k, and its size on a given GPU comes from a measurement
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+Separable Blur Code
+function blur_rows!(tmp, F, u)  # pass 1, along the rows
+r = (blockIdx().x - Int32(1)) * blockDim().x + threadIdx().x
+c = (blockIdx().y - Int32(1)) * blockDim().y + threadIdx().y
+H, W = size(F)
+if r <= H && c <= W
+acc = 0f0
+for j in -R:R
+cc = clamp(c + j, 1, W)
+@inbounds acc += u[j + R + 1] * F[r, cc]
+end
+@inbounds tmp[r, c] = acc
+end
+return nothing
+end
+u_d = CuArray(Float32[1, 4, 6, 4, 1] ./ 16)
+@cuda threads=(16 16) blocks=bl blur rows!(tmp d  x d  u d)
+Pass 2, blur_cols!, is the same kernel with the loop over i, the read
+tmp[clamp(r + i, 1, H), c] and the output written to out.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+Read Amplification
+Naive kernel: k2 load instructions per  3 x 3 kernel
+the red pixel lies in the window of 9 threads
+output pixel; 25 for 5 × 5, so a 1080p
+frame of 8.3 MB is requested as 207 MB
+Cache reuse: neighbouring threads
+request the same cache lines, so L1 and
+L2 serve most repeats and far less than
+207 MB comes from DRAM; each request
+still costs an instruction and a cache
+lookup
+Memory pressure: one multiply-add per
+9 loads requested per pixel; 25 for a 5 x 5 kernel
+load; the repeated loads put pressure on
+the memory hierarchy, and profiling
+identifies the limiting resource
+Remedy: load each pixel once per block
+into shared memory, a tile with a halo
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Tile and Halo
+Block tile with a border of radius R
+20 x 20 loaded
+Shared-memory tile, radius 2
+halo
+Loads per block  20 x 20 = 400 pixels
+Outputs per block  16 x 16 = 256 pixels
+tile
+Global loads per output  400 / 256 = 1.6
+Naive kernel, 5 x 5  25 loads per output
+Halo overhead  144 of 400 loads, 36 %
+16 x 16 written  the halo is read by two blocks; a 32 x 32 tile cuts the overhead to 20 %
+256 outputs need a 400-pixel input tile, so global loads per output fall from 25 to
+1.6. The speedup is smaller than this ratio, because the cache already served
+repeats. Neighbouring blocks both load the halo between them: 144 of the 400
+loads, 36 %, for a 16 × 16 tile and about 20 % for 32 × 32.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+Tiled Convolution in Three Phases
+1. Load together  2. Synchronise  3. Compute
+out
+256 threads copy 400 pixels  sync_threads(): every thread  25 multiply-adds from shared
+from global to shared memory  waits for the complete tile  memory, one write to global
+Load together: all 256 threads copy the 20 × 20 tile, halo included, into shared
+memory; threads with a local index up to 4 load a second row or column, and
+those with both load a corner too
+Synchronise: sync_threads(), after which the whole tile is in place
+Compute: the naive loop with F replaced by the tile and the indices shifted by
+R
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+Tiled Convolution Kernel
+const T = 16; const S = T + 2R  # tile 16, loaded 20
+function convolve_tiled!(out, F, w)
+tile = CuStaticSharedArray(Float32, (S, S))
+tr, tc = threadIdx().x, threadIdx().y  # 1..16
+r0 = (blockIdx().x - Int32(1)) * T  # tile origin in the frame
+c0 = (blockIdx().y - Int32(1)) * T
+H, W = size(F)
+for i in tr:T:S, j in tc:T:S  # 1. load together
+@inbounds tile[i, j] = F[clamp(r0 + i - R, 1, H), clamp(c0 + j - R, 1, W)]
+end
+sync_threads()  # 2. synchronise
+r, c = r0 + tr, c0 + tc  # 3. compute from the tile
+if r <= H && c <= W
+acc = 0f0
+for j in -R:R, i in -R:R
+@inbounds acc += w[i + R + 1, j + R + 1] * tile[tr + R + i, tc + R + j]
+end
+@inbounds out[r, c] = acc
+end
+return nothing
+end
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+Memory Choices for Images
+Data  Space  Reason
+Frame tile  shared  reused by 25 windows, loaded
+(CuStaticSharedArray)  once per block
+Filter  read-only global  25 values, every thread reads the
+weights  (CUDA.Const) or a tuple  same one: a broadcast from
+argument  cache
+Whole  texture (CuTexture)  2D-local cache, clamp at the
+frame  border in hardware, no halo code
+Output  global (CuArray)  written once, coalesced down the
+columns
+Shared-memory tiles give the most control. Texture memory is optional material:
+the naive kernel runs unchanged on a CuTexture and gains the 2D cache and the
+hardware clamp; see texture memory in the CUDA.jl documentation.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+II. Histograms and
+Operation Types
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11
+Camera Tampering Detection
+Intensity histogram: one frame in 256 numbers
+Normal view  Covered lens  Blinded by light
+0  intensity  255  0  intensity  255  0  intensity  255
+Computation: a privatised histogram, one bin per intensity, over 2 million pixels per frame:
+a global aggregation, neither a point nor a neighbourhood operation
+Tampering indicators: a covered lens collapses the histogram into the dark bins, a torch
+or the sun pushes it to the bright end, defocus narrows it
+Detection: the distance between this frame’s 256 bins and their running average, one
+number per frame; a jump marks possible tampering or a change of lighting
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  12
+Operation Classification
+Type, memory and separability of six operations
+1. Greyscale conversion of an RGB frame
+2. 7 × 7 Gaussian blur
+3. 3 × 3 median filter (the middle value of the window)
+4. Sobel gradient (each of its two filters is a smoothing [1 2 1] along
+one axis times a difference [−1 0 1] along the other)
+5. Difference of two consecutive frames
+6. Intensity histogram
+Types: point, neighbourhood, or global aggregation. Memory: broadcast, shared
+tile, texture, atomics in shared memory. Separable: yes, no, or not applicable.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  13
+III. Gradients and Edges
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  14
+Edges
+Fast change of intensity along a row
+the row, after the blur
+rising edge  falling edge
+255
+intensity
+F[r, c]
+0
+derivative
+0
+(F[r, c+1] - F[r, c-1]) / 2  an edge is a peak of the derivative
+column c along one row of the frame
+Derivative along a row: (F [r, c + 1] − F [r, c − 1])/2, the central
+difference; its peak marks the edge, its sign tells dark-to-bright from bright-to-
+dark
+Noise: the derivative of noise is noise, so the gradient follows the blur
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  15
+The Sobel Operator
+A difference along one axis and a smoothing along the other
+Gx: change along c  Gy: change along r  Gx = smoothing × difference
+-1  +0  +1  -1  -2  -1  1
+separable:
+-2  +0  +2  +0  +0  +0  2  ×  -1  +0  +1  two 1D passes
+of 3 taps
+-1  +0  +1  +1  +2  +1  1  [−1 0 1] along c
+horizontal derivative  vertical derivative  [1 2 1] along r
+Gx  measures the change along c, the horizontal direction; Gy the change along r,
+the vertical direction
+Separable kernels: each a 3-tap smoothing [1 2 1] along the edge times a 3-tap
+difference [−1 0 1] across it; integer weights, 6 non-zero taps
+Both from one window: a thread reads its 3 × 3 neighbourhood once and computes
+Gx and Gy together
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  16
+Gradient Magnitude and Direction
+Blurred input  Gx  Gy  Magnitude  Edge map
+signed: grey is 0  signed: grey is 0  √(Gx² + Gy²)  magnitude above 60
+−−−−−−−
+2  2
+G = √Gx + Gy ,  θ = atan(Gy , Gx )
+G  is the edge strength and θ the direction across the edge. A
+threshold on G gives the edge map. θ is used by edge thinning and
+by feature descriptors; the course pipeline uses G alone.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  17
+Sobel Kernel
+function sobel!(mag, F)
+r = (blockIdx().x - Int32(1)) * blockDim().x + threadIdx().x
+c = (blockIdx().y - Int32(1)) * blockDim().y + threadIdx().y
+H, W = size(F)
+if r <= H && c <= W
+rm, rp = clamp(r - 1, 1, H), clamp(r + 1, 1, H)  # clamp
+cm, cp = clamp(c - 1, 1, W), clamp(c + 1, 1, W)
+@inbounds begin
+gx = (F[rm, cp] + 2f0 * F[r, cp] + F[rp, cp]) -
+(F[rm, cm] + 2f0 * F[r, cm] + F[rp, cm])
+gy = (F[rp, cm] + 2f0 * F[rp, c] + F[rp, cp]) -
+(F[rm, cm] + 2f0 * F[rm, c] + F[rm, cp])
+mag[r, c] = sqrt(gx * gx + gy * gy)
+end
+end
+return nothing
+end
+Eight reads and ten multiply-adds per pixel, the weights in the code. A
+shared-memory tile cuts the reads to 1.3 per pixel.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  18
+Noise and the Blur
+Noise amplification by differencing
+Raw frame  Sobel on raw  After the blur  Sobel after blur
+sensor noise, sigma 6  noise becomes edges  5 x 5 binomial  object edges remain
+−−
+Sobel gain for noise: the root of the sum of the squared weights, √12 ≈ 3.5:
+sensor noise of 6 grey levels becomes noise of 21 in Gx , the speckle in panel 2
+After the blur: blur and Sobel combine into one 7 × 7 filter with gain 1.1: noise
+of 6.5 in Gx , while an ideal edge of 100 levels still peaks at Gx = 250
+Order of the pipeline: convert, blur, gradient
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  19
+Beyond Sobel
+Thinning and linking stages of Canny
+Canny (1986)
+Smooth  Gradient  Thin  Link
+Sobel magnitude  keep the local maximum  two thresholds: strong edges
+Gaussian blur
+and direction  along the gradient  extend through weak ones
+removes noise  where and which way  one pixel wide  connected chains
+Thinning (non-maximum suppression) keeps a pixel only where G is the maximum
+along θ: edges one pixel wide
+Linking (hysteresis) keeps a weak edge only where it connects to a strong one: two
+thresholds, longer connected chains
+On a GPU: both are neighbourhood operations with branches, so warps diverge;
+linking is iterative
+Corners (Harris): the gradient changes in two directions; classical feature points
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  20
+Edges in Security Work
+Perimeter lines: a fence, a door frame or a road edge is a long
+straight edge; a change of the edge map along it is an intrusion cue
+that needs no model
+Tamper detection: a defocused or covered camera loses its
+edges; the sum of G over the frame is one number per frame to
+watch (a reduction, lecture 6), beside the intensity histogram
+Features for learning: histograms of gradient orientation (HOG,
+Histogram of Oriented Gradients) were the pedestrian detector
+before neural networks; the first layer of a convolutional network
+learns Sobel-like kernels
+Cost: one 3 × 3 pass per frame, cheaper than any model that
+follows
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  21
+IV. Motion Detection
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  22
+Frame Differencing
+Comparison of consecutive frames
+Frame t - 1  Frame t  |Ft − Ft−1|  Mask
+blurred  blurred  scaled 0 to 100  difference above 25
+Dt [r, c] = |Ft [r, c] − Ft−1 [r, c]| ,  Mt [r, c] = Dt [r, c] > τ
+Dt  is the difference frame, Mt the motion mask and τ the threshold, set above
+the noise of the difference (2.3 grey levels after the blur; 25 here). A point
+operation on two frames: a broadcast. Only the moving edges show; the inside of
+a uniform object and a slow object leave a hollow or empty mask.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  23
+Background Model
+Running mean per pixel as a memory of the empty scene
+Ft[r, c], the blurred pixel  Bt−1 ± 30: inside is background
+Bt = (1 − 0.1) Bt−1 + 0.1 Ft, the background estimate  foreground: outside the band
+255
+pixel
+value
+0
+0  10  20  30  39
+frame t at pixel (r, c) on the path of object 1
+Mt = |Ft − Bt−1 | > τ ,  Bt = (1 − α) Bt−1 + α Ft
+Bt  is the background estimate and α the learning rate, a memory of about 1/α
+frames: at α = 0.1 a stationary object is absorbed in about 10 frames and leaves a
+ghost when it goes. An extension: track C requires differencing.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  24
+Motion Stage Code
+# point operations on whole frames: one fused kernel per line (lab 2)
+s.mask .= (abs.(s.b .- s.prev) .> s.τ) .& s.band  # Bool mask, border band cl
+s.prev, s.b = s.b, s.prev  # keep this blurred frame:
+n_fg = count(s.mask)  # a reduction (lecture 6)
+# bounding box: which rows and columns contain foreground
+rows = Array(any(s.mask, dims=2))  # 1080 flags to the host
+cols = Array(any(s.mask, dims=1))  # 1920 flags
+r0, r1 = findfirst(vec(rows)), findlast(vec(rows))
+c0, c1 = findfirst(vec(cols)), findlast(vec(cols))
+The frame never leaves the device: 3 000 flags and one count do.
+The state between frames is the previous blurred frame s.prev, set
+from frame 1 before the loop. The background model puts s.bg in
+place of s.prev and adds s.bg .= (1f0 - α) .* s.bg .+ α .* s.b
+after the mask. One box covers all foreground; separate objects need
+connected components (next slide).
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  25
+From Mask to Alarm
+foreground mask, frame 20
+Detected against the ground truth
+box of each connected mask region
+motion_truth_<ID>.csv
+object  truth box (c0, r0, c1, r1)  IoU
+1  (123, 211, 163, 241)  0.90
+2  (55, 117, 80, 150)  0.88
+3  (143, 210, 165, 232)  0.39
+IoU: intersection over union of the two boxes;
+above 0.5 counts as detected
+Cleanup: a 3 × 3 opening, a min filter then a max filter, removes isolated noise pixels: two
+neighbourhood passes
+Regions: connected components give one box per object; two objects that touch merge
+into one region (object 3)
+Validation: one detected box per truth box in motion_truth_<ID>.csv, IoU (intersection
+over union) above 0.5; unmatched boxes are false positives or misses
+Alarm: foreground count above an area threshold inside a zone, for a minimum number of
+consecutive frames
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  26
+Failure Modes
+Lighting change: a cloud or a lamp shifts every pixel at once and
+the whole frame becomes foreground; a gain correction from the
+intensity histogram or a temporarily larger α absorbs it
+Repetitive motion: swaying branches, rain, a flag: motion that is
+background; a per-pixel variance or a mixture of Gaussians per
+pixel replaces the single mean
+Camera shake: every edge moves by a pixel and every edge
+becomes foreground; the blur helps, alignment of the frame to the
+background cures it
+The cost of a false alarm: an operator who sees a hundred false
+alarms a day stops looking at them; the same arithmetic as the
+false-positive rate of lecture 12
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  27
+V. Video and the Frame
+Budget
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  28
+The Frame Budget
+All stages within one frame period
+0  40 ms: one frame period at 25 fps
+0.5 ms per frame  80 cameras
+1 ms per frame  40 cameras
+2 ms per frame  20 cameras
+one GPU, one slot per camera frame; every camera's frame must be processed before its next one arrives
+Period: at f = 25 frames per second a camera delivers a frame every 40 ms
+Capacity: one GPU serving N cameras has 40/N ms per frame, so
+N = ⌊1/(f t)⌋, t the time per frame in seconds, all stages included: an ideal
+serial estimate, kept with headroom for jitter
+Track C: measure t, report N , name the stage that sets t
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  29
+Time per Stage
+upload (PCIe)  104 µs
+convert to Float32  31 µs
+blur, two passes  86 µs
+Sobel magnitude  43 µs  bytes / 504 GB/s
+difference mask  51 µs  bytes / 20 GB/s
+count and box  42 µs  10 µs per launch
+total about 356 µs per frame: 173 kernel data movement, 104 upload, 80 launches
+Model estimate: bytes per stage over the bandwidth, plus 10 µs per launch
+Memory-bound: 40 million multiply-adds take about 2 µs at the FP32 peak; the 173
+µs is data movement, and the 2 MB upload is the largest single item
+Data source: bandwidth model of the track C pipeline with RTX 4070 SUPER memory bandwidth
+504 GB/s, FP32 peak 35 TFLOP/s (a multiply-add counted as two operations), PCIe 4.0 x16 pinned
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  30
+Capacity
+Cameras per GPU against the time per frame
+400
+N = 1 / (f t) = 1000 ms / (25 x t)
+500 cameras at 0.5 ms per frame: 7 GPUs
+300
+cameras
+per GPU  200
+at 25 fps  0.25 ms: 160
+100  0.5 ms: 80
+1 ms: 40
+2 ms: 20
+0.5  1  2  3  4
+time per 1080p frame, ms (all stages, one camera)
+At the model’s 0.36 ms: 112 cameras per GPU; at a measured 1 ms: 40
+The 500-camera installation of lecture 1: between 5 and 13 GPUs,
+depending on where the track C measurement lands on the curve
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  31
+Launch Overhead at Scale
+Per-camera launches against one launch per stage
+0  40 ms frame period
+per camera: 100 x 8 launches  8 ms of host submission
+batched: 8 launches over
+0.08 ms
+a 1080 x 1920 x 100 array
+illustrative: 10 µs of host time per launch; the GPU keeps running meanwhile
+Per camera: 100 cameras on one GPU × 8 launches × 10 µs = 8 ms of host
+submission in every 40 ms period, a fifth of it, whatever the kernels take
+Batched: the frames of the GPU’s cameras in one H × W × N array, one launch
+per stage with the third grid dimension indexing the camera: 8 launches per period,
+and one upload of N frames instead of N uploads
+Size of the batch: about 48 MB of state per camera, 4.8 GB for 100, and a 207 MB
+upload per period, 10 ms at 20 GB/s: the batch is the cameras of one GPU, not the
+installation
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  32
+Upload Overlap and Decode
+Sequential: upload, then the kernels: 104 + 253 µs per frame in
+the model
+Overlapped: while the kernels process frame t, frame t + 1
+uploads on a second stream: the period per frame becomes the
+larger of the two, 253 µs, while each frame still waits for its upload
+and its kernels (lecture 11)
+Decode: the camera delivers compressed video (H.264 or H.265);
+decoding it on the CPU costs more than every stage above, and
+the GPU’s hardware decoder (NVDEC) writes the frames into GPU
+memory directly: the raw frames never cross the bus
+End to end: the decoder with its throughput and stream limit, the
+YUV conversion and the kernels
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  33
+The Pipeline as a Function
+function process_frame!(s, f)  # one frame: host bytes to result
+copyto!(s.raw, f)  # upload, 2 MB
+s.x .= Float32.(s.raw)
+@cuda threads=(16, 16) blocks=bl blur_rows!(s.tmp, s.x, s.u)
+@cuda threads=(16, 16) blocks=bl blur_cols!(s.b, s.tmp, s.u)
+@cuda threads=(16, 16) blocks=bl sobel!(s.mag, s.b)
+s.mask .= (abs.(s.b .- s.prev) .> s.τ) .& s.band
+s.prev, s.b = s.b, s.prev
+return count(s.mask), Array(any(s.mask, dims=2)), Array(any(s.mask, dims=1))
+end
+function run_clip!(s, frames)  # the whole clip, state reset
+blur!(s.prev, s, frames[1])  # upload, convert, blur frame 1
+for f in frames[2:end]
+process_frame!(s, f)  # the flags wait for the result
+end
+end
+The output boundary is the count and the 3 000 flags on the host; everything before it, the upload
+included, is inside the function that is timed.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  34
+Frame Time Measurement
+using Statistics  # median
+run_clip!(s, frames)  # warm-up: compilation (lecture 7)
+t_clip = median([@elapsed run_clip!(s, frames) for _ in 1:5])
+t_frame = t_clip / (length(frames) - 1)  # wall clock per frame, all stages
+N = floor(Int, 1 / (25 * t_frame))  # cameras at 25 fps
+# the limiting stage: events around one stage at a time, repeated the same way
+t_up  = CUDA.@elapsed copyto!(s.raw, frames[2])
+t_blur = CUDA.@elapsed begin
+@cuda threads=(16, 16) blocks=bl blur_rows!(s.tmp, s.x, s.u)
+@cuda threads=(16, 16) blocks=bl blur_cols!(s.b, s.tmp, s.u)
+end
+The timing rules of lecture 7: warm up, synchronise, repeat and take the median. The wall clock
+over the clip sets t and N ; the stage times, one stage at a time, name the limiter and are compared
+with the model.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  35
+VI. Privacy by Design
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  36
+Data Minimisation
+Output: counts, boxes and masks leave the
+GPU; frames stay on the card unless an  GPU  frames
+alarm justifies keeping a clip  frames  personal data: deleted on the card
+in memory
+Retention: a stated number of days, in the  mask
+policy and in the code that deletes  2 MB, shape: less, not anonymous
+Access: the operator sees the alarm clip; the  count, boxes
+archive is under authenticated encryption  a few bytes per frame
+(AES-GCM, a vetted library), the key held  2 MB each
+apart from the storage  keep the data that answers the question,
+not the data it was computed from
+Transparency: signage and a documented
+purpose; an impact assessment for large-
+scale monitoring of public space (GDPR
+Article 35(3)(c))
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  37
+Dual Use
+The same kernels: the detector that guards a substation counts the people in a
+square; the difference lies in the purpose, the lawful basis and who holds the data
+The AI Act line: classification by purpose and context, not by kernel
+prohibited: real-time remote biometric identification in publicly accessible space for law
+enforcement (narrow, authorised exceptions); facial databases scraped from CCTV
+footage
+high-risk: other remote biometric identification; a learned stage only if its purpose is listed
+(Annex III)
+fixed arithmetic, as here: not an AI system under the Act’s definition; data protection law
+applies (GDPR, or the Law Enforcement Directive for the police)
+Engineering choice: what the pipeline outputs is decided by whoever writes it;
+minimisation is written into the code rather than added afterwards
+The frame budget says how many cameras one GPU can watch; the
+purpose and the law say how many it should.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  38

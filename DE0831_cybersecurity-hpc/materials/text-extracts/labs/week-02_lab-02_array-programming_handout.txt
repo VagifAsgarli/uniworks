@@ -1,0 +1,114 @@
+DE0831 · Lab 2 · Student handout
+DE0831 Cybersecurity Solutions in High Performance Computing Environment · Riga
+Technical University
+Lab 2 — Array Programming on the GPU
+Student handout · vector addition, broadcasting, reductions · 2 academic hours
+Institute of Information Technology · Laboratory work 2 of 16
+Marta Narigina, Lecturer, M.sc.ing. · marta.narigina@rtu.lv
+07.09.2026 · keep this next to the notebook
+What we did today, in one paragraph
+Someone handed us capture.bin: about 100 MB pulled from a network capture, scrambled byte-
+by-byte with one secret key. We put it on the GPU, decrypted it, then found the key without
+being told it by trying all 256 possibilities and keeping the one that turned the file back into
+English. We never wrote a kernel, a thread or an index — all of that is next week. Today the GPU
+was a machine you give one instruction and it applies it to a hundred million things at once.
+The two ideas that carry the whole session: broadcasting (one operation, every
+element, at once — the dot) and reduction (a whole array folded to one number —
+sum). Put them together and you have a key search.
+Glossary — the words you will hear
+Word  In plain terms
+array  A shelf of numbered boxes in a row. Our file is a shelf of ~100 million boxes.
+byte  One box. A whole number from 0 to 255. Can stand for a letter, a pixel, anything.
+CPU  A few very fast workers who walk the shelf box by box, in order.
+GPU  2560 slower workers (on a T4) who each stand at their own box and act at the same
+moment.
+broadcasting  Shout one instruction; every box gets it. Written as a dot, e.g. xor.(shelf, key).
+reduction  Fold the whole shelf down to one number, e.g. sum, count.
+kernel  A loop you write out by hand for the GPU. NOT today — this is next week.
+thread / block  How the GPU splits work among its workers. The dot hides this from you today.
+XOR  Compare two numbers bit by bit: 'were these different?'. Doing it twice with the
+same key undoes it.
+key  The one secret byte the file was scrambled with. We recover it in Part 4.
+brute force  Try every possible key (all 256) and keep the best. Against a one-byte key it always
+wins.
+scalar indexing  Asking the GPU for one box at a time. It refuses — that is the error everyone hits.
+Cheat sheet — the syntax you actually use
+You write  It means
+name = value  Give this thing a name. Name on the left, thing on the right. (One =
+1
+DE0831 · Lab 2 · Student handout
+You write  It means
+sign.)
+verb(x)  Do the verb to x. Anything with brackets after it is a verb: read, sum,
+length.
+# ...  A note for a human. The machine ignores everything after the #.
+CuArray(a)  Copy a shelf from the CPU to the GPU (the device).
+Array(d)  Copy a shelf back from the GPU to the CPU.
+xor.(shelf, key)  The dot: XOR every box with the key, all at once. Decrypt = do it
+again.
+shelf .== 32  Ask every box 'are you 32?'. Two = signs = a question. Gives
+true/false per box.
+a .& b a .| b  AND / OR, box by box. Combine two true/false shelves.
+sum(trueFalse)  Count the trues (true = 1, false = 0).
+UInt8('a')  The byte value of a character. UInt8 just means 'a byte'.
+argmax(scores)  The position (slot) of the biggest number.
+CUDA.@sync ...  Wait here until the GPU has actually finished. Needed before you
+time anything.
+@btime ...  Measure how long something takes, honestly (runs it many times).
+How to read any line of code today
+• Find the = sign. To its left is a name; to its right is the thing being named.
+• Anything with (brackets) after it is a verb doing something to what is inside.
+• A dot before an operation (xor., .==, .>=) means 'to every box at once'.
+• Julia counts boxes from 1, not 0. So guess number 0 lives in slot number 1.
+• There are no loops over the data today. If you are writing one, stop — use a dot instead.
+The four things you build
+1. Hands-on 1 — decrypt with the given key 0x5a in one line: d_plain = xor.(d_payload, key).
+Read the first 200 characters.
+2. Hands-on 2 — score it: english_score(d_plain) is about 0.99; a wrong key scores about 0.19.
+Write one sentence on why.
+3. Hands-on 3 — find the key: try all 256, keep the best. Answer is 90 (0x5a). Winner ~0.99
+beats runner-up ~0.80.
+4. Hands-on 4 — time it honestly: GPU vs CPU, and again with the file-copy included. Two
+numbers, one gap.
+The score we use, and why not just 'printable'
+We grade a guess with english_score — the fraction of bytes that are a letter or a space. Real
+English is nearly all letters and spaces, so the correct key scores ~0.99 and wrong keys ~0.19.
+We do not just check 'printable characters' (the range 32–126), because 37% of all byte values
+2
+DE0831 · Lab 2 · Student handout
+are printable, so several wrong keys still look all-printable and the test could hand you the wrong
+key. Letters-and-spaces is a tighter target that only the real key hits hard.
+function english_score(bytes)
+lower = (bytes .>= UInt8('a')) .& (bytes .<= UInt8('z'))
+upper = (bytes .>= UInt8('A')) .& (bytes .<= UInt8('Z'))
+space = bytes .== UInt8(' ')
+sum(lower .| upper .| space) / length(bytes)
+end
+When it breaks — the four common errors
+What you see / did  Fix
+ERROR: Scalar indexing is disallowed  You asked the GPU for one box (d[1]). Use a
+broadcast, or copy a slice back first: Array(d)[1:200].
+ERROR: no method matching xor(...)  You forgot the dot (xor not xor.), or the key is not a
+byte. Wrap the counter: UInt8(k).
+Recovered key is off by one (89 or 91)  The 1-based counting. Store in slot k+1, and
+subtract 1 after argmax.
+Wrong key scores ~0.99 too  You scored d_plain again instead of d_wrong. Score
+the new variable.
+Timing trap: plain @time on GPU code reports microseconds because the GPU works
+in the background. Always warm up once, then time with CUDA.@sync inside.
+Submit before 14.09 (next Monday)
+• Your notebook with all four hands-on cells run and showing output.
+• Hands-on 2: the two scores, the five counts, and your one sentence.
+• Hands-on 3: the recovered key and the winner-vs-runner-up gap.
+• Hands-on 4: your three-row timing table (GPU, CPU, and the honest number with copies).
+• If a cell errors and you cannot fix it, LEAVE the error in and write one line on what you think
+went wrong — that earns marks; a hidden bug does not.
+Next week we take the dot away: you write the loop it was hiding, by hand, with threads and blocks. Come with a
+notebook that runs — Lab 3 does not stop to fix environments.
+References
+JuliaGPU, CUDA.jl documentation — array programming. https://cuda.juliagpu.org
+JuliaLang, Julia documentation — broadcasting and the dot syntax. https://docs.julialang.org
+IETF, RFC 20: ASCII format for network interchange, 1969 (printable range 0x20–0x7E). https://www.rfc-
+editor.org/rfc/rfc20
+OWASP Foundation, Cryptographic Storage Cheat Sheet (weak/XOR obfuscation). https://owasp.org
+3

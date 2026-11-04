@@ -95,8 +95,9 @@ From the Project 1 feedback (9.75/10):
 
 - [x] Brief read and extracted; scanned for hidden text (clean); generators stored; data generated
       for the ID to check sizes.
-- [ ] Track confirmed; lecture 7 (scan/compaction) and the track's lecture/lab slides collected
-      into `../materials/`.
+- [x] Lectures 1–10 and labs 2, 3, 7 collected into `../materials/` (lecture 7 covers prefix sum
+      and timing; lectures 12–13 not yet delivered).
+- [ ] Track confirmed (aligned with the research-project topic: track E ↔ topic 10).
 - [ ] Design note (`notes/design.md`): memory layout, kernels, validation plan, measurement plan.
 - [ ] Implementation + CPU baseline + tests, checked on the CPU emulator and by PTX compilation.
 - [ ] Colab T4 run; benchmarks, roofline, analysis, plots (Julia).

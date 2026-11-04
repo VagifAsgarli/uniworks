@@ -1,0 +1,122 @@
+Institute of Information Technology
+GPU Kernels for Security Analytics
+Coalescing and Data Layout
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+28. 09. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Destination: Memory for the Entropy
+Scanner
+File  4096-byte windows
+Lecture 4: one thread per record, a bounds guard,  w1  w2  w3  w4  w5  w6
+the grid-stride loop
+Project 1, exercise 4: the byte entropy of each
+4096-byte window of a file  Byte histogram  one per window
+The scanner needs
+This lecture. Input arranged for efficient reads
+Lecture 6. A histogram per window in a block  prose: peaked  ciphertext: flat
+workspace; safe counting; a staged sum over the 256
+bins
+Entropy  bits per byte, maximum 8
+4.6  4.9  5.3  8.0  8.0  4.4
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+I. Global Memory and
+Layout
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Coalesced Memory Access
+Neighbouring reads use fewer memory sectors
+Adjacent reads  8 values · 1 sector · 32 bytes fetched
+1  2  3  4  5  6  7  8  every fetched byte is used
+Reads 32 bytes apart  8 values · 8 sectors · 256 bytes fetched
+sector 1  sector 2  sector 3  sector 4  sector 5  sector 6  sector 7  sector 8
+dark: the requested 4-byte value; the rest of each sector is fetched as well
+Illustration: eight threads, 4-byte values, aligned 32-byte sectors
+A full warp of 32 threads: 4 sectors for consecutive elements, 32 for elements 8
+apart
+Source: NVIDIA, CUDA C++ Best Practices Guide, coalesced access to global memory (a sector is
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+Warp Load Patterns: Aligned and Permuted
+The set of sectors sets the cost, not the order of threads
+1. Aligned and consecutive  4 sectors · 128 of 128 bytes used · 100 %
+warp
+0  128  256  384 bytes
+2. Permuted within 128 bytes  4 sectors · 128 of 128 bytes used · 100 %
+warp
+0  128  256  384 bytes
+One warp of 32 threads, 4-byte words. Green: requested bytes. Grey: not fetched.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+Warp Load Patterns: Misaligned and Broadcast
+A shift of one word costs a fifth sector
+3. Consecutive, offset by one word  5 sectors · 128 of 160 bytes used · 80 %
+warp
+0  128  256  384 bytes
+4. The same address in every thread  1 sector · 4 of 32 bytes used · 12.5 %
+warp
+0  128  256  384 bytes
+Case 3: 32 consecutive words that straddle a sector boundary: 5 sectors, 80 %
+Case 4: one word for all 32 threads: 1 sector, broadcast to the warp
+Pale red: fetched bytes that no thread requested
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Warp Load Patterns: Scattered Addresses
+Each distinct sector is a separate transaction
+5. Scattered addresses  21 sectors · 128 of 672 bytes used · 19 %
+warp
+0  256  512  768  1024 bytes
+Offset (case 3)  Gather (case 5)
+k = i + offset  if i <= length(idx)
+if k <= length(A)  C[i] = A[idx[i]]
+C[i] = A[k] + B[k]  end
+end
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+Coalescing Bandwidth
+Measured on an RTX 4070 SUPER
+Stride 1: 92 % of the 504 GB/s theoretical peak
+Stride 8 and beyond: 6–12 % of peak
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+Column-Major Array Layout
+Elements that differ in the first index are adjacent
+stats[account, field]  Order in memory  column-major
+failed  success  time
+1  f1  s1  t1
+2  f2  s2  t2  f1  f2  f3  s1  s2  s3  t1  t2  t3
+3  f3  s3  t3  stats[i, 1] for i = 1, 2, 3: adjacent
+rows: accounts
+For stats[account, field], neighbouring accounts in one field are
+adjacent. stats[field, account] would store each account’s fields
+together instead.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+Record Layout: AoS and SoA
+Neighbouring threads should read neighbouring values
+Array of structs: one record
+per entry, fields interleaved
+A kernel reading one field
+strides over the others
+Struct of arrays: one array
+per field
+The same kernel reads a
+contiguous run
+For the login example: keep
+all failed counts together
+stats[account, field] is the
+struct-of-arrays form
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+Naive Matrix Transpose
+Adjacent reads, strided writes
+# Fragment inside a 2D kernel; B has transposed dimensions.
+row = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+col = (blockIdx().y - 1) * blockDim().y + threadIdx().y
+if row <= size(A, 1) && col <= size(A, 2)
+B[col, row] = A[row, col]
+end
+memory order, 4 × 4 matrix; threads T1 to T4 differ in row
+Reads from A
+T1  T2  T3  T4
+consecutive
+Writes to B
+T1  T2  T3  T4
+stride 4 = size(B, 1)
+Either the reads or the writes of a transpose are strided.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11

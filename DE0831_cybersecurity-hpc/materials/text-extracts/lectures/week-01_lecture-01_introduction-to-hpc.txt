@@ -1,0 +1,288 @@
+Institute of Information Technology
+Introduction to High-Performance
+Computing
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+31. 08. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Welcome to DE0831
+Cybersecurity Solutions in High Performance Computing
+Environment
+6 ECTS, 16 weeks  Platform: NVIDIA CUDA
+32 h lectures + 32 h laboratory  Language: Julia + CUDA.jl
+work  Hardware: your own NVIDIA
+96 h independent work  GPU or Google Colab
+In-person, English
+The course teaches general-purpose GPU computing and then
+applies it to four security domains: vulnerability analysis, parallel
+data encryption, surveillance data mining, and object
+detection and  recognition.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+Course Roadmap
+Weeks  Block  Content
+1–2  Foundations  HPC for security workloads, limits of single-core execution, CPU
+versus GPU, CUDA and Julia
+3–6  GPU core  Execution model, kernels, memory, parallel algorithms, optimisation
+7  Cryptography I  Prefix sum and kernel timing; hash functions, password auditing
+8  Cryptography II  Password storage, ethics and law; block and stream ciphers
+9–10  Imaging  Pixels, convolution and filters; edge detection, motion, the frame
+budget
+11  Scale  Multi-GPU, distributed security analytics
+12–13  Applied security  ML-based intrusion detection, security of HPC systems
+14–16  Assessment  Written test, research project, presentations
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Assessment
+Component  Share  Project 1 (wk 3 → 8): GPU
+Tests  20 %  programming fundamentals
+Laboratory work  25 %  Project 2 (wk 7 → 13): applied
+security on GPUs, one of five tracks
+Individual study  25 %
+Research project (wk 6 → 16): the
+Exam  30 %
+exam is its defence
+Written test: wk 14, closed-book,
+on paper, lectures 1–13
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+I. HPC Requirements for
+Security Workloads
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+Security Has Become a Throughput Problem
+Classical security engineering focused on correctness: protocol
+soundness and implementation memory safety.
+Modern defensive and offensive security is increasingly about rate:
+Password-hash testing throughput
+Line-rate packet-inspection capacity
+Video-analysis capacity within the incident-response deadline
+Log-matching throughput against threat indicators
+When a security requirement is expressed as a number of
+operations per second, it becomes a high-performance computing
+problem.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Four Workloads That Define This
+Course
+1. Password and credential auditing  3. Surveillance imaging and object detection
+Testing candidate passwords against captured  Convolution over every pixel of every frame
+hashes  Naturally 2D data-parallel
+Embarrassingly parallel and throughput-bound  Lecture 10, lab 10, and Project 2 track C
+Lecture 7, lab 7, and Project 2 track A
+4. Anomaly and intrusion detection
+2. Bulk data encryption
+Feature extraction and neural network
+Encrypting or decrypting terabytes at rest or in  inference over network flows
+flight  Dense linear algebra underneath
+Parallelisable only in certain cipher modes  Lecture 12, lab 12, and Project 2 track D
+Lecture 8 and Project 2 track B
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+The Scale of Password Auditing
+Measured hash rates for a single consumer-class GPU (NVIDIA RTX 4070 SUPER, hashcat 7.1.2
+benchmark):
+Hash  Rate Purpose
+MD5  ≈ 7.0 × 10
+10
+/s legacy, broken
+NTLM  ≈ 1.2 × 10
+11
+/s Windows credentials
+SHA-256  ≈ 9.4 × 10
+9
+/s general-purpose
+bcrypt (cost 5)  ≈ 1.1 × 10
+5
+/s deliberately slow
+Argon2id (64 MiB)  ≈ 8.5 × 10
+2
+/s memory-hard
+The ratio between MD5 and Argon2id is roughly 108 . The whole discipline of password hashing
+consists of making this number as small as possible for the attacker.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+The Scale of Network Monitoring
+A 100 GbE link carries 12.5 GB/s. At the minimum Ethernet frame
+size of 64 bytes, that is ≈ 1.5 × 108 packets per second.
+A single CPU core at 3 GHz has ≈ 20 clock cycles per packet at
+that rate. Deep inspection (regex matching, TLS fingerprinting,
+statistical feature extraction) does not fit in 20 cycles.
+The classical answers are: sample the traffic (lose visibility), drop to
+flow-level metadata (lose detail), or parallelise.
+A GPU with ≈ 16 000 CUDA cores gives a very different budget:
+≈ 10 core-cycles per packet at the same line rate, if you can
+5
+express the work as thousands of independent threads.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+The Scale of Surveillance Video
+One 1080p camera at 25 fps produces
+1920 × 1080 × 25 ≈ 5.2 × 10 pixels per second.
+7
+A modest municipal installation of 500 cameras produces
+≈ 2.6 × 10
+10
+pixels per second.
+A 3 × 3 convolution costs ≈ 18 floating-point operations per pixel:
+≈ 4.7 × 10
+11
+FLOP/s for a single filter pass.
+Real pipelines apply tens of such passes, plus a neural network per
+frame.
+GPUs are built for this arithmetic profile: the same small operation
+applied to every element of a large regular grid.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+Definition of High-Performance Computing
+High-performance computing (HPC): the branch of computer
+science concerned with building and using supercomputers,
+parallel algorithms and parallel methods to solve problems that a
+single conventional machine cannot solve in acceptable time.
+Two situations push a problem into the HPC regime:
+Data size constraints. A 10 000 × 10 000 × 10 000 grid holds 1012 points; four Float32
+values per point is 32 TB of state, far beyond the memory of any single node.
+Time constraints. Weather forecasting, protein analysis, turbulence and flow simulation.
+For us, a password audit that must finish before the next credential rotation, or an intrusion
+alert that must fire before the attacker moves laterally.
+A security answer that arrives after the incident is over has no
+operational value. Throughout this course, “fast enough” is defined
+against a deadline.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11
+Measuring Performance: FLOPS
+FLOPS, or FLOP/s: floating-point operations per second.
+Scale  FLOP/s  Typical context
+MFLOPS  10
+6
+1980s workstation
+GFLOPS  10
+9
+one CPU core today
+TFLOPS  10
+12
+one modern GPU
+PFLOPS  10
+15
+a national HPC centre
+EFLOPS  10
+18
+crossed in 2022; see top500.org
+MIPS, millions of instructions per second, measures integer instruction throughput instead.
+Most of our workloads are integer workloads: hashing, block ciphers and pattern matching issue
+almost no floating-point instructions. Their natural units are hashes per second, gigabytes per
+second and packets per second. FLOPS says nothing useful about them. Only the imaging
+and machine-learning lectures (10 and 12) are genuinely FLOPS-bound.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  12
+Three Measures of Performance
+Theoretical peak Rpeak (also written Rtheor ): the throughput the hardware would deliver if every
+functional unit issued an operation every cycle:
+Rpeak = fclock × Ncores × FLOP per cycle per core
+Example: 3 GHz, 2 cores, 1 FLOP per cycle ⇒ Rpeak = 6 GFLOPS.
+Achieved performance Rmax : measured on a specific well-tuned benchmark (the TOP500 list
+uses dense linear algebra, HPL).
+Sustained performance Rsustained : the throughput achieved by the application.
+Rsustained ≪ Rmax ≤ Rpeak
+In practice Rsustained < 10% Rpeak is common.
+Closing that gap is the subject of lectures 4–7. Quote Rpeak in a report only if you also state the
+measured fraction of peak performance.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  13
+The Most Powerful Supercomputers
+TOP500 list, June 2026: the three fastest GPU-accelerated
+machines, ranked 2–4 overall
+2. El Capitan
+R  : 1 809 PFLOPS
+max
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.
+4. Aurora
+3. Frontier
+R  : 1 353 PFLOPS
+max  R  : 1 012 PFLOPS
+max
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  14
+TOP500 in June 2026
+Source: https://www.top500.org
+Rank  System  Cores  Rmax  Rpeak  Power
+(PFLOPS)  (PFLOPS)  (kW)
+1  LineShine, China  13 789 440  2 198.40  2 735.82  42 220
+2  El Capitan, USA  11 340 000  1 809.00  2 821.10  29 685
+3  Frontier, USA  9 066 176  1 353.00  2 055.72  24 607
+4  Aurora, USA  9 264 128  1 012.00  1 980.01  38 698
+5  JUPITER Booster, Germany  4 801 344  1 000.00  1 226.28  15 794
+Rmax /Rpeak  ranges from 51% (Aurora) to 82% (JUPITER Booster), even on the benchmark
+these machines are tuned for. The power column shows that at this scale energy is the binding
+constraint.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  15
+Interpretation of the June 2026 TOP500
+List
+LineShine (Shenzhen, China) took first place in June 2026, ending El Capitan’s run and
+becoming the fifth exascale system, the first Chinese system to lead the list since Sunway
+TaihuLight in 2017.
+It is CPU-only: 13.8 million cores of a custom 304-core processor, no accelerators. It is the first
+system to pass two exaflops without GPUs.
+El Capitan still has the higher theoretical peak (2 821 vs 2 736 PFLOPS). LineShine wins on
+Rmax by extracting 80% of its peak, and by drawing 42 MW.
+Performance per watt reverses the ranking:
+System  Accelerator  GFLOP/s per watt
+HPC7 (rank 6)  AMD Instinct MI300A  65
+JUPITER Booster  NVIDIA Grace Hopper  63
+El Capitan  AMD Instinct MI300A  61
+Frontier  AMD Instinct MI250X  55
+LineShine  none (CPU only)  52
+Fugaku (rankDE0831
+9)  Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.
+none (CPU only)  15  16
+II. Limits of Single-Core
+Execution
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  17
+50 Years of Microprocessor Trends
+Data: Karl Rupp, 50 Years of Microprocessor Trend Data, CC BY 4.0; original data to 2010 by
+Horowitz, Labonte, Shacham, Olukotun, Hammond and Batten.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  18
+End of Frequency-Scaling Gains
+Moore’s Law (1965, 1975): the number of transistors per chip
+doubles roughly every two years. Still approximately holding.
+Dennard scaling (1974): as transistors shrink, power density stays
+constant, so clock frequency can rise with each generation. Broke
+down around 2005.
+Consequence: transistor budgets keep growing, but they can no
+longer be spent on a faster single core. They are spent on more
+cores.
+Since about 2005, performance growth is available only to
+programs that expose parallelism.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  19
+Speedup: Amdahl’s Law
+If a fraction p of a program can be parallelised and (1 − p) is
+inherently sequential, the speedup on N processors is bounded by
+1  1
+S(N ) =  ,  lim S(N ) =
+p
+N →∞  1 − p
+(1 − p) +
+N
+Fixed problem size. Amdahl’s law quantifies the maximum
+speedup for a fixed problem size.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  20
+Speedup: Gustafson’s Law
+If the problem grows with the machine, the scaled speedup is
+S(N ) = (1 − p) + p ⋅ N
+Fixed time budget. Gustafson’s law quantifies the amount of
+additional work that can be completed within a fixed time budget.
+Security workloads are usually Gustafson-shaped: given a faster
+machine, the analyst does not finish the same audit sooner; they
+audit a larger keyspace, more cameras, or a longer log
+retention window.
+GPU acceleration therefore changes which security analyses are
+feasible, not only how long they take.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  21
+Amdahl versus Gustafson
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  22
+Strong and Weak Scaling
+Strong scaling (Amdahl)  Weak scaling (Gustafson)
+Problem size fixed  Work per processor fixed
+Add processors → less work  Add processors → bigger
+each  problem
+Efficiency E = S(N )/N  Efficiency can stay near 1
+decays  Limited by global
+Limited by communication and  synchronisation and memory
+the sequential fraction  capacity
+When you report a speedup in this course, always state the
+measured scaling regime and the comparison baseline: a single
+CPU core, all DE0831
+CPUCybersecurity
+cores, Solutions
+or a tuned  library.
+in HPC Environment © A. Lektauers 2026.  23

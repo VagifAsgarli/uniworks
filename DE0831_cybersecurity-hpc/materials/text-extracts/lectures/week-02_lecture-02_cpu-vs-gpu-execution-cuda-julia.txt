@@ -1,0 +1,183 @@
+Institute of Information Technology
+CPU versus GPU Execution
+CUDA and Julia
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+07. 09. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Learning Objectives
+After this lecture you will be able to:
+Contrast the CPU and GPU design philosophies and explain SIMT
+execution, warps and divergence.
+Describe the GPU memory hierarchy and how oversubscription
+hides latency.
+Place a security workload on the roofline model and classify it as
+memory-bound or compute-bound.
+Describe the CUDA platform and the JuliaGPU ecosystem, and the
+role of Julia in this course.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+I. CPU versus GPU
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Two Design Philosophies
+CPU: latency oriented  GPU: throughput oriented
+Few, very wide, very fast cores  Thousands of simple cores
+Deep pipelines, aggressive branch prediction  Shallow pipelines, no speculation
+Large multi-level caches per core  Small caches; latency hidden by switching
+Most transistors spent on control and cache  threads
+Goal: finish one instruction stream as fast as  Most transistors spent on arithmetic units
+possible  Goal: keep all arithmetic units busy
+A GPU does not make an individual thread fast. It makes having very many threads cheap.
+Workloads with few independent tasks, heavy branching, or irregular memory access do not
+benefit.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+CPU and GPU Structure
+CPU: a few large cores  GPU: thousands of small cores
+core  core  core  core
+core  core  core  core
+large cache (L3, ~tens of MB)  memory bandwidth (GDDR/HBM, ~hundreds of GB/s)
+Schematic structure of a CPU and a GPU; the figures are order-of-magnitude values.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+The Streaming Multiprocessor
+Structure of an NVIDIA H100 streaming multiprocessor (SM).
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+SIMT Execution
+CUDA’s execution model is SIMT: single
+instruction, multiple threads.
+Threads are grouped into warps of 32. All
+threads in a warp issue the same instruction in
+the same cycle.
+If threads in a warp take different branches, the
+warp executes both paths and masks off the
+inactive threads: branch divergence.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+Impact of Divergence on Security Kernels
+Cryptographic code is full of data-dependent branching, which is
+poorly suited to SIMT execution.
+A conditional such as
+if key_byte > 0x7f
+# path A
+else
+# path B
+end
+serialises the two paths within each warp: up to 2× slowdown.
+Well-written GPU crypto is therefore branchless, using arithmetic
+and bitwise selection instead of control flow.
+The same branchless style makes CPU crypto constant-time and
+resistant to timing side channels. On GPUs it is a performance
+requirement first; lecture 13 returns to the security implications.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+The GPU Memory Hierarchy
+Memory hierarchy of an NVIDIA H100 GPU.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+Latency Hiding
+A global memory access costs ≈ 400–800 cycles. A CPU hides
+this with caches and out-of-order execution.
+A GPU hides it by oversubscription: when a warp stalls on
+memory, the scheduler issues an instruction from a different
+resident warp in the same cycle.
+The fraction of the hardware’s maximum resident warps that are
+actually resident is called occupancy.
+GPUs do not avoid latency; they overlap it. This works only if the
+scheduler has enough independent work.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+The Roofline Model
+Operational intensity I = operations performed per byte moved from global memory: FLOP for
+numerical code, integer and bit operations for hashing and encryption. Attainable performance is
+P = min(Ppeak , I ⋅ Bpeak )
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11
+Workload Placement in the Roofline
+Model
+Workload  Operational intensity  Regime
+Vector addition  ≈ 0.08  FLOP/byte  strongly memory-bound
+3 × 3  convolution  ≈ 1.5  FLOP/byte  memory-bound
+Log pattern matching  < 1  FLOP/byte  memory-bound
+SHA-256 brute force  ≫ 100  integer ops/byte  strongly compute-bound
+AES-CTR encryption  ≈ 10 50–  integer ops/byte  compute-bound
+Dense matrix multiply (N = 4096)  ≈ 340  FLOP/byte  compute-bound
+Hash cracking is one of the few real workloads that is purely compute-bound: the candidate
+password is generated on the GPU, so almost no data crosses the memory bus and throughput
+scales almost linearly with the hardware.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  12
+GPU Generations and Compute
+Capability
+Generation  Year  Compute  Notable for us
+capability
+Maxwell  2014  5.x  minimum supported by CUDA.jl
+Pascal  2016  6.x  unified memory, FP16
+Volta  2017  7.0  tensor cores
+Turing  2018  7.5  INT8/INT4 tensor cores
+Ampere  2020  8.0/8.6  TF32, MIG partitioning
+Ada Lovelace  2022  8.9  FP8, consumer workstation GPUs
+Hopper  2022  9.0  confidential computing
+Blackwell  2024  10.x/12.x  FP4
+MIG (Multi-Instance GPU) and confidential computing are the hardware foundations of multi-
+tenant GPU security, the subject of lecture 13.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  13
+Performance Scaling
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  14
+Scaling of Machine-Learning Accelerator
+Performance
+Accelerator performance on machine-learning workloads has grown exponentially for
+some 15 years, roughly 1.6× per year
+The curve serves both sides: it makes the learned intrusion
+detector of lecture  12 practical,
+DE0831 Cybersecurity Solutions inand  it lowers
+HPC Environment © A. the  cost
+Lektauers 2026.of a brute-  15
+NVIDIA Graphics Processors
+The three tiers still hold; the brand names have moved on. Tesla is
+now the data-centre line (A100, H100, B200) and Quadro the RTX
+professional line (RTX 6000 Ada).
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  16
+II. CUDA and the
+JuliaGPU Ecosystem
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  17
+CUDA Platform and Programming Model
+CUDA (Compute Unified Device Architecture): the parallel computing platform and programming
+model developed by NVIDIA and implemented by NVIDIA GPUs.
+First released in 2007. It turned the GPU from a fixed-function graphics device into hardware
+programmable for general-purpose computation.
+Two things carry the name:
+the architecture: the SIMT execution model and memory hierarchy, a property of the silicon;
+the platform: driver, runtime, compilers (nvcc, the PTX intermediate representation) and libraries
+(cuBLAS, cuFFT, cuDNN, Thrust).
+CUDA C/C++ is the reference language: industry-standard C++ plus a small set of extensions for
+heterogeneous programming, and an API for device, memory and stream management.
+CUDA.jl targets this platform: Julia code is compiled to PTX through LLVM and launched through
+the same driver API. The hardware and the execution model are the same; only the front end
+differs.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  18
+The CUDA Parallel Computing Platform
+“Drop-in”  Easily Accelerate
+Maximum Flexibility
+Acceleration  Apps
+Nsight IDE  CUDA-GDB
+Linux, Mac and Windows  debugger
+GPU Debugging and  NVIDIA Visual
+Profiling  Profiler
+Enables compiling new languages to CUDA
+platform, and CUDA languages to other
+architectures
+Dynamic  HyperQ  GPUDirect
+SMX
+Parallelism
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  19
+Rationale for Julia in This Course
+One language, both sides. The host code and the GPU kernel are ordinary Julia functions. No
+separate .cu file, no host/device language split.
+Just-in-time specialisation. CUDA.jl compiles kernels through the same LLVM pipeline Julia
+uses for the CPU, specialising on the concrete argument types.
+Generic code that runs on both. Through multiple dispatch, the same algorithm can execute on
+Array and CuArray, essential when you need a CPU reference implementation to validate a
+cryptographic kernel against.
+Interactive performance work. Profiling, benchmarking and kernel introspection happen in the
+REPL, not in a compile–run–inspect cycle.
+Everything you learn transfers directly to CUDA C++: the execution model, the memory hierarchy
+and the optimisation strategies are properties of the hardware, not of the language.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  20
+The JuliaGPU Ecosystem
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  21

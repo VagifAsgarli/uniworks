@@ -1,0 +1,51 @@
+Institute of Information Technology
+Lab 7: Parallel Hashing
+Dictionary Attack on Salted Hashes
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Marta Narigina
+Lecturer, M.sc.ing.
+marta.narigina@rtu.lv
+12. 10. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Exercises 1–2: SHA-256 Kernel
+Notebook: work in Google Colab. Choose a Julia runtime with a
+T4 GPU, then run the setup cells. Download the track A
+wordlist.txt and your hashes_<ID>.txt from ORTUS.
+Start from the kernel skeleton in the notebook; it keeps the SHA-
+256 state in registers.
+Complete the round function (Σ, Ch, Maj, wrapping UInt32 additions).
+Verify the kernel against the NIST test vectors for "abc" and the
+empty string "".
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+Exercise 3: Dictionary Attack
+Copy the wordlist to the device; for each (salt, target) pair, hash
+every candidate and record the index of the match.
+Dataset: your hashes_<ID>.txt, 200 (salt, SHA-256(salt ‖
+password)) pairs. Some passwords are dictionary words, some are
+words changed by a rule, and some are random.
+The wordlist and the passwords are synthetic.
+Report the hash rate (H/s) and the number of recovered
+passwords.
+Extension: record all matches with the scan and compaction
+pattern of lecture 7.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Exercises 4–5: Rules and Defence
+Add simple mangling rules (capitalise, leet substitution, append
+digits) to the candidate generator; measure how coverage and
+candidate count grow.
+Re-run against targets stored with iterated SHA-256 (4 096
+iterations), a stand-in for key stretching, and measure the drop in
+password checks per second. PBKDF2 and Argon2 are discussed,
+not implemented.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+Session Outcome
+By the end of the session you should have:
+1. Your verified SHA-256 kernel and its hash rate.
+2. Dictionary-attack results: recovery count and H/s.
+3. The effect of rules on coverage.
+4. A defensive recommendation: a password policy and a storage
+function with parameters, justified by your measured single-GPU
+hash rate.
+Reading: FIPS 180-4; OWASP Password Storage Cheat Sheet.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5

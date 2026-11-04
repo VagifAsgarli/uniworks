@@ -1,0 +1,336 @@
+Array Programming on the GPU
+Vector addition, broadcasting and reductions on a captured payload
+DE0831 Cybersecurity Solutions in High Performance Computing Environment
+Institute of Information Technology · Laboratory work 2 of 16
+Marta Narigina, Lecturer, M.sc.ing. · marta.narigina@rtu.lv
+07. 09. 2026. · 90 minutes
+What you will have in 90 minutes
+• A 100 MB payload decrypted on the GPU, in one line of code
+– No kernel, no threads, no indexing - all of that is next week
+• A way to ask a hundred million questions at once and get one answer back
+• The key, found by trying all 256 of them, in less time than it takes to read this slide
+• Two numbers you can defend: the speed-up, and the honest speed-up
+• Your own notebook, with your own timings in it, that you keep
+2
+Where today sits
+Level 1 all session. We do not touch level 2 until next week.
+# Level 1 - array programming  <- today, all of it
+d_out = xor.(d_payload, key)
+# Level 2 - hand-written kernel  <- next week, 14.09
+@cuda threads=256 blocks=cld(N,256) my_kernel!(d_out, d_payload, key)
+# Level 3 - vendor-portable kernel  <- week 6
+@kernel function my_kernel_ka!(out, payload, key)
+i = @index(Global)
+end
+Sources: [1], [3]  3
+Part 1 · ~13 minutes
+No computer yet
+4
+The file somebody handed us
+• 100 MB pulled out of a network capture: capture.bin
+• It is not text. Opening it in an editor gives you nonsense
+• Somebody scrambled every byte with the same one-byte key
+– Scrambled with XOR, which is the simplest thing an attacker can do
+– It is also the most common thing in real malware droppers
+• Two questions: what does it say, and what was the key
+Sources: [10]  5
+Rules of engagement
+• Everything today runs on a file we generated for this course
+• The technique is exactly the technique used on real traffic. That is the point.
+• Where you may use it: systems you own, or hold written authorisation for
+– A signed scope from the system owner, before you start, in every case
+• Latvian and EU law treats unauthorised access as a criminal offence
+• Week 7 goes deeper into this, with password auditing. The rule does not change.
+6
+An array is a shelf of numbered boxes
+• A hundred million boxes, in one long row, numbered from 1
+• Each box holds one byte: a whole number from 0 to 255
+– A byte can be a letter, a pixel, a bit of a packet. Today they are letters.
+• The shelf on the CPU and the shelf on the GPU are two different shelves
+– Copying between them takes real time. We measure it in part five.
+• That is the entire data structure for today
+7
+One fast worker, or 2560 slow ones
+CPU  GPU
+• A handful of workers, each very fast  • 2560 workers on a T4, each slower
+• Walks the shelf box by box  • Every worker stands at their own box
+• Brilliant at 'it depends what was in the last box'  • Hopeless if boxes must wait for each other
+• 100 M boxes = 100 M steps in a row  • 100 M boxes = a few thousand steps
+Sources: [1], [4]  8
+Broadcasting
+One instruction, shouted once, applied to every box on the shelf.
+• You do not tell the workers to line up, or which box each one takes
+• You say what to do to a box. The machine works out the rest.
+• In code this is one character: a dot
+– xor.(payload, key) - the dot is the shouting
+9
+The other question: reduce the shelf to one number
+• Broadcasting: a hundred million boxes in, a hundred million boxes out
+• Reduction: a hundred million boxes in, one number out
+– How many spaces? How many letters? What is the total?
+• This one does need workers to talk to each other. It still parallelises.
+• Everyone adds their number to their neighbour's, then half of us sit down
+– A hundred million numbers, added in 27 rounds. Not 100 million.
+10
+Checkpoint - before we open anything
+Which of these four can 2560 workers do at the same time?
+• Add 5 to every box on the shelf
+• Replace every box with the box next to it, plus itself
+• Add up every box into one total
+• Sort the shelf into order, smallest to largest
+– Take two answers before you say anything.
+11
+Part 2 · ~15 minutes
+One line over a hundred million bytes
+12
+Three lines to get onto the GPU
+using CUDA
+payload = read("capture.bin")  # 100 MB of bytes, on the CPU shelf
+d_payload = CuArray(payload)  # the same bytes, on the GPU shelf
+length(d_payload)  # 104857600
+typeof(d_payload)  # CuArray{UInt8, 1, CUDA.DeviceMemory}
+Sources: [3]  13
+Reading those three lines, word by word
+• payload = read(...) - the equals sign means 'give this thing a name'
+– The name is on the left. What it names is on the right.
+• read("capture.bin") - a verb, then brackets holding what it acts on
+– Everything with brackets after it is a verb. There are no exceptions.
+• # after a line - a note to a human. The machine ignores it.
+• Nothing here is a loop, a condition or a variable that changes. Not today.
+14
+The dot is the entire idea
+Same work, twice. Look at how much the second one leaves out.
+# The way you would say it in any language you have seen
+out = similar(payload)
+for i in 1:length(payload)
+out[i] = xor(payload[i], 0x5a)
+end
+# The way you say it here
+d_out = xor.(d_payload, 0x5a)
+#  ^
+#  this dot means: to every box, all at once
+Sources: [3], [11]  15
+What XOR does, and why it undoes itself
+• XOR compares two numbers bit by bit and answers 'were these different?'
+– Same bit gives 0. Different bits give 1. That is the whole rule.
+• Scramble: byte XOR key gives nonsense
+• Unscramble: nonsense XOR the same key gives the byte back
+– Doing it twice with the same key returns you to where you started
+• One operation for both directions. Which is why attackers like it.
+Sources: [10]  16
+Hands-on 1 - decrypt with the key you were given
+Type it, run it, read what comes out. Five minutes.
+key = 0x5a
+d_plain = xor.(d_payload, key)  # <- the one line
+# bring 200 bytes back to the CPU and look at them
+peek = String(Array(d_plain)[1:200])
+println(peek)
+17
+The trap: one box at a time
+Every course has one error message everybody hits. This is ours.
+d_plain[1]
+# ERROR: Scalar indexing is disallowed.
+# What it means: you asked the GPU for one box, one at a time.
+# 2560 workers, and you gave a job to one of them.
+# If you really need one value:
+CUDA.@allowscalar d_plain[1]  # works, and is slow. For debugging only.
+Array(d_plain)[1:200]  # the normal way: copy a slice, then look
+Sources: [3]  18
+Part 3 · ~16 minutes
+A hundred million bytes, one number
+19
+From a shelf to a number
+Two steps. Ask everybody a yes-or-no question, then count the yeses.
+# step 1 - ask every box the same question. A shelf of true/false comes back.
+d_spaces = d_plain .== UInt8(' ')
+# step 2 - count how many said yes
+sum(d_spaces)  # 19 922 944
+length(d_plain)  # 104 857 600
+sum(d_spaces) / length(d_plain)  # 0.19
+20
+Reading it word by word
+• .== - ask every box: are you equal to this?
+– .>= and .<= work the same way, for at-least and at-most
+• UInt8(' ') - the byte number for the space character, which is 32
+– Quotes around a single character give you a character, not text
+• sum(...) - add up the whole shelf, get one number back
+– On true/false, sum counts. It is the same operation.
+21
+The question that matters: is this English?
+Written English is almost entirely letters and spaces. That is the detector.
+function english_score(bytes)  # returns 0.0 to 1.0
+lower = (bytes .>= UInt8('a')) .& (bytes .<= UInt8('z'))
+upper = (bytes .>= UInt8('A')) .& (bytes .<= UInt8('Z'))
+space = bytes .== UInt8(' ')
+sum(lower .| upper .| space) / length(bytes)
+end
+english_score(d_plain)  # right key -> ~0.99  wrong key -> ~0.19
+Sources: [9], [10]  22
+Five questions, five reductions
+Same shape, five times. You run all five in hands-on 2.
+lower  = sum((d_plain .>= UInt8('a')) .& (d_plain .<= UInt8('z')))
+upper  = sum((d_plain .>= UInt8('A')) .& (d_plain .<= UInt8('Z')))
+digits = sum((d_plain .>= UInt8('0')) .& (d_plain .<= UInt8('9')))
+spaces = sum(d_plain .== UInt8(' '))
+control = sum(d_plain .< 0x20)
+# five numbers that describe 100 MB you have never looked at
+23
+Hands-on 2 - score your own decryption
+Score the right key, then a wrong one, then write one sentence. Five minutes.
+# 1. score your correct decryption
+english_score(d_plain)  # ~0.99
+# 2. now decrypt with a WRONG key and score that
+d_wrong = xor.(d_payload, 0x2b)
+english_score(d_wrong)  # ~0.19
+# 3. also run the five counts from the slide before
+# In your notebook: one sentence on why the two scores are so far apart.
+24
+Checkpoint - why letters, and not just printable?
+Why did we count letters and spaces, instead of the whole printable range?
+• Printable is too generous: 37% of all byte values are printable
+– Several wrong keys still look 'all printable'. It cannot pick the key.
+• Letters and spaces are only ~27% of values: a much tighter target
+• Even so, a high letter-score proves 'looks like language', not 'is true'
+– A page of random letters scores high and means nothing
+Sources: [9], [10]  25
+Part 4 · ~17 minutes
+Nobody gives you the key
+26
+The situation, honestly
+• A one-byte key has exactly 256 possible values. All of them.
+– From 0 to 255. There is no 257th option and no clever maths needed.
+• You already have a function that scores a guess: english_score
+• So: decrypt 256 times, score 256 times, keep the best one
+• That is 26 GB of work. On a laptop, minutes. Here, about half a second.
+• This is called brute force, and against a one-byte key it always wins
+Sources: [10]  27
+Why 2560 workers help here twice over
+• Inside one guess: 100 M bytes XOR'd at once, then reduced to one score
+• Across guesses: each of the 256 is completely independent of the others
+– Guess 40 does not need anything from guess 39
+• Today we parallelise the inside and loop over the outside
+– The loop over 256 runs on the CPU. It is 256 steps. Nobody cares.
+• Loops are not banned. Loops over 100 M things are banned.
+28
+The loop that is allowed
+Nine lines. Every one of them is something you have already run.
+scores = zeros(Float64, 256)  # an empty shelf for the 256 answers
+for k in 0:255
+trial = xor.(d_payload, UInt8(k))  # decrypt with this guess
+scores[k + 1] = english_score(trial)  # how English does it look?
+end
+best_key = argmax(scores) - 1  # 90, which is 0x5a
+Sources: [3], [11]  29
+The two off-by-one traps
+• Julia counts from 1. Most languages you have heard of count from 0.
+– Guess 0 goes in slot 1. Hence scores[k + 1].
+– argmax gives a slot number, so subtract 1 to get back to a key.
+• UInt8(k) converts the counter into a byte before XOR sees it
+– Without it: an error about no matching method, which means a type mismatch
+• If your recovered key is out by one, this slide is why
+30
+Hands-on 3 - find the key
+Run the loop. Then decrypt with what it found and read the file. Six minutes.
+# 1. run the 256-key loop from two slides ago
+# 2. best_key = argmax(scores) - 1
+recovered = xor.(d_payload, UInt8(best_key))
+println(String(Array(recovered)[1:400]))
+# 3. how confident are you? compare the winner with the runner-up
+sorted = sort(scores, rev=true)
+sorted[1], sorted[2]  # e.g. 0.99 and 0.80
+31
+Three passes, or one?
+What english_score does  The fused version
+• lower = ... ; upper = ... ; space = ...  • count(b -> 'a'<=Char(b)<='z' ||
+• sum(lower .| upper .| space)  •  b == UInt8(' '),
+•  •  trial)
+• Builds 3 yes/no shelves, then ORs them  • Reads the data once, builds nothing
+Sources: [3], [11]  32
+What you just built has a name
+• A brute-force key search with an automated plaintext test
+– Known-plaintext-style scoring, without needing any known plaintext
+• The structure is the same for password cracking in week 7
+– Guess, transform, score, keep the best. Only the transform changes.
+• Change XOR to SHA-256 and you have a password auditor
+• The GPU does not know or care which of those it is doing
+Sources: [1], [10]  33
+Part 5 · ~15 minutes
+Two speed-ups, and only one is true
+34
+Why the obvious way to time it is wrong
+The first thing everyone reaches for, and why it reports a fantasy.
+@time xor.(d_payload, 0x5a)
+#  0.000021 seconds  <- 21 microseconds. This is a lie.
+# The GPU works in the background. @time measured you ASKING,
+# not the GPU DOING. It clocked the phone call, not the journey.
+@time CUDA.@sync xor.(d_payload, 0x5a)
+#  0.002100 seconds  <- 2.1 ms. This is real.
+Sources: [1], [3]  35
+Measure it properly
+Warm up once, then time. The first run includes compiling.
+using BenchmarkTools
+# the first call also COMPILES the code - throw it away
+CUDA.@sync xor.(d_payload, 0x5a)
+# now measure the steady state
+@btime CUDA.@sync xor.($d_payload, 0x5a)
+#  2.1 ms
+Sources: [3]  36
+Hands-on 4 - the two numbers
+What you time  T4 (GPU)  Colab CPU  Speed-up
+Key search only, GPU already
+0.55 s  48 s  ~87x
+loaded
+Same, plus copying the file over
+0.62 s  48 s  ~77x
+first
+Honest: search + copy + result
+0.68 s  48 s  ~70x
+back
+Sources: [1], [4]  37
+The result nobody expects
+• Try the key search on a tiny file: 1000 bytes instead of 100 MB
+• The CPU wins. Comfortably.
+– Copying to the GPU and back costs more than the whole computation
+• The GPU is not a faster computer. It is a wider one.
+– Wide only pays when there is enough work to fill the width
+• Small job, few workers needed, and you paid to wake up 2560 of them
+Sources: [1], [8]  38
+Part 6 · ~6 minutes
+Before you leave
+39
+The whole session on one slide
+• An array is a shelf of numbered boxes. The GPU is 2560 slow workers.
+• Broadcasting: the dot. One operation, every box, at once.
+• Reduction: sum. A whole shelf folded down to one number.
+• Put them together: guess, transform, score, keep the best
+• Time it honestly: warm up, CUDA.@sync, count the data transfer
+• Wide beats fast only when the work is wide enough to fill the machine
+40
+Next week: we take the dot away
+• Today the dot chose the workers and handed out the boxes for you
+• Next week you do that by hand: threads, blocks, and the index
+– Same XOR, same file. You write the loop the dot was hiding.
+• It is fiddlier, and it is where Project I begins
+• You will break it, verify against today's one-line version, and fix it
+• Come with a working notebook. Lab 3 does not stop to fix environments.
+Lab 3 preview; schedule 14.09  41
+Sources and further reading
+[1] A. Lektauers, "GPU Architecture and the CUDA Execution Model," DE0831 Lecture 2, Riga Technical University, 07 Sep. 2026.
+[2] A. Lektauers and M. Narigina, "Lab 2: Array Programming - Vector Addition, Broadcasting and Reductions," DE0831 Lab guide, Riga Technical
+University, 2026.
+[3] JuliaGPU, "CUDA.jl documentation - Array programming and kernel programming." [Online]. Available: https://cuda.juliagpu.org
+[4] NVIDIA Corporation, "NVIDIA T4 Tensor Core GPU Datasheet," 2018. 320 GB/s memory bandwidth, 2560 CUDA cores, compute capability
+7.5.
+[5] J. Bezanson, A. Edelman, S. Karpinski and V. B. Shah, "Julia: A Fresh Approach to Numerical Computing," SIAM Review, vol. 59, no. 1, pp.
+65-98, 2017.
+[6] T. Besard, C. Foket and B. De Sutter, "Effective Extensible Programming: Unleashing Julia on GPUs," IEEE Trans. Parallel Distrib. Syst., vol.
+30, no. 4, pp. 827-841, 2019.
+42
+Sources and further reading (cont.)
+[7] Google Research, "Colaboratory - Julia runtime," 2025. Julia is a natively supported Colab runtime; T4 accelerator available on the free tier.
+[8] S. Williams, A. Waterman and D. Patterson, "Roofline: an insightful visual performance model for multicore architectures," Commun. ACM, vol.
+52, no. 4, pp. 65-76, 2009.
+[9] Internet Engineering Task Force, "ASCII format for network interchange," RFC 20, 1969. Printable character range 0x20-0x7E.
+[10] OWASP Foundation, "Testing for Weak Cryptography" and "Cryptographic Storage Cheat Sheet." [Online]. Available: https://owasp.org
+[11] JuliaLang, "Julia Documentation - Mathematical Operations, Broadcasting and the dot syntax." [Online]. Available: https://docs.julialang.org
+43

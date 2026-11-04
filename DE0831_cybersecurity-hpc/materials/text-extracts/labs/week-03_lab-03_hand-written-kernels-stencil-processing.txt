@@ -1,0 +1,260 @@
+Institute of Information Technology
+Lab 3: Hand-Written Kernels
+Stencil Processing
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Marta Narigina
+Lecturer, M.sc.ing.
+marta.narigina@rtu.lv
+14. 09. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Session Objectives
+This session introduces hand-written kernels and compares them with the array-level baseline from
+Lab 2.
+Exercises  Skills
+1. Vector addition: blocks and threads  Global index arithmetic in 1-based Julia
+2. Indexing at warp boundaries  Halo loading and sync_threads()
+3. 1D stencil, naive  CPU-reference validation at boundary sizes
+4. 1D stencil with shared memory and halos
+5. Race conditions, deliberately
+6. Sliding-window byte entropy kernel
+Execution rule: do not use @inbounds until the kernel passes its tests.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+Exercise 1: Vector Addition Step by Step
+Start with one thread doing everything:
+using CUDA
+function add_one_thread!(c, a, b)
+for i in 1:length(a)
+@inbounds c[i] = a[i] + b[i]
+end
+return nothing
+end
+N = 1_000_000
+a = CUDA.rand(Float32, N); b = CUDA.rand(Float32, N); c = similar(a)
+@cuda threads=1 blocks=1 add_one_thread!(c, a, b)
+CUDA.synchronize()
+@assert Array(c) ≈ Array(a) .+ Array(b)
+This implementation is correct but has very low throughput because one GPU core performs one
+million iterations. Measure it as the lower-performance reference case.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+One Thread per Block
+function add_blocks!(c, a, b)
+i = blockIdx().x  # one thread per block
+if i <= length(a)
+@inbounds c[i] = a[i] + b[i]
+end
+return nothing
+end
+@cuda threads=1 blocks=N add_blocks!(c, a, b)
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+One Block with Many Threads
+function add_threads!(c, a, b)
+i = threadIdx().x  # one block, many threads
+if i <= length(a)
+@inbounds c[i] = a[i] + b[i]
+end
+return nothing
+end
+@cuda threads=1024 blocks=1 add_threads!(c, a, b)  # max 1024 threads!
+This version can only handle N ≤ 1024. A block cannot exceed
+1024 threads, and one block occupies a single SM, leaving the
+others idle.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+Blocks and Threads
+function add_kernel!(c, a, b)
+i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+if i <= length(a)
+@inbounds c[i] = a[i] + b[i]
+end
+return nothing
+end
+threads = 256
+blocks = cld(N, threads)
+@cuda threads=threads blocks=blocks add_kernel!(c, a, b)
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Task 1
+Time all four versions at N = 107 , plus the broadcast baseline
+c .= a .+ b from lab 2, and tabulate:
+Version  Time  Beff  % of B_PEAK
+add_one_thread!
+add_blocks!
+add_threads! (N = 1024)
+add_kernel!
+c .= a .+ b
+Report whether the hand-written kernel exceeds the broadcast baseline. If it does not, explain
+the result in two sentences.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+Exercise 2: Indexing at Boundaries
+using Test
+@testset "boundary sizes" begin
+for N in (1, 31, 32, 33, 255, 256, 257, 1023, 1024, 1025, 100_000)
+a = CUDA.rand(Float32, N); b = CUDA.rand(Float32, N); c = similar(a)
+@cuda threads=256 blocks=cld(N,256) add_kernel!(c, a, b)
+@test Array(c) ≈ Array(a) .+ Array(b)
+end
+end
+Task 2. Delete the if i <= length(a) guard and re-run the test
+suite. Identify the sizes that fail and those that pass silently. Explain
+the different outcomes for N = 256 and N = 257.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+Effects of Omitting the Bounds Guard
+N = 1000, threads = 256 → blocks = 4 → 1024 threads.
+Threads 1001–1024 index past the end of the array.
+With bounds checking on: a device-side error on the next
+synchronisation.
+With @inbounds: a silent write into unrelated device memory.
+This is the GPU equivalent of a buffer overflow, and unlike on the
+CPU, there is no guard page to catch it. compute-sanitizer finds it.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+Stencil Processing
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+Stencil Definition
+Each output element is a weighted combination of a fixed
+neighbourhood of the input:
+R
+out[i] =  ∑ wk ⋅ in[i + k]
+k=−R
+R  is the radius; the window has 2R + 1 elements.
+1D: moving average, FIR filter, edge detection along a signal.
+2D: image convolution (lecture 9).
+Stencils are the archetypal memory-bound with reuse kernel: each
+input element is read 2R + 1 times by neighbouring threads, and
+shared memory serves that reuse.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11
+Exercise 3: Naive 1D Stencil
+const RADIUS = 3
+function stencil_naive!(out, in)
+i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+if RADIUS < i <= length(in) - RADIUS
+acc = 0.0f0
+for k in -RADIUS:RADIUS
+acc += in[i + k]
+end
+out[i] = acc
+end
+return nothing
+end
+N = 10^7
+in_d = CUDA.rand(Float32, N)
+out_d = CUDA.zeros(Float32, N)
+@cuda threads=256 blocks=cld(N,256) stencil_naive!(out_d, in_d)
+Task 3. Time it. Each thread reads 7 values, so the apparent traffic is 7N ⋅ 4 bytes, but the
+L1/L2 caches absorb most of the reuse. Compute the bandwidth both ways and compare with
+the measured value. Use the comparison to infer the cache contribution to effective bandwidth.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  12
+Exercise 4: Shared Memory with Halos
+A block of T threads needs T + 2*RADIUS input elements: its own tile
+plus a halo of RADIUS on each side.
+halo  tile (T elements)  halo
+[ - - - ][ x x x x x x x x x x x x ][ - - - ]
+Threads 1:T load their own element.
+The first RADIUS threads additionally load the left halo.
+The last RADIUS threads additionally load the right halo.
+sync_threads(), then everybody computes from shared memory.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  13
+The Tiled Stencil Kernel
+1 function stencil_shared!(out, in, ::Val{T}) where {T}
+2  temp = CuStaticSharedArray(Float32, T + 2 * RADIUS)
+3
+4  tid = threadIdx().x
+5  i  = (blockIdx().x - 1) * blockDim().x + tid
+6  lid = tid + RADIUS  # index into the shared tile
+7
+8  n = length(in)
+9  if i <= n
+10  temp[lid] = in[i]
+11  if tid <= RADIUS  # halos
+12  temp[lid - RADIUS] = (i - RADIUS >= 1) ? in[i - RADIUS] : 0.0f0
+13  temp[lid + T]  = (i + T <= n)  ? in[i + T]  : 0.0f0
+14  end
+15  end
+16  sync_threads()
+17
+18  if RADIUS < i <= n - RADIUS
+19  acc = 0.0f0
+20  for k in -RADIUS:RADIUS
+21  acc += temp[lid + k]
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  14
+Task 4
+1. Verify stencil_shared! against stencil_naive! and against a CPU
+reference at the boundary sizes from Exercise 2.
+2. Time both for RADIUS ∈ {1, 3, 7, 15} and tabulate the speedup.
+3. Determine the RADIUS at which the shared-memory version begins
+to outperform the naive version and explain the absence of an
+advantage at RADIUS = 1.
+The Val(T) argument is how the tile size reaches the kernel at
+compile time: a CuStaticSharedArray needs a compile-time
+constant size. Passing T as an ordinary argument will not compile.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  15
+Exercise 5: A Deliberate Race
+# In-place stencil: concurrent reads and writes to neighbouring elements
+function stencil_racy!(A)
+i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+if 1 < i < length(A)
+A[i] = (A[i-1] + A[i+1]) / 2.0f0
+end
+return nothing
+end
+A = CUDA.rand(Float32, 10_000)
+results = map(1:10) do _
+B = copy(A)
+@cuda threads=256 blocks=cld(10_000,256) stencil_racy!(B)
+CUDA.synchronize()
+sum(Array(B))
+end
+println(results)  # the ten values will NOT all be equal
+Task 5. Run it ten times and show that the results differ. Then fix it two ways: (a) with a separate
+output array, and (b) by staging through shared memory. Confirm that both fixes give bit-identical
+results across runs.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  16
+Security Implications of Race Conditions
+A race that crashes is found in testing.
+A race that shifts a floating-point sum by 10−6 passes testing and
+reaches production.
+In a detection pipeline, a non-deterministic feature vector means a
+non-reproducible alert, and an incident report that cannot be
+verified.
+Any result you submit in this course must be reproducible across
+runs. If it is not, you have a race, not a rounding difference.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  17
+Security Application
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  18
+Exercise 6: Sliding-Window Entropy
+Kernel
+In lab 2 you computed one entropy value for a whole file. Now compute one per window, a stencil
+over byte counts.
+1  # One block per window; 256 threads = 256 bins
+2  function window_entropy!(H, bytes, ::Val{W}) where {W}
+3  counts = CuStaticSharedArray(Int32, 256)
+4  tid = threadIdx().x
+5  counts[tid] = Int32(0)
+6  sync_threads()
+7
+8  base = (blockIdx().x - 1) * W
+9  j = tid
+10  while j <= W && base + j <= length(bytes)
+11  b = @inbounds bytes[base + j]
+12  CUDA.atomic_add!(pointer(counts, Int(b) + 1), Int32(1))
+13  j += blockDim().x
+14  end
+15  sync_threads()
+16
+17  # ... reduce -p*log2(p) over the 256 bins, thread 1 writes H[blockIdx().x]
+18  return nothing
+19  end
+Task 6. Complete the reduction with a shared-memory tree (see the worked block reduction;
+lecture 6 develops the kernel) and produce an entropy profile of a file with a compressed or
+encrypted section. Compare  the runtime
+DE0831 Cybersecurity  withinthe
+Solutions  HPC256-pass  array
+Environment  version 2026.
+© A. Lektauers from lab 2.  19
+Session Outcome
+By the end of the session you should have, in a script or notebook:
+1. Task 1: the five-row timing table with Beff , and your explanation of whether the hand-written
+kernel beat the broadcast.
+2. Task 2: boundary sizes that fail without the guard and the cause of failure.
+3. Task 3/4: naive versus shared-memory stencil across four radii and the crossover radius.
+4. Task 5: evidence of the race, both fixes, and proof of determinism.
+5. Task 6: the window-entropy profile and its speedup over lab 2.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  20

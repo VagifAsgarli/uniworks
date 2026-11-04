@@ -1,0 +1,138 @@
+Institute of Information Technology
+Research Project
+GPU-Accelerated Cybersecurity
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+Marta Narigina
+Lecturer, M.sc.ing.
+marta.narigina@rtu.lv
+DE0831 Cybersecurity Solutions
+05.in10.
+HPC Environment © A. Lektauers 2026.
+2026.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Overview
+Logistics  Deliverables
+Worked in pairs (alone by agreement)  A working GPU implementation, on your own
+Topics assigned: week 6, 05.10  device or Google Colab
+Report due: week 15, Fri 11.12  A written report (6–10 pages)
+Presentation: week 16, 14.12  A 10-minute presentation with a live
+demonstration
+Weight: 30 % of the final grade (the Exam
+component: the project defence is the exam)  Reproducible code with benchmarks
+A project is a measurable performance study. It must define an objective beyond GPU
+implementation. A suitable objective is: Determine the data rate at which GPU log mining
+exceeds a tuned multicore CPU baseline and identify the factors that limit throughput as the
+input grows.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+Choosing a Topic
+One topic per pair from the list of 11 topics, first come, first
+served.
+Agreed with an instructor in week 6: the objective, the baseline
+and the data.
+Own topic possible by agreement, if it keeps the same shape: one
+measurable objective, one baseline, one security conclusion.
+Methods arrive later. Most topics use material from lectures 7–13;
+the column “Taught in” says where.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Topics 1–5: Passwords and Encryption
+#  Topic  Measurable objective  Taught in
+1  Password hashing cost  Guesses per second on the GPU and the CPU for salted hashes, and  L7, L8, lab
+the iteration count that brings the GPU rate below a stated target  7
+2  Password policy  Time to try every password of a given length and character set on one  L7
+strength  GPU, for at least four policies
+3  Bulk encryption  AES-CTR or ChaCha20 throughput on the GPU and the CPU, and the  L8
+file size at which the GPU wins once transfers are counted
+4  Encrypted-file  Byte-entropy scanner (a ransomware indicator): throughput and share  L6, Project
+detection  of files classified correctly as the block size changes  1
+5  File integrity checking  Hashing many files on the GPU and the CPU, and the batch size at  L7
+which the GPU wins
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+Topics 6–11: Imaging and Detection
+#  Topic  Measurable objective  Taught in
+6  Surveillance edge detection  Number of 720p and 1080p streams processed in real time by  L9–10, lab
+Sobel edges plus motion detection  10
+7  Filter size and frame rate  Frame rate as the convolution filter grows, and the largest filter  L10
+that meets the frame budget
+8  IDS training speed  Training time of a small neural network on the IDS dataset, GPU  L12, lab 12
+against CPU, at equal accuracy
+9  IDS precision  Inference throughput gained by Float16 over Float32, and the  L12
+detection accuracy it costs
+10  Log indicator matching  Log lines per second as the number of indicators grows from 10  L13, lab 13
+to 10 000
+11  Scan and brute-force  Per-address event counting on the log corpus: events per  L6, L13
+detection  second, GPU against CPU
+Topics 6–11 use the course datasets (footage, IDS records, log corpus); no data has to be
+collected.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+Requirements
+Runs reproducibly on a stated GPU: your own device or Google
+Colab. State the GPU model, and keep every run within one
+session’s limits.
+A baseline to compare against: a tuned CPU implementation, a
+library, or an unoptimised GPU version.
+A measurement: throughput, scaling, or a cost/accuracy curve,
+reported with the timing method of lecture 7 (warm-up,
+CUDA.@elapsed, repeated samples).
+A defensive or analytical conclusion: the implications of the
+measurements for a real security decision.
+Reproducibility: Project.toml, Manifest.toml, a script or notebook
+that reproduces the runs, and a README.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Timeline
+Week 6 (05.10): topic, objective and baseline agreed.
+Weeks 7–13: baseline and measurement script first; the GPU
+version once the lecture for your topic has run. Consultations in
+every lab session.
+Weeks 14–15: no other coursework due. The full measurement
+runs and the report belong here.
+11.12: report and code submitted through ORTUS.
+14.12: presentation and defence. The project is graded only here,
+as a whole.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+The Report (6–10 Pages)
+1. Problem and measurable objective: the security context and the target metric.
+2. Approach: the GPU design, the memory strategy, and the decomposition.
+3. Baseline and methodology: the comparison baseline and measurement procedure.
+4. Results: benchmark tables and scaling plots.
+5. Security discussion: the implications for a defender or analyst; limitations; ethical/legal notes for
+the domain.
+6. Reproducibility appendix: hardware, versions, and execution instructions.
+The 6–10 pages do not include the title page, table of contents, references and appendices.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+The Presentation (Week 16)
+10 minutes + 5 minutes questions.
+A live demonstration on your own device or Google Colab. A
+recorded run is not accepted.
+Both members of a pair must be able to answer questions on the
+whole project, not only their own part. Each is graded individually
+on the defence, so a pair can receive two different grades.
+Both sessions of week 16 are given to the presentations. Attend for
+the whole of both: the discussion of other projects is part of the
+examination.
+The running order is published in week 15.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+Grading
+Component  Max
+Technical implementation (correct, runs reproducibly on a  3
+stated GPU)
+Measurement and analysis (baseline, methodology,  3
+scaling)
+Security relevance and conclusion  1
+Report quality and reproducibility  1
+Presentation, demonstration and answers during the  2
+defence
+Total  10
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+Authorised Use
+Every project operates only on self-generated or instructor-
+provided data and on systems for which you hold authorisation
+(your own device or your own Colab session). No project may
+target, probe, or collect data from any external system, network, or
+individual.
+A small, well-measured result is preferable to an ambitious
+implementation with no baseline.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11

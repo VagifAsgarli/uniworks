@@ -1,0 +1,152 @@
+Institute of Information Technology
+GPU Kernels for Security Analytics
+Threads, Indexing and Bounds
+DE0831 Cybersecurity Solutions in High Performance Computing
+Environment
+Arnis Lektauers
+Assoc. Professor, Dr.sc.ing.
+arnis.lektauers@rtu.lv
+21. 09. 2026
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  1
+Course Roadmap: GPU Toolset and Security
+Applications
+Weeks  Content  Security use
+1–7  Kernels, memory, parallel  Entropy scanner (Project 1)
+patterns, timing
+7, 9  Hashing, AES-CTR, ChaCha20 Password auditing, encryption
+(Project 2)
+8, 11  Cluster architecture, multi-GPU Security analytics at scale
+10, 12  Image processing, machine  Surveillance, intrusion
+learning  detection (Project 2)
+13  Security of HPC systems  Hardening, side channels, log
+mining
+14–16  Written test, research project
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  2
+Destination: An Entropy Scanner for
+Encrypted Content
+File  4096-byte windows
+Project 1, exercise 4: the byte entropy of each  w1  w2  w3  w4  w5  w6
+4096-byte window of a file
+Entropy near 8 bits per byte: encrypted or
+compressed content  Byte histogram  one per window
+Ransomware output, packed malware, hidden archives
+The scanner needs
+This lecture. Correct indexing at window and array  prose: peaked  ciphertext: flat
+boundaries
+Lecture 5. Input arranged for efficient reads
+Entropy  bits per byte, maximum 8
+Lecture 6. A histogram per window in a block
+workspace; safe counting; a staged sum over the 256
+bins
+4.6  4.9  5.3  8.0  8.0  4.4
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  3
+Byte Entropy of One Window
+Count, divide, sum
+255
+cb
+pb =  ,  H = − ∑ pb log2 pb
+W
+b=0
+cb  : count of byte value b in a window of W bytes (W = 4096; 8 below). H : bits per byte.
+Window  A A A A A A A A  A A A A A A B B  A A A A B B B B  A B C D E F G H
+8 bytes
+1. Count
+histogram
+2. Divide  p=1  p = 3/4, 1/4  p = 1/2, 1/2  p = 1/8, eight times
+count / 8
+3. Sum  H=0  H = 0.81  H=1  H=3
+bits per byte
+k equally frequent values: H = log2 k.
+Ciphertext uses all 256 values about equally: H ≈ log2 256 = 8.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  4
+Entropy Scanner Applications
+High entropy selects regions for closer inspection
+English text  4.5 bits
+Ransomware: many files rewritten near 8
+bits  x86 machine code  6 bits
+Malware: packed or encrypted code
+sections  JPEG, ZIP, video  7.9 bits
+Firmware and disk images: compressed
+or hidden encrypted regions  AES ciphertext  7.95 bits
+Memory dumps: short high-entropy runs
+as key candidates  0  4  flag  8
+bits per byte, 4096-byte window
+Limit: compressed media also score near 8
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  5
+I. Kernels and Indexing
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  6
+Example Workload: Failed Logins
+Eight accounts, one rule
+Failed logins per account in a ten-minute window.
+Rule: flag a count of at least 5.
+Account  1  2  3  4  5  6  7  8
+Failures  0  2  7  1  5  0  8  3
+rule: ≥ 5
+Flag  ?  ?  ?  ?  ?  ?  ?  ?
+In pairs: identify the flagged accounts. A flag marks an account for
+investigation.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  7
+One Thread per Account
+Block 1  4 threads  Block 2  4 threads
+T1  T2  T3  T4  T1  T2  T3  T4
+i=1  i=2  i=3  i=4  i=5  i=6  i=7  i=8
+i = (block − 1) × block size + thread  (2 − 1) × 4 + 2 = 6
+A thread performs one instance of the work. A block groups threads.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  8
+Bounds Guard
+The guard handles the final partial block
+function flag_kernel!(flags, failed, threshold)
+i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+if i <= length(failed)
+flags[i] = failed[i] >= threshold
+end
+return nothing
+end
+if allows only threads with a valid record to access the arrays.
+Allocate flags and failed with the same length.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  9
+Simple Processing Flow: Step 1 (Copy In)
+1. Copy the input from CPU memory to GPU memory: CuArray(host)
+2. Run the kernel; the device caches its data: @cuda
+3. Copy the results from GPU memory to CPU memory: Array(flags_d)
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  10
+Simple Processing Flow: Step 2 (Execute)
+1. Copy the input from CPU memory to GPU memory: CuArray(host)
+2. Run the kernel; the device caches its data: @cuda
+3. Copy the results from GPU memory to CPU memory: Array(flags_d)
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  11
+Simple Processing Flow: Step 3 (Copy Out)
+1. Copy the input from CPU memory to GPU memory: CuArray(host)
+2. Run the kernel; the device caches its data: @cuda
+3. Copy the results from GPU memory to CPU memory: Array(flags_d)
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  12
+A Complete Launch and Validation
+using CUDA
+host = Int32[0, 2, 7, 1, 5, 0, 8, 3]
+failed_d = CuArray(host)
+flags_d = CUDA.zeros(Bool, length(host))
+threads = 4  # 256 for real inputs
+blocks = cld(length(host), threads) # 2 blocks
+@cuda threads=threads blocks=blocks flag_kernel!(
+flags_d, failed_d, Int32(5))
+CUDA.synchronize()
+@assert Array(flags_d) == (host .>= 5)
+Allocate on the host, launch on the device, validate against a CPU
+reference.
+Compilation failures: device code and compiler inspection.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  13
+Grid-Stride Loop
+One thread covers more than one element
+# Inside a kernel: n is the input length.
+i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+stride = blockDim().x * gridDim().x
+while i <= n
+# process element i
+i += stride
+end
++4  +4
+1  2  3  4  5  6  7  8  9  10
+T1 starts  T2 starts  T3 starts  T4 starts  stride = 4 launched threads
+Predict: the indices visited by thread 3. This pattern supports Project
+1 SAXPY.
+DE0831 Cybersecurity Solutions in HPC Environment © A. Lektauers 2026.  14
