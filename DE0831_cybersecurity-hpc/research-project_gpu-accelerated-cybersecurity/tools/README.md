@@ -21,6 +21,14 @@ The notebook instantiates the environment, generates the corpora from the studen
 `test/runtests.jl`, shows `results/`, and downloads `DE0831_RP_Asgarli_251ADM047.zip` (without
 `data/`) and `run_logs.zip`.  About 40 minutes.
 
+## `DE0831_RP_demo.ipynb`: the live run for the defence
+
+The same first steps (Julia, upload, instantiate), then a **warm-up** cell to run before the talk
+(generates the 125,000-line corpus and compiles the kernels, `RP_QUICK=1`) and a **live run** cell
+of about one minute: validation on 125,000 lines (`Correct!`), then the list-size sweep at 10,
+1,000 and 10,000 indicators with 20 repetitions, and the benchmark table.  Open Colab about 20
+minutes before the presentation.
+
 ## CPU-only run on a multicore machine
 
 The tuned CPU baseline scales with tasks; the Colab host has two hardware threads, so the

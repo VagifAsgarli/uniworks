@@ -100,8 +100,13 @@ Topic 5 (file integrity checking) fits Project 2 track A (SHA-256 kernel), not t
       flat from 10 to 10,000 indicators (30 M lines/s with compaction, 49 M without); the
       per-indicator kernel grows linearly (5.9 ms per 32 indicators); the tuned CPU reaches
       1.1–1.4 GB/s on 4 cores, the GPU 1.9 GB/s with the copy and 5.8 GB/s on the device.
-- [ ] Report (6–10 pages, RTU format): draft in `outputs/report/`; code and report by 11.12.
-- [ ] Presentation (10 min, live demo on Colab), speaker notes and Q&A, 14.12.
+- [x] Report in the RTU format (`outputs/report/DE0831_ResearchProject_Asgarli_251ADM047.pdf`
+      and `.docx`, built by `build_report.js`; 10 body pages + title, contents, references,
+      appendix); presentation (`outputs/presentation/*.pptx|pdf`, 10 slides + backup,
+      `speaker-notes.md`, 1,350 words); `notes/defence-prep.md` (numbers, likely questions);
+      `tools/DE0831_RP_demo.ipynb` for the live run.
+- [ ] Fill in the "Declared AI use" paragraph of `DE0831_RP/README.md` in the archive; upload the
+      report and the code archive (`outputs/submission/`) through ORTUS by 11.12; present 14.12.
 
 ## Layout
 
