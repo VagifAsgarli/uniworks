@@ -32,8 +32,28 @@ Individualisation (student ID `251ADM047`, digits 251047): **N = 1152, SEED = 51
 - [x] Measured on Google Colab, Tesla T4, 23.10.2026; every script printed `Correct!`
       ([logs](outputs/colab-t4_2026-10-23/logs)).
 - [x] Submission archive built: [`outputs/submission/DE0831_P1_Asgarli_251ADM047.zip`](outputs/submission/DE0831_P1_Asgarli_251ADM047.zip).
-- [ ] Uploaded to ORTUS.
-- [ ] Defence (week 9).
+- [x] Uploaded to ORTUS.
+- [x] Defence 02.11.2026: passed.
+- [x] **Graded: 9.75 / 10** (implementation 10/10, analysis 9.5/10): [`outputs/feedback_2026-11-02.md`](outputs/feedback_2026-11-02.md).
+
+## Feedback and lessons
+
+Four remarks, all in the analysis side (full text and causes in the feedback file):
+
+1. A comment in `p1_ex3.jl` says "16 blocks per SM": that is the grid size, not the number of
+   resident blocks (4 × 256 threads on a T4). Do not confuse grid size with occupancy.
+2. The "0.056 ms for the 23.6 MB count matrix" figure came from subtracting two timings instead
+   of measuring the array step directly, and one of the two was anomalous. A number that breaks a
+   physical bound (here: 2 TB/s on a 320 GB/s GPU) is a measurement error, not evidence, and must
+   not be used for a conclusion, even with a caveat.
+3. The analysis cites `CUDA.@device_code_ptx` output that the submitted scripts never produce
+   (it came from a separate check in `tools/`). Evidence has to be reproducible from the
+   submission itself.
+4. The entropy plot was drawn with matplotlib in the Colab notebook because GR failed there; the
+   task requires Julia only. Use a headless-capable Julia plotting path next time.
+
+The submitted files are kept exactly as handed in. If the issues are fixed later for the exam
+(19 January 2027), do it in a new run folder under `outputs/` and leave the submission untouched.
 
 ## Results (Tesla T4)
 
