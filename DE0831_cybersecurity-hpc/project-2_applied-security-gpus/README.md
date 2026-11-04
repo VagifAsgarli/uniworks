@@ -103,6 +103,8 @@ From the Project 1 feedback (9.75/10):
       benchmark/results/analysis generators, CairoMakie plots, tests.  Checked on the CPU emulator
       (`Correct!`), by PTX compilation of all nine kernels and by mutation testing
       (`outputs/emulator-validation_2026-11-04/`).
-- [ ] Colab T4 run (`tools/DE0831_P2_colab.ipynb`); review of the measured numbers and the
-      generated analysis.
-- [ ] Archive built; upload by 27.11.2026; defence week 14 (defence notes and Q&A to prepare).
+- [x] Colab T4 runs (`tools/DE0831_P2_colab.ipynb`): run 1 stopped at the threshold check
+      (threshold heuristic fixed), run 2 complete with the first match kernel (diagnosed the
+      warp-level limiter), run 3 complete with both kernels (`outputs/colab-t4_2026-11-04_run*/`).
+- [ ] Final run with the corrected analysis template → `DE0831_P2/results/`; archive built;
+      upload by 27.11.2026; defence week 14 (`notes/defence-prep.md`).

@@ -1,0 +1,473 @@
+   Installed LERC_jll ──────────────── v4.3.0+0
+   Installed JpegTurbo_jll ─────────── v3.2.1+0
+   Installed HypergeometricFunctions ─ v0.3.31
+   Installed OffsetArrays ──────────── v1.18.0
+   Installed Accessors ─────────────── v0.1.46
+   Installed CUPTI ─────────────────── v6.5.1
+   Installed AdaptiveArrayPools ────── v0.3.12
+   Installed CUDATools ─────────────── v6.5.1
+   Installed Roots ─────────────────── v3.0.13
+   Installed cuSPARSE ──────────────── v6.5.1
+   Installed GPUArrays ─────────────── v12.2.0
+   Installed SPIRV_Tools_jll ───────── v2025.4.0+0
+   Installed BFloat16s ─────────────── v0.6.4
+   Installed ColorSchemes ──────────── v3.32.0
+   Installed Missings ──────────────── v1.2.1
+   Installed LLVM ──────────────────── v10.4.3
+   Installed SIMD ──────────────────── v3.8.2
+   Installed JSON ──────────────────── v1.13.4
+   Installed CUDA_Driver_jll ───────── v13.3.6+0
+   Installed Hwloc_jll ─────────────── v2.15.0+0
+   Installed cuFFT ─────────────────── v6.5.1
+   Installed cuSOLVER ──────────────── v6.5.1
+   Installed SpecialFunctions ──────── v2.9.1
+   Installed HarfBuzz_jll ──────────── v100.15000.0+0
+   Installed LMDB_jll ──────────────── v1.0.3+0
+   Installed SLEEF_jll ─────────────── v3.9.0+2
+   Installed FriBidi_jll ───────────── v1.0.19+0
+   Installed SPIRV_LLVM_Backend_jll ── v23.1.4+0
+   Installed CUDACore ──────────────── v6.5.1
+   Installed Graphics ──────────────── v1.1.3
+   Installed Colors ────────────────── v0.13.4
+   Installed cuRAND ────────────────── v6.5.1
+   Installed FreeType2_jll ─────────── v2.14.3+1
+   Installed libaom_jll ────────────── v3.15.3+0
+   Installed ColorTypes ────────────── v0.12.5
+   Installed NVML ──────────────────── v6.5.1
+   Installed ArgCheck ──────────────── v2.5.0
+   Installed Expat_jll ─────────────── v2.10.0+0
+   Installed LLVMExtra_jll ─────────── v0.0.56+0
+   Installed Parsers ───────────────── v3.0.6
+   Installed ColorVectorSpace ──────── v0.11.2
+   Installed CompilerCaching ───────── v0.5.2
+   Installed ComputePipeline ───────── v0.1.9
+   Installed ChainRulesCore ────────── v1.26.8
+   Installed KernelInterface ───────── v0.4.3
+   Installed AcceleratedKernels ────── v0.5.11
+   Installed libdeflate_jll ────────── v1.26.0+1
+   Installed NVPTX_LLVM_Backend_jll ── v23.1.2+2
+   Installed PrettyTables ──────────── v3.5.1
+   Installed Atomix ────────────────── v1.7.0
+   Installed KernelAbstractions ────── v0.10.4
+   Installed OpenEXR_jll ───────────── v3.5.3+0
+   Installed GPUArraysCore ─────────── v0.2.2
+   Installed SPIRVIntrinsics ───────── v1.6.0
+   Installed XML2_jll ──────────────── v2.15.4+0
+   Installed Cairo ─────────────────── v1.1.1
+   Installed IterTools ─────────────── v1.11.0
+   Installed GPUCompiler ───────────── v2.20.0
+   Installed CairoMakie ────────────── v0.15.17
+   Installed FFTA ──────────────────── v0.3.2
+   Installed GPUToolbox ────────────── v3.5.0
+   Installed pocl_standalone_jll ───── v7.2.3+3
+   Installed CRlibm ────────────────── v1.1.1
+   Installed Makie ─────────────────── v0.24.17
+   Installed FillArrays ────────────── v1.18.2
+   Installed StructUtils ───────────── v2.12.0
+   Installed cuBLAS ────────────────── v6.5.1
+   Installed Distributions ─────────── v0.25.134
+   Installed CUDA ──────────────────── v6.5.1
+Precompiling packages...
+    702.1 ms  ✓ Preferences
+    509.1 ms  ✓ JLLWrappers
+   2115.2 ms  ✓ CUDA_Driver_jll
+  3 dependencies successfully precompiled in 3 seconds. 4 already precompiled.
+  3 dependencies precompiled but different versions are currently loaded (Dates, Printf and TOML). Restart julia to access the new versions. Otherwise, 3 dependents of these packages may trigger further precompilation to work with the unexpected versions.
+  Installing 18 artifacts
+   Installed artifact Expat                   314.6 KiB
+   Installed artifact JpegTurbo               1.9 MiB
+   Installed artifact FreeType2               1.5 MiB
+   Installed artifact HarfBuzz                2.3 MiB
+   Installed artifact FriBidi                 83.1 KiB
+   Installed artifact SPIRV_Tools             3.7 MiB
+   Installed artifact libdeflate              79.4 KiB
+   Installed artifact LMDB                    909.4 KiB
+   Installed artifact libaom                  6.6 MiB
+   Installed artifact LERC                    275.7 KiB
+   Installed artifact OpenEXR                 1.1 MiB
+   Installed artifact XML2                    2.2 MiB
+   Installed artifact SPIRV_LLVM_Backend      9.7 MiB
+   Installed artifact SLEEF                   5.7 MiB
+   Installed artifact Hwloc                   3.6 MiB
+   Installed artifact NVPTX_LLVM_Backend      11.0 MiB
+   Installed artifact LLVMExtra               5.1 MiB
+   Installed artifact pocl_standalone         105.7 MiB
+Precompiling packages...
+   1057.3 ms  ✓ LLVMLoopInfo
+   1183.8 ms  ✓ RangeArrays
+   1414.6 ms  ✓ AbstractFFTs
+   1183.6 ms  ✓ LaTeXStrings
+   1017.9 ms  ✓ IndirectArrays
+   5293.9 ms  ✓ GPUToolbox
+   1046.5 ms  ✓ PolygonOps
+   1172.0 ms  ✓ ExprTools
+    893.3 ms  ✓ IteratorInterfaceExtensions
+   1057.7 ms  ✓ TensorCore
+   1247.4 ms  ✓ StatsAPI
+   1789.3 ms  ✓ Contour
+   2536.9 ms  ✓ HelpPlots
+   2741.5 ms  ✓ OffsetArrays
+   5116.9 ms  ✓ CEnum
+   1275.3 ms  ✓ TriplotBase
+   2593.4 ms  ✓ FillArrays
+   3652.3 ms  ✓ Format
+    995.0 ms  ✓ IntegerMathUtils
+   1126.5 ms  ✓ InverseFunctions
+  18297.9 ms  ✓ BaseDirs
+   1518.6 ms  ✓ KernelInterface
+    998.7 ms  ✓ ArgCheck
+   1554.9 ms  ✓ Statistics
+   1567.3 ms  ✓ IterTools
+   3732.6 ms  ✓ RandomNumbers
+   6913.7 ms  ✓ OrderedCollections
+    771.7 ms  ✓ DataValueInterfaces
+   5060.8 ms  ✓ Observables
+   1071.3 ms  ✓ EnumX
+    919.3 ms  ✓ Reexport
+   1409.7 ms  ✓ DocStringExtensions
+   1377.5 ms  ✓ AbstractTrees
+  12557.9 ms  ✓ MacroTools
+   1373.9 ms  ✓ IntervalSets
+   1081.8 ms  ✓ RoundingEmulator
+   1089.4 ms  ✓ CompositionsBase
+   1449.1 ms  ✓ PtrArrays
+   9409.9 ms  ✓ IrrationalConstants
+   8286.4 ms  ✓ ChainRulesCore
+   1781.6 ms  ✓ TranscodingStreams
+   7368.4 ms  ✓ CUDA_Runtime_Discovery
+   1148.9 ms  ✓ HashArrayMappedTries
+   4150.9 ms  ✓ AdaptivePredicates
+   4394.5 ms  ✓ NaNMath
+   4623.5 ms  ✓ LazyModules
+   1363.0 ms  ✓ DelimitedFiles
+   1693.9 ms  ✓ Inflate
+   1756.2 ms  ✓ Adapt
+   1880.1 ms  ✓ DataAPI
+   1333.1 ms  ✓ StaticArraysCore
+   1496.3 ms  ✓ MappedArrays
+   6074.4 ms  ✓ ConstructionBase
+   2044.0 ms  ✓ WoodburyMatrices
+   2742.9 ms  ✓ PDMats
+   7570.7 ms  ✓ Crayons
+   2431.0 ms  ✓ Requires
+   2393.8 ms  ✓ ProgressMeter
+   5265.5 ms  ✓ BFloat16s
+   2047.6 ms  ✓ Scratch
+   2029.4 ms  ✓ Preferences
+   8372.3 ms  ✓ StructUtils
+   3407.2 ms  ✓ UnicodeFun
+   4532.8 ms  ✓ Compat
+   3537.5 ms  ✓ PkgVersion
+   3832.5 ms  ✓ AbstractFFTs → AbstractFFTsTestExt
+   1093.9 ms  ✓ TableTraits
+   1305.9 ms  ✓ StackViews
+   1993.4 ms  ✓ PaddedViews
+   3304.0 ms  ✓ FillArrays → FillArraysSparseArraysExt
+   2175.8 ms  ✓ Primes
+   1147.5 ms  ✓ InverseFunctions → InverseFunctionsDatesExt
+   1657.3 ms  ✓ InverseFunctions → InverseFunctionsTestExt
+   2974.1 ms  ✓ SignedDistanceFields
+   1686.5 ms  ✓ Statistics → SparseArraysExt
+   1098.0 ms  ✓ FillArrays → FillArraysStatisticsExt
+   2783.6 ms  ✓ Random123
+  13119.4 ms  ✓ FixedPointNumbers
+   6539.5 ms  ✓ DataStructures
+   1879.3 ms  ✓ SimpleTraits
+    903.4 ms  ✓ IntervalSets → IntervalSetsRandomExt
+   1220.6 ms  ✓ IntervalSets → IntervalSetsStatisticsExt
+    913.3 ms  ✓ CompositionsBase → CompositionsBaseInverseFunctionsExt
+   1258.4 ms  ✓ AliasTables
+   1818.3 ms  ✓ LogExpFunctions
+   1112.9 ms  ✓ AbstractFFTs → AbstractFFTsChainRulesCoreExt
+   1119.2 ms  ✓ ScopedValues
+   5836.4 ms  ✓ ChainRulesCore → ChainRulesCoreSparseArraysExt
+   2653.4 ms  ✓ Adapt → AdaptSparseArraysExt
+   1581.2 ms  ✓ OffsetArrays → OffsetArraysAdaptExt
+   2255.5 ms  ✓ GPUArraysCore
+    960.3 ms  ✓ ConstructionBase → ConstructionBaseIntervalSetsExt
+    960.9 ms  ✓ ConstructionBase → ConstructionBaseLinearAlgebraExt
+   1753.5 ms  ✓ AxisAlgorithms
+   4740.0 ms  ✓ Missings
+   1807.4 ms  ✓ FillArrays → FillArraysPDMatsExt
+   1008.5 ms  ✓ Ratios
+   1021.3 ms  ✓ ProgressMeter → ProgressMeterDistributedExt
+   1228.0 ms  ✓ RelocatableFolders
+   4858.5 ms  ✓ AdaptiveArrayPools
+   1546.3 ms  ✓ JLLWrappers
+   1110.7 ms  ✓ PrecompileTools
+  15304.8 ms  ✓ FileIO
+   5417.1 ms  ✓ ComputePipeline
+   1006.9 ms  ✓ Compat → CompatLinearAlgebraExt
+   1089.7 ms  ✓ StructUtils → StructUtilsStaticArraysCoreExt
+   1406.2 ms  ✓ MosaicViews
+   7995.2 ms  ✓ Tables
+   1225.9 ms  ✓ SortingAlgorithms
+   8293.6 ms  ✓ ColorTypes
+   2056.2 ms  ✓ AxisArrays
+   1165.6 ms  ✓ LogExpFunctions → LogExpFunctionsInverseFunctionsExt
+   5493.9 ms  ✓ QuadGK
+   3364.8 ms  ✓ Gamma
+   5256.1 ms  ✓ LogExpFunctions → LogExpFunctionsChainRulesCoreExt
+  89100.0 ms  ✓ Unitful
+   1116.7 ms  ✓ Ratios → RatiosFixedPointNumbersExt
+  10308.9 ms  ✓ Accessors
+   2041.6 ms  ✓ CoreMath_jll
+   9395.7 ms  ✓ CUDA_Driver_jll
+   3017.6 ms  ✓ SPIRV_LLVM_Backend_jll
+   2253.1 ms  ✓ Graphite2_jll
+   1992.0 ms  ✓ Libmount_jll
+   1672.1 ms  ✓ LLVMOpenMP_jll
+   1716.0 ms  ✓ tree_sitter_spirv_jll
+   1862.1 ms  ✓ Bzip2_jll
+   1166.5 ms  ✓ MSVCRuntime_jll
+   1663.0 ms  ✓ Xorg_libpciaccess_jll
+   1613.0 ms  ✓ NVTX_jll
+   1510.6 ms  ✓ Rmath_jll
+   1771.3 ms  ✓ LibTracyClient_jll
+   1431.9 ms  ✓ Xorg_libXau_jll
+   1631.4 ms  ✓ libpng_jll
+   2460.0 ms  ✓ libfdk_aac_jll
+   2818.9 ms  ✓ Imath_jll
+   2038.8 ms  ✓ tree_sitter_gcn_jll
+   3614.2 ms  ✓ SPIRV_Tools_jll
+   1621.7 ms  ✓ demumble_jll
+   1472.6 ms  ✓ Giflib_jll
+   1920.2 ms  ✓ LAME_jll
+   1600.7 ms  ✓ LERC_jll
+   1681.9 ms  ✓ EarCut_jll
+   1690.6 ms  ✓ libdeflate_jll
+  31482.2 ms  ✓ FastInterpolations
+   1906.8 ms  ✓ JpegTurbo_jll
+   2104.8 ms  ✓ CRlibm_jll
+   2084.9 ms  ✓ XZ_jll
+   1848.0 ms  ✓ Ogg_jll
+   2262.7 ms  ✓ Xorg_libXdmcp_jll
+   2436.4 ms  ✓ x265_jll
+   3011.7 ms  ✓ x264_jll
+   3151.5 ms  ✓ LLVMExtra_jll
+   2474.4 ms  ✓ libaom_jll
+   1949.1 ms  ✓ Zstd_jll
+   1673.6 ms  ✓ NVPTX_LLVM_Backend_jll
+   2366.4 ms  ✓ LMDB_jll
+   1652.8 ms  ✓ Expat_jll
+   1718.7 ms  ✓ Opus_jll
+   1752.8 ms  ✓ JuliaNVTXCallbacks_jll
+   1775.4 ms  ✓ Xorg_xtrans_jll
+   1758.7 ms  ✓ Libiconv_jll
+   1746.9 ms  ✓ Libffi_jll
+   1779.5 ms  ✓ tree_sitter_llvm_jll
+   1666.2 ms  ✓ isoband_jll
+   2014.2 ms  ✓ OpenSpecFun_jll
+   1819.6 ms  ✓ tree_sitter_ptx_jll
+   1517.7 ms  ✓ FriBidi_jll
+   2278.2 ms  ✓ Libuuid_jll
+   2296.2 ms  ✓ OpenBLASConsistentFPCSR_jll
+   3205.5 ms  ✓ MuladdMacro
+   2244.0 ms  ✓ CommonSolve
+  19178.4 ms  ✓ StringManipulation
+  12197.2 ms  ✓ SIMD
+  34730.9 ms  ✓ StaticArrays
+   3067.1 ms  ✓ FilePathsBase
+   7726.8 ms  ✓ StructArrays
+   1010.9 ms  ✓ StructUtils → StructUtilsTablesExt
+  53061.1 ms  ✓ Automa
+  12592.4 ms  ✓ StatsBase
+   1066.7 ms  ✓ ColorTypes → StyledStringsExt
+  10581.9 ms  ✓ ColorVectorSpace
+   4826.4 ms  ✓ HypergeometricFunctions
+   1626.3 ms  ✓ Unitful → ConstructionBaseUnitfulExt
+   1444.7 ms  ✓ Unitful → NaNMathExt
+   1466.8 ms  ✓ Unitful → InverseFunctionsUnitfulExt
+   1529.2 ms  ✓ Unitful → PrintfExt
+  18136.6 ms  ✓ Colors
+   1390.8 ms  ✓ Accessors → LinearAlgebraExt
+   1571.3 ms  ✓ Accessors → TestExt
+   1365.7 ms  ✓ Accessors → IntervalSetsExt
+   1953.4 ms  ✓ CoreMath
+   2455.4 ms  ✓ Accessors → UnitfulExt
+   2285.6 ms  ✓ Pixman_jll
+   2089.9 ms  ✓ SLEEF_jll
+   1937.3 ms  ✓ FreeType2_jll
+   8394.0 ms  ✓ CUDA_Compiler_jll
+   1981.1 ms  ✓ libdrm_jll
+   2018.6 ms  ✓ Rmath
+   2072.5 ms  ✓ Tracy
+   1730.2 ms  ✓ FastInterpolations → FastInterpolationsChainRulesCoreExt
+   2548.7 ms  ✓ libsixel_jll
+   2650.6 ms  ✓ CRlibm
+   2947.3 ms  ✓ libvorbis_jll
+   5193.3 ms  ✓ Xorg_libxcb_jll
+   2825.4 ms  ✓ CodecZstd
+   1861.2 ms  ✓ Libtiff_jll
+   4550.4 ms  ✓ LMDB
+   2983.0 ms  ✓ NVTX
+   2066.2 ms  ✓ XML2_jll
+   2195.1 ms  ✓ GettextRuntime_jll
+    988.5 ms  ✓ Isoband
+   9120.1 ms  ✓ SpecialFunctions
+   3154.5 ms  ✓ FFTA
+ 100452.6 ms  ✓ Parsers
+   6711.1 ms  ✓ StaticArrays → StaticArraysChainRulesCoreExt
+   1520.0 ms  ✓ StaticArrays → StaticArraysStatisticsExt
+   1613.3 ms  ✓ FillArrays → FillArraysStaticArraysExt
+   1543.5 ms  ✓ Adapt → AdaptStaticArraysExt
+   1545.0 ms  ✓ ConstructionBase → ConstructionBaseStaticArraysExt
+   2149.4 ms  ✓ Accessors → StaticArraysExt
+  82947.6 ms  ✓ LLVM
+   1596.3 ms  ✓ FilePathsBase → FilePathsBaseMmapExt
+   3686.8 ms  ✓ FilePathsBase → FilePathsBaseTestExt
+   1983.5 ms  ✓ FilePaths
+   1890.7 ms  ✓ StructArrays → AdaptExt
+   1700.1 ms  ✓ StructArrays → LinearAlgebraExt
+   1914.7 ms  ✓ StructArrays → SparseArraysExt
+   5989.5 ms  ✓ StructArrays → StaticArraysExt
+  52334.4 ms  ✓ GeometryBasics
+   1296.2 ms  ✓ StructArrays → GPUArraysCoreExt
+   1078.8 ms  ✓ Accessors → StructArraysExt
+   3115.4 ms  ✓ PDMats → StatsBaseExt
+   1819.0 ms  ✓ FastInterpolations → FastInterpolationsColorVectorSpaceExt
+   5171.3 ms  ✓ QOI
+   1519.5 ms  ✓ Animations
+   4762.7 ms  ✓ Graphics
+  13482.0 ms  ✓ ColorSchemes
+  13137.5 ms  ✓ Roots
+   2317.3 ms  ✓ FreeType
+   2965.7 ms  ✓ Fontconfig_jll
+   8899.9 ms  ✓ CUDA_Runtime_jll
+ 120722.8 ms  ✓ PrettyTables
+   2096.5 ms  ✓ Xorg_libX11_jll
+  13043.3 ms  ✓ IntervalArithmetic
+   1949.2 ms  ✓ OpenJPH_jll
+   2029.5 ms  ✓ CompilerCaching
+   1995.5 ms  ✓ NVTX → NVTXColorsExt
+   2716.3 ms  ✓ Hwloc_jll
+   3024.5 ms  ✓ Glib_jll
+   4675.8 ms  ✓ SpecialFunctions → SpecialFunctionsChainRulesCoreExt
+   1450.2 ms  ✓ ColorVectorSpace → SpecialFunctionsExt
+  74667.5 ms  ✓ ImageCore
+   7421.7 ms  ✓ StatsFuns
+   9958.6 ms  ✓ Interpolations
+   9301.7 ms  ✓ UnsafeAtomics
+   1619.0 ms  ✓ LLVM → BFloat16sExt
+  23799.5 ms  ✓ GridLayoutBase
+   1946.8 ms  ✓ GeometryBasics → IntervalSetsExt
+   3593.0 ms  ✓ Packing
+   5485.7 ms  ✓ ShaderAbstractions
+  71479.5 ms  ✓ JSON
+   1142.6 ms  ✓ Roots → RootsChainRulesCoreExt
+   1517.8 ms  ✓ Roots → RootsUnitfulExt
+   6089.7 ms  ✓ FreeTypeAbstraction
+   2203.0 ms  ✓ Xorg_libXrender_jll
+   2937.9 ms  ✓ Xorg_libXext_jll
+   1873.1 ms  ✓ Xorg_libXfixes_jll
+   1722.3 ms  ✓ IntervalArithmetic → IntervalArithmeticSparseArraysExt
+   1074.4 ms  ✓ IntervalArithmetic → IntervalArithmeticIntervalSetsExt
+   1494.4 ms  ✓ IntervalArithmetic → IntervalArithmeticIrrationalConstantsExt
+   1600.2 ms  ✓ IntervalArithmetic → IntervalArithmeticLinearAlgebraExt
+   3042.5 ms  ✓ OpenEXR_jll
+ 134526.9 ms  ✓ TiffImages
+  43258.2 ms  ✓ PlotUtils
+   1750.0 ms  ✓ pocl_standalone_jll
+   8279.6 ms  ✓ ImageBase
+   6622.8 ms  ✓ Sixel
+  17362.2 ms  ✓ PNGFiles
+   1303.8 ms  ✓ StatsFuns → StatsFunsInverseFunctionsExt
+   9001.9 ms  ✓ JpegTurbo
+   4121.0 ms  ✓ StatsFuns → StatsFunsChainRulesCoreExt
+   1615.2 ms  ✓ Atomix
+   3194.1 ms  ✓ Interpolations → InterpolationsUnitfulExt
+   1338.0 ms  ✓ JSON → JSONSerializationExt
+   1842.9 ms  ✓ ColorBrewer
+  14307.7 ms  ✓ SPIRVIntrinsics
+   3086.3 ms  ✓ Libglvnd_jll
+   3762.6 ms  ✓ Cairo_jll
+   2373.1 ms  ✓ libva_jll
+  23299.8 ms  ✓ MathTeXEngine
+   4422.0 ms  ✓ OpenEXR
+   6139.6 ms  ✓ ImageAxes
+  16446.1 ms  ✓ ExactPredicates
+   2592.0 ms  ✓ SPIRVIntrinsics → SPIRVIntrinsicsSpecialFunctionsExt
+   9681.7 ms  ✓ SPIRVIntrinsics → SPIRVIntrinsicsSIMDExt
+  15434.8 ms  ✓ Distributions
+   2272.3 ms  ✓ HarfBuzz_jll
+              ✗ libwebp_jll
+   4262.4 ms  ✓ ImageMetadata
+   3494.1 ms  ✓ SPIRVIntrinsics → SPIRVIntrinsicsSIMDSpecialFunctionsExt
+   3482.7 ms  ✓ Distributions → DistributionsTestExt
+   7838.5 ms  ✓ Distributions → DistributionsChainRulesCoreExt
+  19067.0 ms  ✓ DelaunayTriangulation
+   1761.0 ms  ✓ libass_jll
+   2581.0 ms  ✓ Pango_jll
+   4514.9 ms  ✓ Netpbm
+   5751.6 ms  ✓ KernelDensity
+              ✗ WebP
+   3489.6 ms  ✓ FFMPEG_jll
+   3277.3 ms  ✓ ImageIO
+   6575.6 ms  ✓ Cairo
+ 224772.9 ms  ✓ GPUCompiler
+   1746.5 ms  ✓ UnsafeAtomics → UnsafeAtomicsGPUCompilerExt
+ 241109.2 ms  ✓ KernelAbstractions
+   4295.7 ms  ✓ KernelAbstractions → SparseArraysExt
+   4318.2 ms  ✓ KernelAbstractions → StaticArraysExt
+   4688.4 ms  ✓ KernelAbstractions → LinearAlgebraExt
+   4780.3 ms  ✓ StructArrays → KernelAbstractionsExt
+   7521.1 ms  ✓ AcceleratedKernels
+  11833.1 ms  ✓ GPUArrays
+ 530582.9 ms  ✓ Makie
+  16674.8 ms  ✓ IntervalArithmetic → IntervalArithmeticMakieExt
+  18728.4 ms  ✓ IntervalSets → IntervalSetsMakieExt
+ 260798.2 ms  ✓ CUDACore
+  11355.0 ms  ✓ CUDACore → SpecialFunctionsExt
+  12260.9 ms  ✓ CUDACore → StaticArraysExt
+  11182.0 ms  ✓ CUDACore → ChainRulesCoreExt
+  11039.8 ms  ✓ AcceleratedKernels → CUDACoreExt
+  18575.8 ms  ✓ NVML
+  20440.0 ms  ✓ cuRAND
+  13889.5 ms  ✓ cuFFT
+  27331.9 ms  ✓ CUPTI
+  28656.4 ms  ✓ cuSPARSE
+ 173840.2 ms  ✓ CairoMakie
+  42046.9 ms  ✓ cuBLAS
+  22866.5 ms  ✓ cuSOLVER
+  77976.7 ms  ✓ CUDATools
+  11355.2 ms  ✓ CUDA
+   7945.3 ms  ✓ AdaptiveArrayPools → AdaptiveArrayPoolsCUDAExt
+  337 dependencies successfully precompiled in 1518 seconds. 41 already precompiled.
+  24 dependencies precompiled but different versions are currently loaded (ArgTools, Base64, Dates, Downloads, JuliaSyntaxHighlighting, LibCURL, LibCURL_jll, LibGit2, LibGit2_jll, LibSSH2_jll, Logging, Markdown, MozillaCACerts_jll, NetworkOptions, OpenSSL_jll, Pkg, Printf, StyledStrings, TOML, Tar, UUIDs, Zlib_jll, nghttp2_jll and p7zip_jll). Restart julia to access the new versions. Otherwise, 245 dependents of these packages may trigger further precompilation to work with the unexpected versions.
+CUDA toolchain: 
+- runtime 13.0.0, local installation
+- driver 580.82.7 for CUDA 13.3, forward-compatible
+- compiler 13.0.88, local installation
+
+CUDA libraries: 
+- cuBLAS: 13.1.1
+- cuSPARSE: 12.6.3
+- cuSOLVER: 12.0.4
+- cuFFT: 12.0.0
+- cuRAND: 10.4.0
+- CUPTI: 2025.3.1 (API 13.0.1)
+- NVML: 13.0.0+580.82.7
+
+Julia packages: 
+- CUDACore: 6.5.1
+- GPUArrays: 12.2.0
+- GPUCompiler: 2.20.0
+- KernelInterface: 0.4.3
+- CUDA_Driver_jll: 13.3.6+0
+- CUDA_Compiler_jll: 0.6.3+2
+- CUDA_Runtime_jll: 0.25.0+3
+- CUDA_Runtime_Discovery: 2.1.1
+- NVPTX_LLVM_Backend_jll: 23.1.2+2
+- KernelAbstractions: 0.10.4
+
+Toolchain:
+- Julia: 1.12.7
+- LLVM: 18.1.7
+
+Preferences:
+- CUDA_Runtime_jll.version: 13.0.3
+- CUDA_Runtime_jll.local: true
+
+1 device:
+  0: Tesla T4 (sm_75, 14.560 GiB / 15.000 GiB available)
+     compiles to sm_75 / PTX 9.0

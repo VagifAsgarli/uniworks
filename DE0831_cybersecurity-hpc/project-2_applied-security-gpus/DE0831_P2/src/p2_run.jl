@@ -454,7 +454,7 @@ if !QUICK
     ## 2. The limiter
 
     Shares of the pipeline at $(commas(MAIN_N)) lines, each step timed on its own: line table $(pct(b.t_lt / b.s_pipe.mean)),
-    match kernel $(pct(b.s_mt.mean / b.s_pipe.mean)), extraction $(pct(b.t_ex / b.s_pipe.mean)), token starts $(pct(b.t_ts / b.s_pipe.mean)),
+    match kernel $(pct(b.s_mt3.mean / b.s_pipe.mean)), extraction $(pct(b.t_ex / b.s_pipe.mean)), token starts $(pct(b.t_ts / b.s_pipe.mean)),
     token entropies $(pct(b.t_en / b.s_pipe.mean)), histogram and flagging $(pct((b.t_hi + b.t_fl) / b.s_pipe.mean)) (the steps sum to
     $(ms(step_sum)) ms, the end-to-end timing is $(ms(b.s_pipe.mean)) ms).  The largest step is $(largest_name)
     ($(pct(largest_t / b.s_pipe.mean))).$(scan_note)
@@ -462,8 +462,9 @@ if !QUICK
     The match kernels' operational intensity is low and integer: about $(f1(int_per_byte)) (`match_tiled!`) and
     $(f1(int3_per_byte)) (`match_tiled_tri!`) integer operations per byte, counted per lane from the measured candidate and
     compare counts, against 1 byte moved, so on the integer roofline ($(int_ops === nothing ? "n/a" : f2(int_ops / 1e12)) × 10¹² ops/s
-    against $(f1(roof_bw)) GB/s) the balance point is $(isnan(balance) ? "n/a" : f1(balance)) ops/byte and both kernels sit
-    $(min(int_per_byte, int3_per_byte) > (isnan(balance) ? 0 : balance) ? "to the right of it (compute side)" : "to the left of it (memory side)").
+    against $(f1(roof_bw)) GB/s) the balance point is $(isnan(balance) ? "n/a" : f1(balance)) ops/byte: by the lane count
+    `match_tiled!` sits $(int_per_byte > (isnan(balance) ? 0 : balance) ? "to the right of it (compute side)" : "to the left of it (memory side)") and
+    `match_tiled_tri!` $(int3_per_byte > (isnan(balance) ? 0 : balance) ? "to the right of it (compute side)" : "to the left of it (memory side)").
     A roofline built from lane counts is only an upper bound here, because the lanes of a warp do not work independently.
     The limiter is $limiter_txt
     $tiled_vs_global

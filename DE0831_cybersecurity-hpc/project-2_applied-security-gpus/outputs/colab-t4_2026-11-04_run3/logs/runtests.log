@@ -1,0 +1,11 @@
+Student: Vagif Asgarli, ID: 251ADM047
+Track: E (log mining), full route: one multi-pattern kernel, scan and compaction
+Derived parameters: generator seed = 5175890676511383715 (SHA-256 of the ID), validation corpus = 1,000,000 lines, sizes = 125,000, 250,000, 500,000, 1,000,000, 2,000,000, 4,000,000
+Device: Tesla T4
+Compute capability: 7.5.0
+Corpus: 119,177,563 bytes, 1,000,000 lines; 20 indicators; truth: 894 indicator lines, 243 payload tokens
+Entropy: 22,350,735 tokens; max H of tokens shorter than 32 chars = 3.784; min H of the 243 tokens of 32+ chars = 4.488; threshold from the histogram's empty band 3.80–4.45 bits: 4.12
+Validation passed: line table, match set (tiled and global kernels, CPU, occursin) == truth, extraction, 22,350,735 tokens, entropies, flagging, boundary cases
+Correct!
+Test Summary:             | Pass  Total   Time
+DE0831 Project 2, track E |    1      1  49.0s
