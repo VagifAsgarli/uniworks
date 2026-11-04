@@ -1,0 +1,9 @@
+Student: Vagif Asgarli, ID: 251ADM047
+Track: E (log mining), full route: one multi-pattern kernel, scan and compaction
+Derived parameters: generator seed = 5175890676511383715 (SHA-256 of the ID), validation corpus = 20,000 lines, sizes = 125,000, 250,000, 500,000, 1,000,000, 2,000,000, 4,000,000
+Device: FakeGPU (CPU emulator)
+Compute capability: 8.6.0
+Corpus: 2,387,898 bytes, 20,000 lines; 20 indicators; truth: 20 indicator lines, 2 payload tokens
+Entropy: 447,722 tokens; max H of tokens shorter than 32 chars = 3.784; min H of the 2 tokens of 32+ chars = 5.139; threshold from the histogram's empty band 3.80–5.10 bits: 4.45
+Validation passed: line table, match set (tiled and global kernels, CPU, occursin) == truth, extraction, 447,722 tokens, entropies, flagging, boundary cases
+Correct!

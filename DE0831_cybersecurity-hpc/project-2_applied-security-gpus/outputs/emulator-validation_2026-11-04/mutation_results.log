@@ -1,0 +1,9 @@
+caught: no boundary check (tiled) -> Error: CHECK FAILED: small case "abcd\nxabc\nab\n": got Set([(1, 
+caught: no halo -> Error: CHECK FAILED: small case "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+caught: no sync_threads in match_tiled -> Error: TaskFailedException
+caught: scatter off by one -> Error: TaskFailedException
+caught: token start without prev check -> Error: CHECK FAILED: token starts (gpu 1773993 vs cpu 447722)
+caught: binary search off by one -> Error: CHECK FAILED: line mask gpu == cpu
+caught: entropy sign -> Error: TaskFailedException
+MUTANT SURVIVED: first-byte mask ignored
+done

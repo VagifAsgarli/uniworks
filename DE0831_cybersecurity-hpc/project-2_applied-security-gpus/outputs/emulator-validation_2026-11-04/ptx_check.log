@@ -1,0 +1,10 @@
+newline_flags!      OK  shared=SubString{String}[] atomics=SubString{String}[] ld.global=1 bra=2
+scatter_positions!  OK  shared=SubString{String}[] atomics=SubString{String}["atom.relaxed.gpu.cas.b32"] ld.global=2 bra=35
+match_tiled!        OK  shared=SubString{String}[".shared .align 32 .b8 shmem[1056]", ".shared .align 32 .b8 shmem11[1024]", ".shared .align 32 .b8 shmem14[256]", ".shared .align 32 .b8 shmem5[1024]", ".shared .align 32 .b8 shmem8[128]"] atomics=SubString{String}["atom.relaxed.gpu.global.or.b32"] ld.global=9 bra=33
+match_global!       OK  shared=SubString{String}[".shared .align 32 .b8 shmem[1024]", ".shared .align 32 .b8 shmem11[256]", ".shared .align 32 .b8 shmem5[128]", ".shared .align 32 .b8 shmem8[1024]"] atomics=SubString{String}["atom.relaxed.gpu.global.or.b32"] ld.global=9 bra=22
+match_counts!       OK  shared=SubString{String}[".shared .align 32 .b8 shmem[1024]", ".shared .align 32 .b8 shmem11[8]", ".shared .align 32 .b8 shmem5[128]", ".shared .align 32 .b8 shmem8[1024]"] atomics=SubString{String}["atom.relaxed.gpu.shared.add.u32", "atom.relaxed.gpu.global.add.u64"] ld.global=5 bra=15
+gather_lines!       OK  shared=SubString{String}[] atomics=SubString{String}[] ld.global=5 bra=2
+token_flags!        OK  shared=SubString{String}[] atomics=SubString{String}[] ld.global=4 bra=5
+token_entropy!      OK  shared=SubString{String}[".shared .align 32 .b8 shmem[16384]"] atomics=SubString{String}["atom.relaxed.gpu.cas.b32"] ld.global=4 bra=39
+entropy_hist!       OK  shared=SubString{String}[".shared .align 32 .b8 shmem[512]"] atomics=SubString{String}["atom.relaxed.gpu.shared.add.u32", "atom.relaxed.gpu.global.add.u32", "atom.relaxed.gpu.cas.b32"] ld.global=1 bra=40
+exit 0

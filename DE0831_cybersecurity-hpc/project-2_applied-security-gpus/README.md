@@ -97,8 +97,12 @@ From the Project 1 feedback (9.75/10):
       for the ID to check sizes.
 - [x] Lectures 1–10 and labs 2, 3, 7 collected into `../materials/` (lecture 7 covers prefix sum
       and timing; lectures 12–13 not yet delivered).
-- [ ] Track confirmed (aligned with the research-project topic: track E ↔ topic 10).
-- [ ] Design note (`notes/design.md`): memory layout, kernels, validation plan, measurement plan.
-- [ ] Implementation + CPU baseline + tests, checked on the CPU emulator and by PTX compilation.
-- [ ] Colab T4 run; benchmarks, roofline, analysis, plots (Julia).
-- [ ] Archive built; upload by 27.11.2026; defence week 14.
+- [x] Track confirmed: **E, full route** (aligned with research-project topic 10).
+- [x] Design note (`notes/design.md`): memory layout, kernels, validation plan, measurement plan.
+- [x] Implementation (`DE0831_P2/`): kernels, CPU baseline, validation against the ground truth,
+      benchmark/results/analysis generators, CairoMakie plots, tests.  Checked on the CPU emulator
+      (`Correct!`), by PTX compilation of all nine kernels and by mutation testing
+      (`outputs/emulator-validation_2026-11-04/`).
+- [ ] Colab T4 run (`tools/DE0831_P2_colab.ipynb`); review of the measured numbers and the
+      generated analysis.
+- [ ] Archive built; upload by 27.11.2026; defence week 14 (defence notes and Q&A to prepare).
