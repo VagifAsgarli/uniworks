@@ -422,6 +422,8 @@ if !QUICK
     step_sum = sum(last.(steps_main))
     largest_name, largest_t = steps_main[argmax(last.(steps_main))]
     scan_note = largest_name == "the match kernel" ? "" :
+        largest_name == "the token entropy kernel" ? "  The entropy kernel walks every token byte again, so it is a second pass over most of the corpus; the match kernel is analysed below." :
+        largest_name == "the histogram and the flagging" ? "  The match kernel is analysed below." :
         "  The scan steps read and write a 4-byte flag per corpus byte (the lecture-7 scan on `UInt32` flags), so they move more bytes than the match kernel, which reads each byte once; the end-to-end rate is set by them, the match kernel is analysed below."
     read_rate = mbps(big.n, big.t_read)
     read_slower = read_rate < mbps(big.n, big.s_pipe.mean + big.t_h2d)
