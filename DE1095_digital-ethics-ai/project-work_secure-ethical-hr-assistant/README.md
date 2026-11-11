@@ -107,7 +107,9 @@ extracts in `../materials/text-extracts/`.
       2 Aug 2026; SCHUFA C-634/21; Mobley v. Workday status; Amazon 2018; iTutorGroup 2023.
 - [x] System defined (Atlase), content written, deck built and visually checked, speaker notes timed.
 - [ ] Confirm the submission format and place on ORTUS (see below), upload by **9 Nov, 10:00**.
-- [ ] Rehearse to 7 minutes; check the presentation date (10 or 17 Nov) on 9 Nov after 12:00.
+- [x] Presentation date: 17 November 2026 (online, 7 minutes).  Preparation: `notes/presentation-prep.md`
+      (set-up, the six required sections by slide, facts to remember, likely questions and answers).
+- [ ] Rehearse to 7 minutes three times with a timer; test the screen share before the slot.
 
 ## Notes
 
