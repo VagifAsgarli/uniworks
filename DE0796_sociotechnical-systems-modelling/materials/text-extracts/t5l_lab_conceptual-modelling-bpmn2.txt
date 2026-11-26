@@ -1,0 +1,49 @@
+=== Slide 1 ===
+Egils Ginters
+IEEE Senior Member
+E-mail: egils.ginters@rtu.lv
+T5L. Conceptual Modelling in BPMN2
+RTU, 2026
+1
+=== Slide 2 ===
+Rationale
+The content is based on previous research and projects related to Sociotechnical Systems (STS) design, as well as third-party research and presentations.
+2
+RTU, 2026
+=== Slide 3 ===
+3
+Causal Loops Diagrams show the cause and effect relationships between the variables of a system. There are two basic feedback loops – balancing and  reinforcing loops. Balancing loops tend to keep the system in its current stage and reinforcing loops tend to compound change in one direction.
+Kim, Daniel H. (1999), Introduction to Systems Thinking, Pegasus Communications, Inc.
+Business Process Model Notation (BPMN) is a notation for specification the functionality of complex systems, respecting parallelization of processes by both – by feature and by condition.
+Systems Thinking
+RTU, 2026
+=== Slide 4 ===
+4
+BPMN2 drawing in ArisExpress
+Demonstration of BPMN2 drawing…
+(ArisExpress environment)
+RTU, 2026
+=== Slide 5 ===
+5
+T5L Task content*
+1. Draw the T3L goal system (selected of your PR1 topic) CLD diagramm.
+2. Describe the T3L goal system operation in BPMN2 notation. When drawing a BPMN2 conceptual model, use the following mandatory notational elements:
+At least 2 Pools where at least one of the Pools has multiple Swimlanes;
+At least 4 different Events or Intermediate events;
+All recommended Gateways (OR, AND and XOR);
+Message and Data lines;
+Several Data objects.
+RTU, 2026
+=== Slide 6 ===
+RTU, 2026
+6
+T5L Task content**
+2. A BPMN2 model should represent the interaction between Swimlanes and different Pools, representing the operation of the goal system.
+3. The BPMN2 model must be developed in the ArisExpress environment and saved in adf and pdf formats
+(https://ariscommunity.com/aris-express/download) or (https://ariscommunity.com/aris-express). 
+4. Prepare the presentation in PPT format and be ready for defence.
+=== Slide 7 ===
+RTU, 2026
+7
+T5L Task Schedule
+Send T5L protocol (in PDF format) and BPMN2 diagramm (in ADF format) to e-mail egils.ginters@rtu.lv by November 22, 2026 (deadline 24.00)

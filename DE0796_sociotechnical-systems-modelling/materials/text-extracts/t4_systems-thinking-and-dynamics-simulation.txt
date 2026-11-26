@@ -1,0 +1,546 @@
+T4. Systems Thinking and
+  Dynamics Simulation
+
+          Egils Ginters
+      IEEE Senior Member
+    E-mail: egils.ginters@rtu.lv
+
+
+
+
+              RTU, 2026            1
+Rationale
+
+
+
+
+   The content is based on previous research and projects
+    related to Sociotechnical Systems (STS) design, as well as
+    third-party research and presentations.
+
+
+
+
+                             RTU, 2026
+                                                                 2
+STS Design: Step by step to Conceptual model
+
+
+
+
+  From T1. Sociotechnical systems fundamentals.
+
+
+  Conceptual model design:
+   Summarization and concretization of ideas (static
+    representation);
+
+   Functionality explanation (dynamic representation)*.
+                                 RTU, 2026
+                                                           3
+Systems Thinking
+
+
+
+
+   “The significant problems we face today
+   cannot be solved at the same level of
+   thinking at which they were created.”
+
+
+                                  - Albert
+                                  Einstein
+
+
+
+                      RTU, 2026
+                                             4
+Systems Thinking
+
+
+   Systemic view
+
+     Focusing on principle of organization, particularly
+       interdependent relationships;
+
+
+     Dealing with complexity - detail and dynamic;
+
+     Seeing processes of change rather than snapshots.
+
+
+
+
+                               RTU, 2026
+                                                            5
+Systems Thinking
+
+
+                                                     System Analysis
+                                                          (SA)
+
+
+
+
+Andrea M. Bassi, Georg Pallaske, Introduction to Systems Analysis and System
+Dynamics, IISD, https://www.iisd.org
+                                  RTU, 2026
+                                                                               6
+Systems Thinking
+
+
+
+
+                   RTU, 2026
+                               7
+Systems Thinking
+
+Causal Loops Diagrams show the
+cause and effect relationships between
+the variables of a system. There are two
+basic feedback loops – balancing and
+reinforcing loops. Balancing loops tend
+to keep the system in its current stage
+and reinforcing loops tend to compound
+change in one direction.
+
+Kim, Daniel H. (1999), Introduction to Systems Thinking,
+Pegasus Communications, Inc.
+
+System Dynamics is a methodology for
+studying and managing complex feedback
+systems, such as one finds in business and
+other social systems.
+
+Bob Williams and Bill Harris, System Dynamics
+Methodology. WK Kellogg Foundation, 2005.
+
+                                     RTU, 2026
+                                                           8
+ Systems Thinking: References
+
+ Causal Loop Diagrams
+Forrester, J. W. (1961). Industrial Dynamics. Waltham, Mass: Pegasus
+Communications.
+Rosnay Joël de and Robert Edwards. 1979. The Macroscope : A New World
+Scientific System. 1st ed. New York: Harper & Row.
+Richardson, G. P., & Pugh, A. L. (1981). Introduction to System Dynamics
+Modeling with DYNAMO. Cambridge: MIT Press.
+Peter M. Senge, The Fifth Discipline: The Art & Practice of The Learning
+Organization (New York: Currency Doubleday, 1990), 371 p.
+Sterman John. 2000. Business Dynamics : Systems Thinking and Modeling for a
+Complex World. Boston: Irwin/McGraw-Hill.
+
+
+ System Dynamics
+Norbert Wiener, Cybernetics: Or Control and Communication in the Animal and
+the Machine. Paris, (Hermann & Cie) & Camb. Mass. (MIT Press) ISBN 978-0-
+262-73009-9; 1948, 2nd revised ed. 1961.
+Forrester, J. W. (1961). Industrial Dynamics. Waltham, Mass: Pegasus
+Communications.
+                                    RTU, 2026
+                                                                              9
+System Analytics (SA)
+
+
+
+
+Sterman, J. D. 2000. Business Dynamics: Systems Thinking and Modeling for a
+Complex World, Irwin/McGraw-Hill, Boston.
+                                  RTU, 2026
+                                                                              10
+Reinforcing Loops
+
+
+
+
+                    RTU, 2026
+                                11
+Balancing Loops
+
+
+
+
+                  RTU, 2026
+                              12
+Balancing Loops
+
+
+
+
+                  RTU, 2026
+                              13
+Loops Interaction
+
+
+
+
+                    RTU, 2026
+                                14
+Delays Mapping
+
+
+
+
+                 RTU, 2026
+                             15
+Nested Feedback Loops
+
+
+
+
+   Self-Regulating Biosphere
+
+   Bhupendra Kumar (2014), An Introduction to System Dynamics and
+   Feedback Loop Structures.
+
+                                 RTU, 2026
+                                                                    16
+Recommendations for CLD drawing
+
+
+  Pay attention to:
+   Simplify the model as much as possible;
+   Respect important and critical events, influences, effects and
+    relationships only;
+   Design step by step;
+   Don't be afraid of feedbacks;
+   Reinforcing loops must be balanced, otherwise the system
+    will be unstable;
+   Organize the diagrams to minimize crossed lines;
+   Maintain the model transparent;
+   Iterate and re-draw and verifiy your diagram many times to
+    find the best layout;
+   Split model in interrelated domains (sub-systems) if
+    necessary.
+
+
+
+                                RTU, 2026
+                                                                     17
+Systems Thinking
+
+
+
+
+                   RTU, 2026
+                               18
+System Dynamics (SD)
+
+
+
+
+                       RTU, 2026
+                                   19
+System Dynamics (SD)*
+
+
+   System Dynamics - a methodology to create descriptive
+    models that focus on the identification of causal relations
+    influencing the creation and evolution of the issues being
+    investigated. Aimed for studying and managing complex
+    feedback systems, such as business and other social systems.
+    Its main pillars are feedback loops, delays and nonlinearity
+    through the explicit representation of stocks and flows. SD is a
+    continuous deterministic modelling technique.
+
+
+
+  Roberts, N., Andersen, D. F., Deal, R. M., Garet, M. S., and Shaffer, W.
+  A. (1983 ) Introduction to Computer simulation: The System Dynamics
+  Approach, Addison Wesley Publishing Company, London Amsterdam
+  Don Mills Ontario Sydney.
+
+
+
+                                    RTU, 2026
+                                                                             20
+Differential equations for changes specifications
+
+
+
+
+                               RTU, 2026
+                                                    21
+Differentiation: What is dx/dt?
+
+
+
+
+                                  RTU, 2026
+                                              22
+From CLD to Stocks and Flows Diagrams
+
+
+
+    Stocks represent the accumulations existing in a system and
+     characterize the state of the system. Stocks increase due to
+     inflows, and they decrease due to outflows. Stocks are
+     responsible for the delays as they accumulate the difference
+     between inflows and outflows. Basically, stocks and flows
+     represent differential equations.
+
+
+                     Stock                    Converter
+
+
+
+                                                  Action connector
+                       Flow
+
+
+
+
+                               RTU, 2026
+                                                                     23
+System Dynamics (SD) simulation tools
+
+
+       SD simulation tools:
+        DYNAMO (https://github.com/bfix/dynamo)
+       DYNAMO was initially developed under the direction of Jay
+       Wright Forrester in 1958, by Dr. Phyllis Fox, Alexander L.
+       Pugh III, Grace Duren, and others at the M.I.T. Computation
+       Center.
+        Vensim (https://www.ventanasystems.com/)
+        Powersim (https://powersim.com/)
+        STELLA (iThink) (https://www.iseesystems.com/)
+        InsightMaker (https://insightmaker.com/)
+
+      System Dynamics Society,
+      https://systemdynamics.org/tools/core-software/
+
+                                  RTU, 2026
+                                                                     24
+System Dynamics (SD) simulation Web tools
+
+
+    AnyLogic by AnyLogic Company (www.anylogic.com);
+    Consideo iMODELER by Consideo GMBH (www.consideo-m
+       odeler.de)
+      Forio Simulations by Forio Corporation (www.forio.com)
+      Insight Maker, created by S. Fortmann-Roe and G. Bellinger,
+       hosted by Give Team (www.insightmaker.com)
+      SimiLive – service for Simile simulation software by
+       Simulistics Ltd (similive.simulistics.com)
+      Simupedia Studio - plugin for Simantics System Dynamics by
+       VTT Technical Research Centre of Finland and Semantum
+       Oy (http://sysdyn.simantics.org/ and www.simupedia.com)
+      Sysdea of Strategy Dynamics Ltd (sysdea.com)
+
+  Malgorzata Latuszynska, Web-Based Tools for System Dynamics
+  Simulation. Foundations of Management, Vol. 9 (2017), ISSN 2080-7279
+  DOI: 10.1515/fman-2017-0022
+
+                                  RTU, 2026
+                                                                         25
+System Dynamics (SD) Implementation
+
+
+
+
+      Patterns of Growth and Decay in System
+      Dynamics
+
+
+       Causal Loop Diagrams (CLD) design - systems
+         thinking based on imagination;
+
+       Stocks and flows diagrams design - engineering
+         based on experience.
+
+
+
+
+                                RTU, 2026
+                                                         26
+Increasing at a constant rate (linear)
+
+
+
+
+              +
+
+
+
+
+                                RTU, 2026
+                                            27
+Decreasing at a constant rate (linear)
+
+
+
+
+                    +
+
+
+
+
+                               RTU, 2026
+                                           28
+Increasing at an increasing (exponential growth)
+
+
+
+
+                *
+
+
+
+
+                              RTU, 2026
+                                                   29
+Decreasing at a decreasing (exponential decay)
+
+
+
+
+            *
+
+
+
+
+                             RTU, 2026
+                                                 30
+Increasing at a decreasing (convergence up – goal seeking)
+
+
+
+
+           -
+
+       *
+
+
+
+
+                             RTU, 2026
+                                                             31
+Decreasing at a decreasing (convergence down – goal seeking)
+
+
+
+         -
+
+
+             *
+
+
+
+
+                             RTU, 2026
+                                                               32
+Stocks and flows interaction (flows difference)
+
+
+
+
+                               RTU, 2026
+                                                  33
+SD modelling step by step
+
+The SD modelling approach assumes the following sequence:
+
+ Identifying independent stocks or accumulations (levels) in the system
+    and their inflows and outflows;
+   Formulating a behavioural model (stock-and flow/causal feedback
+    structure) capable of reproducing the dynamic problem of concern;
+   Verification of stock and flows model through review of differential
+    equations generated, test sample and visual shape;
+   Experiments with stocks and flow model and validation the results
+    comparing with real system data or the models of other authors or
+    opinions of other experts;
+   Deriving understandings and applicable policy insights from the
+    resulting model;
+   Implementing changes resulting from model-based understandings
+    and insights;
+   Enhance the model receiving feadback of users.
+
+                                   RTU, 2026
+                                                                           34
+CLD: Effects of New Product Introduction
+
+
+
+
+                              RTU, 2026
+                                           35
+Stocks and Flows: Effects of New Product Introduction
+
+
+
+
+                             RTU, 2026
+                                                        36
+Equations: Effects of New Product Introduction
+
+
+
+
+                             RTU, 2026
+                                                 37
+HCI of SD model: Effects of New Product Introduction
+
+
+
+
+                             RTU, 2026
+                                                       38
+Conclusions
+
+
+  Causal Loop Diagrams (CLD) design - systems thinking, which can
+  represent your even hidden ideas about the system;
+
+  Systemic Gap – transition from CLD to stocks and flows model (SD);
+
+  SD stocks and flows diagrams design - engineering work that is
+  based on the designer's experience;
+
+  Verification - always first verify the model trend and check the
+  boundary conditions;
+
+  Scaling - selection the wrong scale can lead to completely wrong
+  visual verification results;
+
+  Structure - SD model structure is more important than the objects of
+  model design. Tuning can be long and annoying.
+
+                                  RTU, 2026
+                                                                         39
+Conclusions*
+
+
+
+
+   “System Dynamics modelling results will
+   be as reliable as the relationships
+   between events are identified in Causal
+   Loops Diagrams. ”
+
+
+                                 - Egils Ginters
+
+
+
+
+                     RTU, 2026
+                                                   40
+T4. Systems Thinking and Dynamic Simulation
+
+
+
+
+         THANK YOU FOR YOUR ATTENTION
+
+
+
+  Testing: DE0796 Systems Thinking and
+           Dynamics Simulation
+
+
+
+
+                           RTU, 2026
+                                              41
+

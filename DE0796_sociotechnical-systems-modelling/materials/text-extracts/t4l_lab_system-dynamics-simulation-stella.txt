@@ -1,0 +1,96 @@
+=== Slide 1 ===
+Egils Ginters
+IEEE Senior Member
+E-mail: egils.ginters@rtu.lv
+T4L. System Dynamics Simulation in STELLA
+RTU, 2026
+1
+=== Slide 2 ===
+Rationale
+The content is based on previous research and projects related to Sociotechnical Systems (STS) design, as well as third-party research and presentations.
+2
+RTU, 2026
+=== Slide 3 ===
+3
+STELLA Alfabet
+Stocks represent the accumulations existing in a system and characterize the state of the system. Stocks increase due to inflows, and they decrease due to outflows. Stocks are responsible for the delays as they accumulate the difference between inflows and outflows. Basically, stocks and flows represent differential equations.
+Stock
+Flow
+Converter
+Action connector
+RTU, 2026
+=== Slide 4 ===
+4
+STELLA Environment
+STELLA® desktop is divided into four tabbed layers:
+Map layer is where you will lay out your thinking in the form of a map (unnecessary);
+ 
+Model layer will transform maps into models that can be simulated on your computer; 
+ 
+Interface layer provides you with the tools needed for engaging end-user interfaces to your models. 
+ 
+Equation gives you a list of all the equations that make up your model and can be used for verification.
+Diana M. Fisher, Modeling Dynamic Systems: Lessons for a First Course, 2nd Edition, isee systems, 2007.
+RTU, 2026
+=== Slide 5 ===
+5
+Patterns in Stocks and Flows Diagrams
+Demonstration of Patterns…
+(STELLA environment)
+RTU, 2026
+=== Slide 6 ===
+6
+Increasing at a constant rate (linear)
++
+RTU, 2026
+=== Slide 7 ===
+7
+Decreasing at a constant rate (linear)
++
+RTU, 2026
+=== Slide 8 ===
+8
+*
+Increasing at an increasing (exponential growth)
+RTU, 2026
+=== Slide 9 ===
+9
+Decreasing at a decreasing (exponential decay)
+*
+RTU, 2026
+=== Slide 10 ===
+10
+Increasing at a decreasing (convergence up – goal seeking)
+*
+-
+RTU, 2026
+=== Slide 11 ===
+11
+Decreasing at a decreasing (convergence down – goal seeking)
+-
+*
+RTU, 2026
+=== Slide 12 ===
+12
+Stocks and flows interaction (flows difference)
+RTU, 2026
+=== Slide 13 ===
+13
+Interface sample of SD model in STELLA
+Demonstration of Interface Sample…
+(STELLA environment)
+RTU, 2026
+=== Slide 14 ===
+14
+T4L Task content
+Based on T4Lprim Yellowstone CLD materials and analysis of information sources create a detail SD stocks and flows model in the STELLA environment of the ecosystem functioning.
+Select your own initial values for resources Wolves, Deers etc. and other parameters/rates. Demonstrate how resources changing in time and are influenced by different rates.
+Use sliders and buttons in Yellowstone SD model interface.
+Prepare a T4L protocol including the simulation results in graphical and table form as well as screenshots from running the Yellowstone SD stocks and flows model.
+Prepare a T4L presentation in the Power Point environment, as well as demonstrate the operation of the Yellowstone SD model in the STELLA environment during defence.
+RTU, 2026
+=== Slide 15 ===
+RTU, 2026
+15
+T4L Task Schedule
+Send the T4L protocol (in PDF format), as well as the model (in STM format) and the presentation (in PPT/PPTX format) to e-mail egils.ginters@rtu.lv by October 24, 2026.

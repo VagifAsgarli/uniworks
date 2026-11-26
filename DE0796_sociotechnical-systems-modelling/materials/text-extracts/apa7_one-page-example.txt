@@ -1,0 +1,42 @@
+  APA 7: In-text Citations and References - All on One Page
+    A practical example: see how a source is cited in the text and how the same source appears in the References list.
+
+Sample text
+Open science is not only about free access to publications; it is a broader approach to the creation,
+dissemination, and reuse of knowledge. UNESCO (2021) associates it with greater accessibility of scientific
+knowledge, data, methods, and infrastructure. A similar institutional approach is used by the European
+Commission (European Research Executive Agency [REA], n.d.).
+
+The concept has several interpretations. Fecher and Friesike (2014) distinguish five schools of thought in open
+science. Changes in research culture require not only technical tools but also changes in publication and
+evaluation practices (Nosek et al., 2015). When one statement is supported by several sources, the citations
+are separated by semicolons (Fecher & Friesike, 2014; UNESCO, 2021).
+
+The structure of research also matters: a clear research question, evaluation of sources, and argumentation
+are fundamental requirements for high-quality research (Booth et al., 2016). When authors are named as part
+of the sentence, write Fecher and Friesike (2014); when the citation is entirely in parentheses, write (Fecher &
+Friesike, 2014).
+
+  Quick rules                                                            For a direct quotation
+  1 author/organization: (UNESCO, 2021)                                  One page: (Author, 2021, p. 27)
+  2 authors: (Fecher & Friesike, 2014)                                   Several pages: (Author, 2021, pp. 27-29)
+  3+ authors: (Nosek et al., 2015)                                       References: alphabetical order + hanging indent.
+  Several sources: (A, 2020; B, 2021)
+
+
+References
+Booth, W. C., Colomb, G. G., Williams, J. M., Bizup, J., & FitzGerald, W. T. (2016). The craft of research (4th ed.). University of
+   Chicago Press.
+European Research Executive Agency. (n.d.). Open science. European Commission. https://rea.ec.europa.eu/open-science_en
+Fecher, B., & Friesike, S. (2014). Open science: One term, five schools of thought. In S. Bartling & S. Friesike (Eds.), Opening
+   science (pp. 17-47). Springer. https://doi.org/10.1007/978-3-319-00026-8_2
+Nosek, B. A., Alter, G., Banks, G. C., Borsboom, D., Bowman, S. D., Breckler, S. J., Buck, S., Chambers, C. D., Chin, G., Christensen,
+   G., Contestabile, M., Dafoe, A., Eich, E., Freese, J., Glennerster, R., Goroff, D., Green, D. P., Hesse, B., Humphreys, M., ...
+   Yarkoni, T. (2015). Promoting an open research culture. Science, 348(6242), 1422-1425.
+   https://doi.org/10.1126/science.aab2374
+UNESCO. (2021). UNESCO recommendation on open science.
+   https://www.unesco.org/en/legal-affairs/recommendation-open-science
+
+Italics matter: italicize the title of a book, report, or webpage; for a journal article, italicize the journal title and volume number. The
+title of a journal article or book chapter is not italicized. Write a DOI in URL format.
+

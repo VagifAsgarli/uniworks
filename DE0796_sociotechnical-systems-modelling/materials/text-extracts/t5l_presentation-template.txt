@@ -1,0 +1,18 @@
+=== Slide 1 ===
+RIGA TECHNICAL UNIVERSITYFaculty of Computer Science, Information Technology and EnergyInstitute of Information Technology
+Sociotechnical systems modelling
+T5L: Conceptual Modelling in BPMN2
+Name Surname
+RTU 2026
+1
+=== Slide 2 ===
+Content
+Brief summary of goal system (selected of your PR1 topic)
+
+       Causal Loops Diagram (CLD) of goal system (free form drawing) and description
+
+       BPMN2 diagram drawing of goal system operation (in ArisExpress environment )
+
+       Conclusions
+2
+RTU 2026

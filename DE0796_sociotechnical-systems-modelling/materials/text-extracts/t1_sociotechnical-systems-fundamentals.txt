@@ -1,0 +1,617 @@
+=== Slide 1 ===
+Egils Ginters
+IEEE Senior Member
+E-mail: egils.ginters@rtu.lv
+T1. Sociotechnical systems fundamentals
+RTU, 2026
+1
+=== Slide 2 ===
+prof. Egils Ginters
+Info
+2
+RTU, 2026
+=== Slide 3 ===
+Rationale
+The content is based on previous research and projects related to Sociotechnical Systems (STS) design, as well as third-party research and presentations.
+3
+RTU, 2026
+=== Slide 4 ===
+Scope
+4
+RTU, 2026
+=== Slide 5 ===
+Perception
+Objective Reality
+Real World
+5
+RTU, 2026
+=== Slide 6 ===
+Sociotechnical System
+6
+RTU, 2026
+=== Slide 7 ===
+Sociotechnical System
+7
+RTU, 2026
+=== Slide 8 ===
+Sociotechnicality
+8
+Closed
+Open
+RTU, 2026
+=== Slide 9 ===
+Theories – to explain perception
+A theory is a set of assumptions or principles that have been repeatedly tested to explain or predict facts or phenomena 
+
+Theories:
+Provide a conceptual framework
+Provide a common vocabulary
+Guides action
+Assists comprehension or judgment
+
+Methodology - a set of techniques and guidelines on how to perform the specified tasks
+9
+RTU, 2026
+=== Slide 10 ===
+Systems Theory
+Ludwig Von Bertalanffy (1968) - founder of General Systems Theory
+He argued that all systems shared similar characteristics & could be analysed in similar terms
+10
+RTU, 2026
+=== Slide 11 ===
+Systems*
+A social system is a complex set of human relationships interacting in many ways. Within an organization, the social system includes all the people in it and their relationships to each other and to the outside world. The social system does not have boundaries...it exchanges goods, ideas, culture, etc. with the environment around it. The environment of social systems includes other social systems.
+
+
+     Luhmann, Niklas (1982). "The World Society as a Social System," in International Journal of General Systems Vol. 8, No. 1.
+11
+RTU, 2026
+=== Slide 12 ===
+Systems**
+A social system is an interdependent network of social institutions, such as the family, school, business, religious organizations, financial organizations... the network brings to mind the biological systems where all parts affect the whole... social scientists likened society to a biofeedback system. 
+
+
+
+     Black Letter Definition of Social System. (2007) http://www.csudh.edu/dearhabermas/socsys.htm.
+12
+RTU, 2026
+=== Slide 13 ===
+Systems***
+A social system is defined as a set of interrelated units that are engaged in joint problem-solving to accomplish a common goal. The members or units of a social system may be individuals, informal groups, organizations, and/or subsystems. 
+
+
+
+     Rogers E.M., Scott K.L. (2007) The Diffusion of Innovations Model and Outreach from the National Network of Libraries of Medicine to Native American Communities. http://nnlm.gov/pnr/eval/rogers.html
+13
+RTU, 2026
+=== Slide 14 ===
+Systems****
+A social system - a set of interrelated human or biological or natural objects (processes)
+
+Features:
+
+Interdependent objects and/or subsystems;
+Objects are humans, individuals, informal groups, organizations, biologic and natural objects etc.;
+Interaction with systems environment and other systems;
+Wide amount of important factors can be stochastic;
+Self-organization, Cognition and continual Evolution is typical;
+Model structure can vary during analysis and exploitation.
+14
+RTU, 2026
+=== Slide 15 ===
+Sociotechnical Systems (STS) Theory–Historical Background
+STS theory was established by Eric Trist, Fred Emery (1951) and a group of the researchers of the Tavistock Institute of Human Relations in London as a new form of work restructuring model to solve the extensive fieldwork in a number of British coal fields.
+15
+RTU, 2026
+=== Slide 16 ===
+Sociotechnical System (STS)*
+Sociotechnical system (STS) is the system that contain both social (human-related or natural) and technical (non-human) aspects as: human actors, organisational units, communication processes, documented information, work procedures and processes, technical units, human-computer interactions, and competencies that interact to pursue a common goal and criterion.
+
+
+Trist and Bamforth (1951), Cherns (1976, 1987), Berniker (1992, 1996), Clegg (2002), Trist (1981), Fox (1995), Hermann (2009), Walker et.al.(2008)
+«Every organisation could be viewed as the sociotechnical system that made up of people and knowledge (the social system) using tools and equipment (the technical system) to produce goods or services»
+16
+RTU, 2026
+=== Slide 17 ===
+Sociotechnical System (STS)**
+Sociotechnical system diagram (Consultants-Engineers-Strategists, 2008)
+17
+RTU, 2026
+=== Slide 18 ===
+Almoust any real system – Sociotechnical System (STS)
+Construction of the Business Center (Kazakhstan, Atyrau)
+Work environment in investment banking (USA, California)
+Factory workers prepare smartphones at the Flextronix factory plant (USA, Texas)
+The Schlumberger geological prospecting company’s workers
+Boeing manufacturing facility (Renton, WA)
+Construction of the old ship (Italy)
+18
+RTU, 2026
+=== Slide 19 ===
+Sociotechnical System (STS) in brief
+19
+RTU, 2026
+=== Slide 20 ===
+Dual nature of Sociotechnical System (STS)
+Finite amount of the states is typical
+     Limited amount of observed perturbations (factors)
+     Control algorithm mostly does not support interaction with outer systems
+     No Self-organization, Cognition and continual Evolution
+     Influence of human factor is limited
+Wide amount of important factors, that can be stochastic
+     Wide interaction with different outer systems
+     Model of the goal system can vary during the session
+     Self-organization, Cognition and continual Evolution is typical
+     Involves humans, social groups, biological and environmental objects
+Technical
+Social (natural)
+20
+RTU, 2026
+=== Slide 21 ===
+Quality Criteria of STS
+The satisfaction of the actors 
+and / or
+stakeholders without damage to the environment and to third parties
+21
+RTU, 2026
+=== Slide 22 ===
+STSTheory
+STS Theory - reflects the holistic view in order to design organisations that can manage better with systems complexity, changes dynamism, new technology introduction and competition
+22
+RTU, 2026
+=== Slide 23 ===
+2
+STS basic principles
+RTU, 2022
+(I) 
+TRIST & BAMFORTH’S (1951)       
+(3 core principles)
+
+Responsible Autonomy
+Adaptability
+Meaningfulness of Tasks
+(II)
+CHERNS’ (1976, 1987) 
+(10 principles)
+
+1.Compatibility
+2.Minimal critical Specification
+3. Variance Control
+4. Boundary Location
+5. Information Flow
+6. Power and Authority
+7. The Multifunctional principle
+8. Support Congruence
+9. Transitional Organization
+10. Incompletion or the Forth Bridge Principle
+
+MUMFORD (1983) 
+
+ETHICS - Effective Technical and Human Implementation of Computer Systems
+“If a technical system is created at the expense of a social system, the results obtained will be sub-optimal.”
+(iii) 
+BERNIKER’S (1992)
+(24 principles)
+
+Philosophical Premises and Values
+1. Value Clarification – The Design Philosophy                       
+2. Uncertainty                                                                        
+3. Technological and Organizational Choice  
+4. Work as Problem-Solving Action 
+and Motivated Behaviour
+5. Participation
+6. Open Sociotechnical Systems
+7. Human Values 
+Design process
+8. Compatibility
+9.  Minimum Critical Specification
+10. Constraint – Free Design
+Work Group Structuring
+11. Self-Regulating Work Groups
+12. Work Group Responsible Autonomy
+13. Inducements to Work
+14. Boundary Location
+15. Boundary Management
+16. Joint Optimization
+17. Organizational Uniqueness
+18. Support Congruence – Reinforcement
+Work Design
+19. Variance Control
+20. Multi-Functionalism and Requisite Response Variety
+21. Information Flow
+22. Learning
+Continuity
+23. Experimentation
+24. Self-Design
+(IV) 
+CLEGG’S (2000)
+ (19 principles)
+
+Meta-principles
+1. Design is systemic.
+2. Values and mindsets are central to design. 
+3. Design involves making choices.
+4. Design should reflect the needs of the business, its users and their managers.
+5. Design is an extended social process. 
+6. Design is socially shaped.
+7. Design is contingent.
+Content principles
+8. Core processes should be integrated.
+9. Design entails multiple task allocations between and amongst humans and machines.
+10. System components should be congruent.
+11. Systems should be simple in design and make problems visible.
+12. Problems should be controlled at source.
+13. The means of undertaking tasks should be flexibly specified.
+Process principles
+14. Design practice is itself a sociotechnical system.
+15. Systems and their design should be owned by their managers and users.
+16. Evaluation is an essential aspect of design.
+17. Design involves multidisciplinary education. 
+18. Resources and support are required for design.
+19. System design involves political processes.
+(V) 
+WALKER (2008)
+ 
+Extensions in a large (wide) scale
+
+
+(VI) 
+ISO (2010)
+ 
+Human centered design
+
+
+(VII) 
+GINTERS (2011-2020)
+ 
+Sustainability assessment and development – attributive and unanticipated effects
+23
+=== Slide 24 ===
+Summary of STS principles
+24
+RTU, 2026
+=== Slide 25 ===
+Consequences of STS essence
+Social implications for changes done in STS
+25
+RTU, 2026
+=== Slide 26 ===
+STS Organisational structure
+.
+GOALS &VALUES
+
+ CULTURE 
+ PHILOSOPHY
+ OVERALL GOALS
+ INDIVIDUAL GOALS
+ GROUP VALUES
+PSYCHOSOCIAL
+
+ HUMAN RELATIONSHIPS
+ ATTITUDES
+ MOTIVATION
+ GROUP DYNAMICS
+ LEADERSHIP
+ INFLUENCE
+TECHNICAL
+
+  TASK REQUIREMENT 
+  KNOWLEDGE
+  TECHNIQUES 
+  LAYOUT OF FACILITIES
+  EQUIPMENT
+  INFORMATION
+STRUCTURAL
+ TASKS 
+ WORKFLOWS
+ WORK GROUPS
+ AUTHORITY 
+ INFORMATION FLOWS
+ PROCEDURES & RULES
+MANAGERIAL
+
+ GOAL SETTING
+ PLANNING
+ ASSEMBLING
+ RESOURCE
+ ORGANISING
+ IMPLEMENTATION
+26
+RTU, 2026
+=== Slide 27 ===
+Consequences of STS Organizational aspects
+Socio-technical systems are organizational systems intended to deliver some organizational or business goal
+
+«If you do not understand the organizational environment where a system is used, the system is less likely to meet the real needs of the business and its users»
+27
+RTU, 2026
+=== Slide 28 ===
+STS Levels
+(Whitworth 2009)
+28
+RTU, 2026
+=== Slide 29 ===
+STS Key Characteristics
+Interdependent parts
+
+Should adapt to and pursue goals in external environments
+
+Have and internal environments comprising quasi separate but interdependent technical and social parts
+
+Have similar or equal sub-systems, but different ways to the goals
+
+Performance relies on the joint enhancement/modification of technical and social parts
+
+
+
+
+(Badham et. al. 2000)
+29
+RTU, 2026
+=== Slide 30 ===
+STS properties
+Emergent properties
+Properties of the system of as a whole that depend on the system components and their relationships
+
+Non-deterministic
+They do not always produce the same output when presented with the same input because the systems’s behaviour is partially dependent on human operators and other stochastic attributes of used technologies
+
+Complex relationships with organisational objectives
+How well a system supports organisational objectives depends not only on the system itself, but also on how and in what context it is used.
+30
+RTU, 2026
+=== Slide 31 ===
+Emergent properties
+Properties of the system as a whole rather than properties that can be derived from the properties of components of a system
+
+Emergent properties are a consequence of the relationships between system components
+
+They can therefore only be assessed and measured once all the components have been integrated into goal system
+
+Some emergent properties - reliability, performance, safety, and security
+31
+RTU, 2026
+=== Slide 32 ===
+STS Engineering
+Activities of specifying, designing, implementing, verification, validating, deploying and maintaining socio-technical system
+
+Concerned with the services provided by the system, constraints and operation and the ways how the system is used
+32
+RTU, 2026
+=== Slide 33 ===
+STS Life cycle
+Process and Operations Modelling, Verification, Validation
+Conceptual Modelling
+Maintenance, Changes management
+33
+RTU, 2026
+=== Slide 34 ===
+STS Requirements and Objectives
+STS Objectives is a part of the requirements definition phase to establish a set of overall objectives that the system should meet
+
+Examples:
+“To provide a intrusion detection system for the call center that will provide internal and external warning of threats and/or unauthorised intrusion.”
+
+“To ensure that the normal functioning of the work carried out in the call center is not seriously disrupted by events such as threats and/or unauthorised intrusion.”
+34
+RTU, 2026
+=== Slide 35 ===
+STS Requirements and Objectives*
+Complex systems are usually developed to address complex problems:
+Problems that are not fully understood
+Changes while the system is being specified
+
+Must anticipate hardware/communications developments over the lifetime of the system
+
+Hard to define non-functional requirements (organizational) without knowing the component structure of the system
+35
+RTU, 2026
+=== Slide 36 ===
+STS Design
+Requirements partitioning to hardware, software and human components may involve a lot of negotiation
+
+Difficult design problems are often assumed to be readily solved using software – a questionable assumption
+
+Hidden and unanticipated factors of used technologies usually are not respected
+
+Interdisciplinary activity: teams drawn from various backgrounds – common understanding and communication «language» are necessary
+
+Constraints posed by the environment and other systems limit design choices, therefore requirements engineering possibilities are critical for the goal system design
+36
+RTU, 2026
+=== Slide 37 ===
+STS Modelling
+System modelling helps the analyst to understand the concept (qualitative assessment) and functionality (quantitative assessment) of the system
+
+Various models present the system from different perspectives
+
+External perspective (Concept: Information Objects, Links)
+showing the system’s context and environment (optional)
+
+Behavioural perspective (Functionality: Tasks, Interaction, Timeline, Links)
+showing the behaviour of the system
+
+Structural perspective (Data level architecture: Data Dictionaries, Links)
+showing the system or data architecture
+37
+RTU, 2026
+=== Slide 38 ===
+STS Sub-systems (embedded) development
+Typically, parallel projects are developed for sub-systems design
+
+May involve some COTS  (Commercial Off-the-Shelf) systems procurement (limited adaptability)
+
+Lack of communication across implementation teams
+
+Bureaucratic and slow mechanism for proposing system changes means that the development schedule may be extended because of the need for rework or additional alignment
+38
+RTU, 2026
+=== Slide 39 ===
+STS Components integration
+The process of putting hardware, software and people together to make a system
+
+Should be tackled incrementally step by step so that sub-systems are integrated one at a time
+
+Interface problems between sub-systems are usually found at this stage
+
+May be problems with uncoordinated deliveries of system components
+39
+RTU, 2026
+=== Slide 40 ===
+STS Installation/Adaptation
+After completion, the system has to be installed/adapted in the customer’s environment:
+
+Environmental assumptions may be incorrect, i.e. physical installation problems (e.g. cabling/reflection/interference problems)
+
+May be human resistance to the introduction of a new system
+
+System can’t get along with other STS for some time
+
+Staff training or change has to be identified
+40
+RTU, 2026
+=== Slide 41 ===
+STS Maintenance/Evolution
+Large systems are expensive and therefore have a long lifetime. They must evolve to meet changing requirements
+
+Evolution is inherently costly:
+
+Changes must be analysed from a technical and business perspective
+Sub-systems interact so unanticipated problems can arise
+System structure is corrupted as changes are made to it
+
+Existing systems which must be maintained are sometimes called legacy systems
+41
+RTU, 2026
+=== Slide 42 ===
+STS Verification/Validation
+Must be done after each step in STS Life cycle: Conceptualization, Design, Installation, Maintenance
+
+Verification - Does the system work as the designer intended?
+
+Validation - Does the system work as specified in the requirements?
+
+Qualitative and quantitative assessment could be done
+
+Critical tasks in successful STS design and introduction
+42
+RTU, 2026
+=== Slide 43 ===
+STS – the set of technologies
+STS is the set of interactive technologies
+
+Today the attribute of practically any new or existing technology/project is some digital technology which is the backbone of any other technology or whole system
+
+Sustainability of STS depends on sustainability of embedded technologies and especially of digital technologies used
+
+Digital technologies are specific part of technologies with high proportion of uncertainty influenced by hidden and unanticipated factors
+43
+RTU, 2026
+=== Slide 44 ===
+The essence of Digital technologies
+44
+RTU, 2026
+=== Slide 45 ===
+STS Before and after Digital era
+(Winby and Mohrman, 2018)
+45
+RTU, 2026
+=== Slide 46 ===
+STS for social collaboration
+46
+RTU, 2026
+=== Slide 47 ===
+STS Today
+“…work systems have become complex, technologically enabled networked ecosystems that extend beyond an organization and its employees and are geographically distributed. How these ecosystems operate has fundamental implications for the sustainability of its actors and the health of society.”
+
+					
+(Winby and Mohrman, 2018)
+47
+RTU, 2026
+=== Slide 48 ===
+STS Sustainability
+The sustainability of any new or existing sociotechnical system will not be better than the sustainability of the digital technologies built into it and depending on stochastic factors.
+48
+RTU, 2026
+=== Slide 49 ===
+STS – to have a Dream
+49
+RTU, 2026
+=== Slide 50 ===
+References*
+Appelbaum, Steven H. (1997). Socio-technical systems theory: an intervention strategy for organizational development. Management Decision 35/6, 452-463. 
+Badham, R, Clegg, C.W, & Wall, Tl. (2000). Socio-technical theory. Handbook of Ergonomics, New York. 
+Baxter, G., Sommerville, I. (2011) Socio-technical systems: From design methods to systems engineering, Interacting with Computers, Volume 23, Issue 1, January 2011, Pages 4–17, https://doi.org/10.1016/j.intcom.2010.07.003
+
+Berniker, E. (1996). Some principles of sociotechnical systems analysis and design. Referencing: http://www. plu. edu/~ bernike/SocioTech/PRincples% 20of% 20STS% 20design. doc (accessed 18-04-00).
+Challenger, R., & Clegg, C. W. (2011). Crowd disasters: a socio-technical systems perspective. Contemporary Social Science, 6(3), 343-360.
+Cherns, A. (1976). The Principles of Sociotechnical Design. Human relations,29(8), 783-792.
+Cherns, A. (1987). Principles of sociotechnical design revisted. Human relations, 40(3), 153-161.
+Child, J. (1984). Organization: A guide to problems and practice. SAGE. 
+Clegg, Chris W. (2000). Sociotechnical principles for system design. Applied Ergonomics 31, 31(5), 463-477. 
+Coakes, E. (2002). Knowledge management: a sociotechnical perspective. InKnowledge management in the sociotechnical world (pp. 4-14). Springer London.
+Coakes, E. (2011). Knowledge Development and Social Change through Technology: Emerging Studies. Information Science Reference (pp.15-28).
+Cummings, T.G., & Worley, C.G. (2001).  Organization development and change (7th edition). Cincinnati, OH: South-Western College Publishing.
+Eric Molleman, Manda Broekhuis. (2001). Sociotechnical systems: towards an organizational learning approach. Journal of Engineering and Technology Management Jet-M, 271-294. 
+Fox, W. M. (1995). Sociotechnical system principles and guidelines: past and present. The Journal of Applied Behavioral Science, 31(1), 91-105.
+Ginters, E., Barkane, Z. (2011) Introduction to Technologies Acceptance and Sustainability Modelling. In: Annual Proceedings of Vidzeme University of Applied Sciences „ICTE in Regional Development 2009/2010”, ISBN 978-9984-633-20-6, Valmiera: Sociotechnical Systems Engineering Institute, Vidzeme University of Applied Sciences, 61-89.
+50
+RTU, 2026
+=== Slide 51 ===
+References**
+Ginters, E., Aizstrauta, D. (2017) Sociotechnical systems acceptance and sustainability assessment using dynamic simulation model. Proceedings of the European Modeling and Simulation Symposium (EMSS 2017). (eds) Affenzeller, Bruzzone, Jiménez, Longo and Piera. ISBN 978-88-97999-85-0, 2017. 519-527.
+Ginters E, Revathy JC. Hidden and Latent Factors’ Influence on Digital Technology Sustainability Development. Mathematics. 2021; 9(21):2801. https://doi.org/10.3390/math9212801
+Griffith, T. L., & Dougherty, D. J. (2001). Beyond socio-technical systems: introduction to the special issue. Journal of Engineering and Technology Management, 18(3), 207-218. 
+Hackman, J.Richard. (1980). Work Redesign and Motivation. Professional Psychology, Vol.11, No.3.
+Herbst, P.G. (1974) Designing with minimal critical specifications. In: Socio-technical Design: Strategies in Multidisciplinary Research, Chapter 2, Herbst, P.G. (ed.). Tavistock Publications, London, UK.
+Herrmann, T. (2009). The socio-technical walkthrough (STWT): A means of research-oriented intervention into organizations.  Proceedings of ALPIS.
+
+Jonhson, Adam. (2003). A Guide to Sociotechnical Systems [report].-USA: Psy 791, https://www.koofers.com/files/notes-9i6b4efbm8/
+Imanghaliy, A. (2015) A review and synthesis of sociotechnical system design principles for innovative work organisations. In: IWOT 19 Conference, September 2015.
+International Standards Organisation. (2010) Ergonomics of Human–System Interaction – Part 210: Human-centred Design for Interactive Systems, 2010, Geneva, Switzerland ISO
+Karwowski, W. (2004) International Encyclopedia of Ergonomics and Human Factors (Vol.2) London: Taylor&Francis. Jarvinen, P. 
+Karwowski, Waldemar. (2006). 2nd Edition International Encyclopedia of Ergonomics and Human Factors, Volume 2; . NW, Suite: CRC Press Taylor and Francis Group.
+Klein, L. (1994). Sociotechnical/organizational design Organization and Management of Advanced Manufacturing (pp. 197-222). New York: Wiley.
+Majchrzak, A. (1997). What to do when you can't have it all: Toward a theory of sociotechnical dependencies. Human Relations, 50(5), 535-565.
+Mumford, Enid. (1983). Designing Human Systems for New Technology-The ETHICS Method: http://www.enid.edu-net.com/C1book1.htm.
+Mumford, E. (2003). Redesigning Human Systems. IGI Global, Hershey, PA, US
+51
+RTU, 2026
+=== Slide 52 ===
+References***
+Leitch, S., Warren, M.J. (2010) ETHICS: The Past, Present and Future of Socio-Technical Systems Design. Arthur Tatnall. History of Computing. Learning from the Past, 325, Springer, pp.189-197, 2010, IFIP Advances in Information and Communication Technology, 978-3-642-15198-9. <10.1007/978-3-642-15199-6 19>. <hal-01059631>
+Mumford, E. (2006). The story of socio‐technical design: Reflections on its successes, failures and potential. Information Systems Journal, 16(4), 317-342.
+Pateman, C. (1975). A Contribution to the Political Theory of Organizational Democracy. Administration and society, 7(1), 5-26.
+Ramage, M., & Shipp, K. (2009). Systems thinkers. Springer Science & Business Media (Chapter 29, pp. 267- 277)
+Siau, John Erickson and Keng. (2011). Social and technical aspects of systems analysis and design Systems Analysis and Design: People, Processes and Projects: Advances in Management information systems, Vladimir Zwass.
+Sommerville, I. Ch 5: Software Engineering, 9ed. DT249/4 Information Systems Engineering. Systems Engineering.
+Trist, Eric. (1981). The evolution of socio-technical systems. Occasional paper, 2, 1981. 
+Trist, E. L., & Bamforth, K. W.  (1951). Human Relations: Some social and Psychological Consequences of the Longwall Method of Coal-Getting : An Examination of the Psychological Situation and Defenses of a Work Group in Relation to the Social Structure and Technological Content of the Work System. Human Relations,4, 4(3), 3-38.  
+Trist, E. L. (1981). The Evolution of Socio-technical Systems: A Conceptual Framework and an Action Research Program: Ontario Ministry of Labour, Ontario Quality of Working Life Centre.
+van Eijnatten, Frans. (1994). The Paradigm That Changed the Workplace. . Acta Sociologica Vol.37, No. 3, 317-319. 
+Vinayshil Gautam. Systems and Contingency Approach to ORG Theory and Practice and Techniques of Organisational Diagnosis. FRAS(London).
+Walker, G. H., Stanton, N. A., Salmon, P. M., & Jenkins, D. P. (2008). A review of sociotechnical systems theory: a classic concept for new command and control paradigms. Theoretical Issues in Ergonomics Science, 9(6), 479-499. 
+Wall, T., Badham, R.J. & Clegg, C.W. (2006) Chapter 462. Sociotechnical Theory. International Encyclopaedia of Ergonomics and Human Factors, Second Edition -3 Volume Set Edited by Waldemar Karwowski. CRC Press. 
+Winby, S., Mohrman, S. A. (2018) The Journal of Applied Behavioral Science, 1-25
+Whitworth, B. (2009) A Brief Introduction to Sociotechnical Systems. p. 394-400, IGI Global.
+Yogesh K. Dwivedi, Helle Zinner Henriksen, David Wastell, Rahul De'. (June 2013). Grand Successes and Failures in IT: Public and Private Sectors. Paper presented at the IFIP AICT 402 WG 8.6 International Working Conference on Transfer and Diffusion of IT, TDIT 2013, Bangalore, India.
+52
+RTU, 2026
+=== Slide 53 ===
+Video
+SocioTechnical Systems - an Introduction
+https://www.youtube.com/watch?v=qP7EZojC440
+Compost and Smart Cities: A Socio-Technical Design
+https://www.youtube.com/watch?v=NRKEo8TIGjw 
+Watch Elon Musk Reveal SpaceX's Most Detailed Plans to Colonize Mars
+https://www.youtube.com/watch?v=zSv0Y7qrzQM
+53
+RTU, 2026
+=== Slide 54 ===
+Sociotechnical Systems Fundamentals
+THANK YOU FOR YOUR ATTENTION
+
+
+Testing: DE0796 STS Fundamentals
+54
+RTU, 2026

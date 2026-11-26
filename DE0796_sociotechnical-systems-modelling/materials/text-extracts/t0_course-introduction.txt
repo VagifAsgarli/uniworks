@@ -1,0 +1,72 @@
+=== Slide 1 ===
+Riga Technical UniversityThe Faculty of Computer Science, Information Technology and EnergyThe Institute of Information Technology
+Sociotechnical systems modelling
+DE0796 Course Introduction
+Prof. Egils Ginters
+IEEE Senior Member
+egils.ginters@rtu.lv
+1
+DE0796 2026
+=== Slide 2 ===
+Course Goals
+2
+To provide a practical introduction to the field of Sociotechnical Systems Modelling;
+To learn systems analysis and design step-by-step, starting with gathering and concretizing ideas and continuing with quantitative modelling;
+To introduce with different modelling and simulation technologies, which serve for conceptualization, modelling dynamic changes in the state of systems and for analysis of individual events.
+DE0796 2026
+=== Slide 3 ===
+Prerequisites
+3
+To have basic knowledge in information technologies and/or computer science and also mathematics;
+To be able to read and understand technical documentation in English
+DE0796 2026
+=== Slide 4 ===
+Course description
+4
+DE0796 Sociotechnical systems modelling
+DE0796 2026
+=== Slide 5 ===
+Literature
+5
+Sources of information are indicated during the lessons, but mainly lecture notes should be used;
+All the links to presentations and other necessary materials will be published on the ORTUS;
+Any information resources on the design of concept maps, system dynamics and discrete-event systems modelling.
+DE0796 2026
+=== Slide 6 ===
+6
+Attendance/Assessment Rules
+Study forms: Lectures, Labs (Practical assignments and tasks) (weight <=50%), Testing (add to final grade 0.5 points if average testing is 80% and higher), Exam (automated) (weight <=50%);
+Attendance forms: Full time studies (in the classroom) till specific announcement about remote access;
+Attendance of all the classes will be registered;
+Very important: All laboratory works (practical) and/or individual design tasks must be submitted and defended in time, otherwise the exam will not be allowed (Compulsory);
+Testing: After or during each lecture and/or lab session;
+Plagiarism is strictly prohibited! Copy&Paste without references would initiate exmatriculation.
+DE0796 2026
+=== Slide 7 ===
+Agenda
+7
+Every week on Wednesdays, 14.30-16.05 (Zunda 10-506) and 16.30-18.05 (Zunda 10-533) auditorium
+It is recommended to use personal notebooks
+Mobile phone use w/o special clearance during classes is prohibited!
+There may be changes, please regularly follow the information in ORTUS!!!
+DE0796 2026
+=== Slide 8 ===
+8
+Platforms*
+https://zoom.us
+DE0796 2026
+=== Slide 9 ===
+9
+Platforms**
+https://www.teachsys.com
+DE0796 2026
+=== Slide 10 ===
+10
+Platforms***
+ORTUS
+DE0796 2026
+=== Slide 11 ===
+DE0796: Course introduction
+11
+Questions
+DE0796 2026

@@ -1,0 +1,265 @@
+=== Slide 1 ===
+Egils Ginters
+IEEE Senior Member
+E-mail: egils.ginters@rtu.lv
+T5. Parallelization of Work and Data Flows in a Conceptual Model
+RTU, 2026
+1
+=== Slide 2 ===
+Rationale
+The content is based on previous research and projects related to Sociotechnical Systems (STS) design, as well as third-party research and presentations.
+2
+RTU, 2026
+=== Slide 3 ===
+STS Design: Step by step to Conceptual model
+3
+From T1. Sociotechnical systems fundamentals.
+
+Conceptual model design:
+Summarization and concretization of ideas (static representation);
+Functionality explanation (dynamic representation)*.
+RTU, 2026
+=== Slide 4 ===
+From Systems Thinking to Conceptual Models
+4
+On Systems thinking based general representation of structure and essence of the goal system:
+Concept map – static view on structure (ideas, concepts and influence)
+RTU, 2026
+=== Slide 5 ===
+From Systems Thinking to Conceptual Models*
+5
+On Systems thinking based general representation of structure and essence of the goal system:
+Causal Loops Diagram – dynamic view on functionality (events and relationships with feedbacks)
+RTU, 2026
+=== Slide 6 ===
+Concept Maps and Causal Loops Diagrams
+6
+Drawbacks:
+Conditional branching of processes is not displayed
+The representation of process parallelization is problematic 
+The start and end of each individual process cannot be represented 
+High level of abstraction and low level of detail
+Translating the notation to an executable model is problematic
+RTU, 2026
+=== Slide 7 ===
+7
+Division by separate processes according to a certain feature
+Specification Techniques of Functional Conceptual Model
+RTU, 2026
+=== Slide 8 ===
+8
+Splitting by condition
+Specification Techniques of Functional Conceptual Model*
+RTU, 2026
+=== Slide 9 ===
+Unified Modelling Language (UML)
+9
+Unified Modeling Language (UML)
+The Unified Modeling Language (UML) is a general-purpose modelling language used in software engineering and aimed to standardize visualisation of the goal system design;
+
+UML was developed in 1994–1996 and was adopted as a standard by the Object Management Group (OMG) in 1997. UML was approved by ISO standard ISO/IEC 19505-2:2012;
+RTU, 2026
+=== Slide 10 ===
+10
+UML ensures: 
+Representation of the structure of the goal system (static view): Structural UML Diagrams (Class diagram, Component diagram, Composite structure diagram, Deployment diagram, Object diagram, Package diagram and Profile diagram);
+Representation of goal system functionality (dynamic view): Behavioural UML Diagrams (Activity diagram, Communication diagram, Interaction overview diagram, Sequence diagram, State diagram, Timing diagram, Use case diagram).
+Unified Modelling Language (UML)*
+RTU, 2026
+=== Slide 11 ===
+11
+Unified Modelling Language (UML)**
+Advantages:
+High level of detail
+Automated translation tools for UML constructs
+ 
+Drawbacks:
+Too wide and diverse set of tools for representing the target system
+Basic orientation to the software engineering area
+The model is rapidly losing transparency and is not comprehensible to specialists in other fields
+It complicates the design of cross-sectoral and edge systems
+Unified Modeling Language. https://en.wikipedia.org/wiki/Unified_Modeling_Language
+RTU, 2026
+=== Slide 12 ===
+12
+Business Process Model and Notation (BPMN)
+Business Process Model and Notation (BPMN)
+Business Process Model and Notation (2005) has become the de-facto standard for graphical business processes diagrams. Version 2.0 of BPMN2 was released in January 2011 and maintained by the Object Management Group (OMG). BPMN is also ratified as ISO 19510. It is intended to be used directly by the stakeholders who design, manage and realize business processes, but at the same time be precise enough to allow BPMN diagrams to be translated into software process components. BPMN has an easy-to-use flowchart-like notation that is independent of any particular implementation environment.
+RTU, 2026
+=== Slide 13 ===
+13
+Business Process Model and Notation (BPMN)*
+BPMN2 is not a methodology, but a graphical notation for universal diagramming. Diagrams provide parallelization of processes both by feature (Pool, Swimlanes) and by condition (Gateways). Each process consists of Activities (tasks, procedures) connected by both sequence and data/message flows. Diagrams can include a variety of data objects. Each process can have both a start and an end event, and a set of different intermediate events (Events) can be used. Conditional transitions are provided by the Gateway set (OR, AND, XOR).
+About the Business Process Model and Notation Specification Version 2.0. https://www.omg.org/spec/BPMN/2.0/
+RTU, 2026
+=== Slide 14 ===
+14
+Business Process Model and Notation (BPMN)**
+Advantages:
+Simple and minimal set of presentation elements
+Good transparency of the model
+Understandable for both stakeholders and software engineering specialists
+A large number of different automated drawing tools
+ 
+Drawbacks:
+Lack of support for stochastic tasks or tasks with uncertainty in time
+A detailed drawing has a large size, so a choreography notation with a higher semantic capacity is introduced
+RTU, 2026
+=== Slide 15 ===
+15
+Business Process Model and Notation (BPMN)***
+RTU, 2026
+=== Slide 16 ===
+16
+BPMN2 Notation
+An Event is represented with a circle and denotes something that happens.
+An Activity is represented as the kind of work which must be done.
+A Gateway determines forking and merging of paths, depending on the conditions expressed.
+A Flow determines sequence of execution Activities or direction of data/message sent.
+XOR
+OR
+AND
+Business Process Model and Notation (BPMN). Version 2.0. https://www.omg.org/spec/BPMN/2.0
+RTU, 2026
+=== Slide 17 ===
+17
+Swimlanes is a sub-partition of Pool that allows you to parallelize processes according to a certain characteristic or criterion.
+BPMN2 Notation*
+A Pool is a frame for representing the flow and interaction of activities.
+Swimlanes is a sub-partition of Pool that allows to parallelize processes according to a certain characteristic or criterion.
+Data Objects can represent a singular object or a collection of objects. A Message is used to depict the contents of a communication between two respondents.
+RTU, 2026
+=== Slide 18 ===
+18
+A sub-process means that a task has embedded activities that are not shown at a given level of abstraction.
+BPMN2 Notation**
+Text Annotations are a mechanism for a modeler to provide additional text information.
+A Sub-process means that a task has embedded Activities that are not shown at a given level of abstraction.
+Choreography is a task for which, for drawing reduction purposes, an initiator and beneficiary are defined.
+RTU, 2026
+=== Slide 19 ===
+19
+Group Artifact allows to mark groups of related activities on the diagram by some feature.
+BPMN2 Notation***
+Off-page Connector shows where a Sequence Flow leaves one page and then restarts on the next page.
+OUT
+IN
+Group Artifact allows to mark groups of related activities on the diagram by some feature.
+RTU, 2026
+=== Slide 20 ===
+20
+Intermediate events
+A specific Timer time-date or a specific cycle (e.g., every Monday at 9am) can be set that will trigger the start or delay of the Process.
+A Message arrives from a Participant and triggers the start or delay of the Process.
+A Signal arrives that has been broadcast from another Process and triggers the start or delay of the Process.
+RTU, 2026
+=== Slide 21 ===
+21
+Intermediate events*
+Error trigger usually interrupt its containing Process.
+Cancel trigger indicates that the process should be cancelled.
+A Link event (Catch (in) and Throw (out)) is a mechanism for connecting two sections of a Process.
+RTU, 2026
+=== Slide 22 ===
+22
+OR Gateway
+OR
+OR
+IF ALL INPUT = 0 THEN OUTPUT = 0
+IF AT LEAST ONE INPUT = 1 THEN ANY OR ALL OUTPUT = 1
+BINARY « + »
+RTU, 2026
+=== Slide 23 ===
+23
+AND Gateway
+IF AT LEAST ONE INPUT = 0 THEN ALL OUTPUT = 0
+IF ALL INPUT = 1 THEN OUTPUT = 1
+BINARY « × »
+AND
+AND
+RTU, 2026
+=== Slide 24 ===
+24
+XOR Gateway
+IF AT LEAST ONE INPUT = 0 THEN ALL OUTPUT = 0
+JUST ONE OF ALL OUTPUT = 1
+BINARY « Decision Y/N »
+?
+?
+?
+?
+XOR
+XOR
+RTU, 2026
+=== Slide 25 ===
+25
+MESSAGE and/or SIGNAL as Start event
+RTU, 2026
+=== Slide 26 ===
+26
+TIME event
+Camunda Platform 8 Docs. Timer events. https://docs.camunda.io/docs/components/modeler/bpmn/timer-events/
+RTU, 2026
+=== Slide 27 ===
+27
+THROW and CATCH events
+BPMN Link Event, 2021.(modified) https://www.javanibble.com/bpmn-link-event/
+RTU, 2026
+=== Slide 28 ===
+28
+ERROR event
+Stephen Russett, 2016. Throwing BPMN Errors with JavaScript in Camunda. https://medium.com/@stephenrussett/throwing-bpmn-errors-with-javascript-in-camunda-c678f4b7d9ff
+RTU, 2026
+=== Slide 29 ===
+29
+Pools and Swimlanes
+RTU, 2026
+=== Slide 30 ===
+30
+BPMN samples
+Olga Altuhhova, Raimundas Matulevičius, Naved Ahmed, 2012. Towards Definition of Secure Business Processes. Lecture Notes in Business Information Processing, 112. DOI: 10.1007/978-3-642-31069-0_1
+RTU, 2026
+=== Slide 31 ===
+31
+BPMN samples*
+RTU, 2026
+=== Slide 32 ===
+32
+BPMN samples**
+Tom Larkworthy, 2020. What is BPMN? https://futurice.com/blog/automating-automation-bpmn-openapi
+RTU, 2026
+=== Slide 33 ===
+33
+Conceptual modelling in BPMN2
+RTU, 2026
+=== Slide 34 ===
+34
+Choreographies
+RTU, 2026
+=== Slide 35 ===
+35
+Choreographies*
+RTU, 2026
+=== Slide 36 ===
+36
+Conclusions
+Creating a conceptual model begins with the generalization and summarization of ideas at the macro level, determining the relationship and influence of concept map elements;
+The causal relations of the conceptual model are represented by Causal loops diagram (CLD), clearly showing the feedbacks that can cause both reinforcing and stabilizing effects of the goal system;
+In order to fully describe the functionality of the conceptual model, a mechanism for representing process parallelization is required, both by feature and by condition;
+The above capabilities are provided equally well by both UML and BPMN2 techniques;
+RTU, 2026
+=== Slide 37 ===
+37
+Conclusions*
+For the visualization of conceptual models of sociotechnical systems, it is preferable to use the BPMN2 technique, which ensures better transparency of the model and, therefore, deeper involvement of stakeholders in the design. This is critical for the preparation of user requirements and the subsequent successful implementation of the project;
+When creating a model, a reasonable and transparent level of abstraction must always be maintained, creating separate models for embedded tasks, as well as drawing the necessary swimlanes content in detail;
+Special attention should be paid to the verification and validation of the model, because the errors left in the conceptual model will inevitably lead to the fatal implementation of the project.
+RTU, 2026
+=== Slide 38 ===
+T5. Parallelization of Work and Data Flows in a Conceptual Model
+THANK YOU FOR YOUR ATTENTION
+
+
+Testing: DE0796 Parallelization of Work and Data Flows in a Conceptual Model
+38
+RTU, 2026

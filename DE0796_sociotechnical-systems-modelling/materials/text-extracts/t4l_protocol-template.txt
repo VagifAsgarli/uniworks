@@ -1,0 +1,51 @@
+Sociotechnical systems modelling
+
+T4L: System Dynamics Simulation in STELLA environment
+
+Students: (Name, Surname)
+
+Date: DD. MM. 2026
+
+Theoretical Rationale:
+
+(Please answer the following questions below)
+
+What are Stocks and Flows models?
+
+What are the differences between CLD and Stocks and Flows models?
+
+Task and work progress:
+
+1.  Brief summary of Yellowstone CLD Conceptual model (of T4Lprim)
+
+    (Be concise, but explain the functioning of your CLD.).
+
+2.  Stocks and Flows model of CLD Yellowstone concept
+
+    (Create a SD stocks and flows model in the STELLA environment
+    selecting your own initial vules for resources Wolves, Deers etc.
+    and other influencig parameters. Show in graph and table form the
+    resorces change. Use Interface layer in STELLA environment for
+    information visualization).
+
+    (Include the MODEL layer screenshot).
+
+    (Carry out experiments with the stocks and flows model and explain
+    the changes of the resorces/stocks).
+
+3.  Conclusions
+
+    (Here and below, present conclusions after summarization the results
+    of SD stocks and flows simulation. Evaluate the prospects of the
+    resources).
+
+4.  Presentation preparation
+
+  (Prepare the presentation in MS Power Point. Find the presentation
+  template on the ORTUS or use the link https://failiem.lv/u/zkah8a9fv)
+
+  (T4L work protocol (pdf), stocks and flows model (STM) and
+  presentation (Power Point) must be sent to egils.ginters@rtu.lv by
+  October 24, 2026).
+
+Signature: ____________________________

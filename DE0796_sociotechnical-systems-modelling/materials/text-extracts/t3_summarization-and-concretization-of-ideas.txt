@@ -1,0 +1,427 @@
+=== Slide 1 ===
+Egils Ginters
+IEEE Senior Member
+E-mail: egils.ginters@rtu.lv
+T3. Summarization and Concretization of Ideas
+RTU, 2026
+1
+=== Slide 2 ===
+Rationale
+The content is based on previous research and projects related to Sociotechnical Systems (STS) design, as well as third-party research and presentations.
+2
+RTU, 2026
+=== Slide 3 ===
+STS Design: Step by step to Conceptual model
+3
+From T1. Sociotechnical systems fundamentals.
+
+Conceptual model design:
+Summarization and concretization of ideas (static representation);
+Functionality explanation (dynamic representation).
+RTU, 2026
+=== Slide 4 ===
+Summarization and concretization of Ideas
+4
+Prose description
+(free formulation of ideas in laconic, business-like and natural language)
+ 
+Concept maps (mind maps, cognitive maps etc.)
+(a formalized visual representation of the system structure in the form of a graph, maintaining a high level of abstraction)
+RTU, 2026
+=== Slide 5 ===
+Representation of the Concept
+5
+“A concept model is a high-level description of an application:
+It enumerates all concepts (ideas) in the application that a user can encounter
+Describes how those concepts (ideas) relate to each other
+And explains how those concepts (ideas) fit into task that users perform with the application”
+Johnson & Henderson, Conceptual Models, 2012
+ 
+Recommendations:
+Keep it simple and focused, and conceptual
+Do not describe implementation and interface specifications
+Describe utility
+Tim Sheiner, The Conceptual Model, 2013
+RTU, 2026
+=== Slide 6 ===
+Prose description
+6
+Prose description disadvantages:  
+
+Ambiguous syntax
+The semantic level is too high, which leads to different understanding of the same concepts
+
+Let’s continue with Concept maps…
+RTU, 2026
+=== Slide 7 ===
+Philosophy of Conceptual modelling
+7
+Relies on:
+Assumptions – uncertainties or beliefs about the real world being modelled
+Simplifications – ways of reducing the complexity of the model maintaining sufficient transparency of the system
+Done by:
+Removing of components and interconnections that have little effect on model accuracy
+Representing more simply the components and interconnections while maintaining a satisfactory level of model accuracy
+ 
+Conceptual modelling, De La Salle University-Manila, 2011. https://www.slideshare.net/benghuid/conceptual-modeling
+RTU, 2026
+=== Slide 8 ===
+Philosophy of Conceptual modelling*
+8
+Conceptual models are essential to knowledge production and decision support
+They are not set in stone: they depend on available knowledge and the objectives pursued
+
+Sources of knowledge:
+	Expert knowledge;
+	Scientific and technical literature;
+	Observations (measures);
+	Experiments;
+	Simulation.
+ Jean-Noel Aubertot, Why modelling? Conceptual modelling, Summer School, Endure, 2016
+RTU, 2026
+=== Slide 9 ===
+Understanding the Problem space
+9
+https://fac.ksu.edu.sa/sites/default/files/it443_chapter2_lecture_v2_0.ppt
+RTU, 2026
+=== Slide 10 ===
+10
+Understanding the Problem space*
+https://fac.ksu.edu.sa/sites/default/files/it443_chapter2_lecture_v2_0.ppt
+RTU, 2026
+=== Slide 11 ===
+11
+Team works on conceptual model development
+Orientation:
+Orient themselves towards asking questions about how the conceptual model will be understood by customers
+Open minded:
+Prevents design teams from becoming narrowly focused early on
+Common ground:
+Establish a set of common terms they all understand and agree upon
+Reduce the chance of misunderstanding and confusion arising later on
+
+https://fac.ksu.edu.sa/sites/default/files/it443_chapter2_lecture_v2_0.ppt
+RTU, 2026
+=== Slide 12 ===
+12
+Concept mapping
+Concept map:
+A technique for visualizing the relationships among different concepts (ideas);
+A diagram showing the relationships based on arrows. The relationships can be articulated in linking phrase, e.g., “results in”, “contributes to”, “giver rise to” etc.
+Can be used as a tool to increase meaningful learning as well as to represent the expert knowledge of individuals and teams.
+Have their origin in constructivism (knowledge constructing by learners applying previous knowledge as background). “The most important single factor influencing learning is what the learner already knows. Ascertain this and teach accordingly (Novak, 1984)”.
+Novak, J.D. & Gowin, D. B., Learning How to Learn, Cambridge University Press, 1984.
+RTU, 2026
+=== Slide 13 ===
+Concept mapping by Novak
+13
+RTU, 2026
+=== Slide 14 ===
+Concept mapping by Novak*
+14
+Xudong William Yu, Concept Mapping, SIUE. https://slideplayer.com/slide/12904590/
+RTU, 2026
+=== Slide 15 ===
+Concept mapping by Novak**
+15
+RTU, 2026
+=== Slide 16 ===
+Concept mapping by Novak***
+16
+RTU, 2026
+=== Slide 17 ===
+Concept mapping by Novak****
+17
+RTU, 2026
+=== Slide 18 ===
+Clarifications of Novak
+18
+RTU, 2026
+=== Slide 19 ===
+Purposes of Concept mapping
+19
+Surendra Sharma, Concept Mapping. https://www.slideshare.net/tmxyz/concept-mapping1
+RTU, 2026
+=== Slide 20 ===
+Versatility of mutations
+20
+Sarah Gibbons, Cognitive Maps, Mind Maps, and Concept Maps: Definitions, Nielsen Norman Group, 2019. https://www.nngroup.com/articles/cognitive-mind-concept/
+RTU, 2026
+=== Slide 21 ===
+Concept maps in research
+21
+RTU, 2026
+=== Slide 22 ===
+Virtual and Augmented Reality Techniques Mapping by Ginters (2022)
+22
+https://www.mindmeister.com/map/2256709844
+RTU, 2026
+=== Slide 23 ===
+Sociotechnical system mapping by Ginters (2022): Objects table
+23
+Rationale | Tasks | Communication environment | Changes management: Procedures/Rules
+Goal | Tasks: 
+Inputs | Physical structure: Hardware | Changes management: Workflows/Data flows
+Objectives | Tasks: 
+Outputs | Physical structure: Software | Changes management: Maintenance
+Assumptions | Tangible values: Individuals | Management: Timeline | Changes management: Risks
+Simplifications | Tangible values: Groups | Management: Resources | Changes management: Verification/Validation
+Restrictions (Criterion) | Psychosocial values: Motivation | Management: Regulations | Changes management: Sustainability development
+Metaphors | Psychosocial values: Leadership | Changes management: Structural changes |  
+RTU, 2026
+=== Slide 24 ===
+24
+Rationale
+Rationale
+(Characterization of the situation. Deficiencies and shortcomings of the existing solution. Justification why changes to the existing solution or a new solution/product are needed)
+For example:
+"As the costs of operating vehicles and the flow of tourists increase, it is necessary to increase the throughput of transport routes. It is necessary to increase the efficiency of each trip. It is necessary to reduce the volume of ticket sales on the bus, using cash and credit cards, which delay the travel time. The existing ticketing system TANGO does not provide this. The most financially effective solution is the development and implementation of unified transport electronic tickets-wallet for based on RFID cards."
+RTU, 2026
+=== Slide 25 ===
+25
+Goal
+Goal
+(The goal of implementing the sociotechnical system. Only one goal that can be achieved. Which of the problems identified in the Rationale will be solved?)
+For example:
+"Development and implementation of TANGO PRO, a pre-paid RFID card-based bus passenger ticketing system."
+RTU, 2026
+=== Slide 26 ===
+26
+Objectives
+Objectives
+(Several sub-goals, the joint achievement of which ensures the achievement of the systemic Goal)
+For example:
+"O1. Ensure convenient and accessible registration of the customer's e-ticket account and replenishment with the required amount of money;
+O2. Create a unified infrastructure for TANGO PRO RFID e-ticket authorization (bus, self-service payment stands, cash desks, Internet);
+O3. Introduce a flexible system of discounts for different population groups;
+O4. Involve TANGO PRO in a unified network of different modes of city transport."
+RTU, 2026
+=== Slide 27 ===
+27
+Assumptions
+Assumptions
+(Any significant assumptions of the designers regarding the design, implementation and maintenance of the system, as well as forecasts and other considerations)
+For example:
+"It is expected that an RFID reader/writer for e-tickets will be developed in time, the price and reliability of which will be appropriate for the efficient operation of the e-ticket system. The introduction of TANGO PRO will not require additional training and qualification of employees."
+RTU, 2026
+=== Slide 28 ===
+28
+Simplifications
+Simplifications
+(Simplifications allowed in the design that do not impair transparency and provide a correct presentation of the system concept. Parameters and influencing factors that are not essential to the system may be discarded)
+For example:
+"TANGO PRO e-ticket is a debit card that does not provide for customer credit. The RFID card works in the LF range, which ensures reading by pressing the card close to the reader housing box."
+RTU, 2026
+=== Slide 29 ===
+29
+Restrictions (Criterion)
+Restrictions (Criterion)
+(Parameters of system usage limits, nominal parameters and maximum values)
+For example:
+"The use of the e-ticket system TANGO PRO complies with the IP65 environmental standard. Request response time is less than 3 seconds. Operating temperature range from +5 to +60 degrees Celsius. Only open-source coding may be used for the software design. User interface languages: Spanish, English and German.”
+RTU, 2026
+=== Slide 30 ===
+30
+Metaphors
+Metaphors
+(A figure of speech that, for rhetorical effect, directly refers to one thing by mentioning another. It may provide clarity or identify hidden similarities between two different ideas. Some examples of common metaphors: “He is an early bird”, “Her eyes were diamonds”)
+For example:
+"Hanging - the system has lost its working capabilities for a short time while it is being restarted. Handshake – client communication protocol, when the respondent's affirmative answer is received to the request, which confirms the start of the session."
+RTU, 2026
+=== Slide 31 ===
+31
+Tasks
+Tasks
+(One or more tasks may correspond to each objective, but there may be common tasks that cover several objectives)
+For example:
+"T1.O1. Analysis of RFID technologies and selection of a suitable LF (NFC) solution: reader/writer/tag and experimental testing;
+T2.O1. Developing a responsive customer registration and e-tickets processing website;
+T3.O1. Development of customer payment database structure;
+T4.O1. Connecting the TANGO PRO payment system to the credit card authorization system of the servicing bank and PayPal."
+RTU, 2026
+=== Slide 32 ===
+32
+Tasks: Inputs
+Inputs
+(Input data is generally described for each task)
+For example:
+“In1.T1.O1. Internet trading resources, Alibaba;
+In2.T2.O1. Client data, e-ticket (account) number.”
+RTU, 2026
+=== Slide 33 ===
+33
+Tasks: Outputs
+Outputs
+(Generally, describes the results of each task)
+For example:
+“Out1.T1.O1. RFID (NFC) reader/writer model, RFID tag;
+Out2.T2.O1. Client e-ticket (account) balance.”
+RTU, 2026
+=== Slide 34 ===
+34
+Tangible values: Individuals
+Tangible values
+(Quantitatively countable and measurable benefits that staff, stakeholders or society will gain as a result of the implementation of the system)
+
+Individuals
+(Advantages and other benefits for each individual system user or person involved)
+For example:
+"The working time of the bus driver will be saved, and the driver's attention will not be distracted by cash payment operations."
+RTU, 2026
+=== Slide 35 ===
+35
+Tangible values: Groups
+Groups
+(Benefits to be received by social or user groups)
+For example:
+"The operational management costs of the bus fleet will be reduced, as there will be no need to carry out cash collection and banking operations. Subsidy planning opportunities for social groups will improve, as discount accounting will be automated."
+Tangible values
+(Quantitatively countable and measurable benefits that staff, stakeholders or society will gain as a result of the implementation of the system)
+RTU, 2026
+=== Slide 36 ===
+36
+Psychosocial values: Motivation
+Motivation
+(Substantial interest of the persons involved in the development, implementation and maintenance of the system)
+For example:
+"The city or regional administration will be able to better monitor the financial flows of the bus company, which will facilitate planning. Working conditions for bus drivers will improve. For the designers of the TANGO PRO system, it will be a financially profitable job with a guaranteed income."
+RTU, 2026
+=== Slide 37 ===
+37
+Psychosocial values: Leadership
+Leadership
+(Is there a person among the system designers with high enough qualification, experience and capabilities to manage the system design and introduction processes from the first to the last day? It is impossible to achieve a successful and timely result without individual responsibility)
+For example:
+"The tender for the development of TANGO PRO has been won by Tráfico Canario, whose deputy head of the Systems Design Department, dr.sc.ing. Javier Martin-Gutierrez is sufficiently experienced and qualified and can be motivated to develop the system. The Systems Design Department will assume a managerial role in the development and implementation of TANGO PRO.”
+RTU, 2026
+=== Slide 38 ===
+38
+Communication environment
+Communication environment
+(Main requirements for the communication environment that will be used to operate the system)
+For example:
+"The communication environment is based on TCP/IP Internet (wired, Wi-Fi) and 3G/4G/5G mobile. Two alternative providers will be selected."
+RTU, 2026
+=== Slide 39 ===
+39
+Physical structure: Hardware
+Hardware
+(General requirements for hardware set used in system operation)
+For example:
+"RFID readers/writers and tags must be unified for all the TANGO PRO. Mirroring is used in the server pool. Only cloud solutions controlled by TANGO PRO owners may be used.”
+RTU, 2026
+=== Slide 40 ===
+40
+Physical structure: Software
+Software
+(General requirements for software used in system operation)
+For example:
+"Only open-source solutions will be used. If solutions based on web services will be used, then the services must be under the complete control of TANGO PRO owners. Social networks Facebook, Twitter, LinkedIn can only be used for additional authorization needs of users. In order to reduce management costs of TANGO PRO, authorization by electronic signature will not be used.”
+RTU, 2026
+=== Slide 41 ===
+41
+Management: Timeline
+Management
+(Considerations for system development and operation management processes)
+Timeline
+(Timeline for system development, implementation and maintenance)
+For example:
+"The development of TANGO PRO will be started no later than January 1, 2023. The beta version is handed over for testing on September 1, 2023. The pilot project is being tested in the city of Costa del Silencio from January 01, 2024 to June 01, 2024. TANGO PRO is put into operation by October 1, 2024."
+RTU, 2026
+=== Slide 42 ===
+42
+Management: Resources
+Resources
+(Human, financial resources and technical appliances available to system developers without additional funding)
+For example:
+"The developers have sufficient financial resources for system design. Tráfico Canario has an experimental environment (polygon) and technical equipment for testing similar systems. The developer has previous experience in developing RFID card processing systems for warehouse stock inventory and customer authorization of large entertainment events."
+RTU, 2026
+=== Slide 43 ===
+43
+Management: Regulations
+Regulations
+(Does the developer's company use uniform guidelines, rules, standards, procedures for quality assurance management?)
+For example:
+“Tráfico Canario's company quality management procedures are ISO 9001:2015 certified and implemented in accordance with the quality manual approved. Environmental management complies with ISO 14001:2015"
+RTU, 2026
+=== Slide 44 ===
+44
+Change management: Structural changes
+Change management
+(How is change management ensured, starting with requirements engineering and ending with system maintenance implementation?)
+Structural changes
+(What structural changes does the introduction of the new system bring in management: vertically and/or horizontally? Does the solution include any subsystems that have already been developed?)
+For example:
+"TANGO PRO will use data from the bus company's staff records, as well as bus fleet management systems. The number of service technical staff will increase by two positions: software engineer and technician-electronics."
+RTU, 2026
+=== Slide 45 ===
+45
+Change management: Procedures/Rules
+Procedures / Rules
+(Change management implementation procedures and rules applied in projects)
+For example:
+"Change management is carried out in accordance with the rules and procedures contained and described in Tráfico Canario's quality management manual."
+RTU, 2026
+=== Slide 46 ===
+46
+Change management: Workflows/Data flows
+Workflows/Data flows
+(Characterizes work flow and data flow changes as a result of the system implementation. A general description of the data dictionary is provided. Critical interfaces could be specified in brief and generally.)
+For example:
+"The work flow related to the collection of cash in the bank is excluded. New types of work: service and repair of RFID equipment, as well as preparation and distribution of e-ticket cards. A relational database will be used to provide SQL queries.”
+RTU, 2026
+=== Slide 47 ===
+47
+Change management: Maintenance
+Maintenance
+(How will the maintenance be carried out after the system introduction?)
+For example:
+"A centralized request servicing system will be created for the TANGO PRO maintenance, which will include reports on system malfunctions. Both passengers and service staff will be able to post messages. The reaction time must be no longer than 30 minutes."
+RTU, 2026
+=== Slide 48 ===
+48
+Change management: Risks
+Risks
+(Description of possible risks of system development and implementation. Both internal and external risks are identified. Strengths, Weaknesses, Opportunities, and Threats (SWOT) analysis can be done. It is also desirable to describe the possible effects of hidden and unanticipated factors. Development of procedures that allow identifying critical design failures and successfully stopping the project by implementing a roll-back mechanism in order to complete the project with minimal losses for stakeholders.)
+For example:
+"Since TANGO PRO has a link with the bus company's staff accounting and bus fleet management system, time delays in data exchange are possible. Internet and mobile network coverage may cause interference. The system must comply with the requirements of changes in AML regulations. Changes in the standardization of RFID frequency bands at the national level should be monitored. Alternatives should be provided in the selection of RFID equipment manufacturers. Compliance with GDPR requirements must be monitored.”
+RTU, 2026
+=== Slide 49 ===
+49
+Change management: Verification/Validation
+Verification/Validation
+(What methods will be used for verification and validation procedures during system development and exploitation?)
+For example:
+"Verification of concepts in interactive mode is carried out in a group of interested parties, which includes representatives of municipalities, passenger transportation company, financial institutions and organizations representing social groups. The verification of technical solutions is performed by checking the border values and the random values of the parameters. Validation is performed by comparing system performance results with system requirements. Verification and validation are performed after each design step.”
+RTU, 2026
+=== Slide 50 ===
+50
+Change management: Sustainability development
+Sustainability development
+(The impact of the system on society and the surrounding environment is assessed, which in the Triple Bottom Line (TBL) model determines the sustainability of the system and its development. The impact on business is included in the assessment of the impact on society. Possible changes in the development of sustainability during the exploitation of the system are predicted.)
+For example:
+"TANGO PRO will have a neutral impact on the environment. A positive impact on the society is expected, as it will be more convenient to pay for tickets, but the e-ticket account can be replenished at any time. The sustainability risk can be caused by the influence of financial institutions, which will want to transform e-tickets into payment cards."
+RTU, 2026
+=== Slide 51 ===
+51
+Sociotechnical system conceptual mapping methodology
+https://www.mindmeister.com/map/2396811945
+RTU, 2026
+=== Slide 52 ===
+52
+Conclusions
+Concept map – Summarization and Concretization of Ideas
+Concept map – Objects (concepts, ideas, propositions) and Links (relationships)
+Concept map – With appropriate level of abstraction aimed to both: designers and stakeholders
+Concept map - Explains object relationships rather than functionality
+Concept map – Must be updated/verified/validated many times
+Concept map - If something is unclear in the conceptulatization, then it makes no sense to continue designing
+RTU, 2026
+=== Slide 53 ===
+T3. Summarization and concretization of Ideas
+THANK YOU FOR YOUR ATTENTION
+
+
+Testing: DE0796 STS Summarization and concretization of Ideas
+53
+RTU, 2026

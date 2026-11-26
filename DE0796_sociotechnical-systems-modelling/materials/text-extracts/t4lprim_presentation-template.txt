@@ -1,0 +1,21 @@
+=== Slide 1 ===
+RIGA TECHNICAL UNIVERSITYFaculty of Computer Science, Information Technology and EnergyInstitute of Information Technology
+Sociotechnical systems modelling
+T4LPrim: Causal Loops Diagram Design
+Name Surname, Name Surname
+RTU 2026
+1
+Group
+=== Slide 2 ===
+Task
+Design and present Causal Loops Diagram (CLD) of the interoperable dynamics processes in Yellowstone nature;
+
+       Mark reinforced and balanced feedbacks in CLD;
+
+       Justify your opinion about ecosystem stability.
+2
+RTU 2026
+=== Slide 3 ===
+Example
+3
+RTU 2026

@@ -1,0 +1,53 @@
+PR1. Summary design. Assignment
+Prepare a brief summary (no more than one A4 page) together with a properly formatted
+list of references. A summary template specifying the content requirements is provided
+below.
+Please follow the required structure and content of the summary. The summary should be
+written as continuous text without subheadings, except for Keywords. Opinions, data,
+and any other factual information must be supported by in-text citations. In-text citations
+and the reference list must be formatted in accordance with APA 7th edition requirements.
+Brief guidelines for formatting references according to APA 7th edition are provided
+separately. Additional information is available at the
+https://www.library.sydney.edu.au/support/referencing/apa.
+
+
+Summary
+First name, Last name
+Date
+                                    Title of the Topic
+Keywords.
+(At least three keywords relevant to the topic of the summary.)
+
+
+Paragraph. Relevance of the topic. (Explain why the selected topic is currently relevant at
+the global, European, and Latvian levels. Support your statements with quantitative data
+and references.)
+Paragraph. Problem identification and existing solutions. (Identify and describe the most
+significant and currently relevant problem, supporting your assessment with quantitative
+data and references. Identify and briefly describe at least three specific existing solutions
+to the problem, providing concrete facts and quantitative data. Explain the principles
+underlying these technological solutions. Describe the advantages provided by these
+solutions. Identify their limitations, disadvantages, and negative impacts.)
+Paragraph. Aim, tasks, and methods. (Briefly describe your proposed approach to solving
+the identified problem while eliminating or reducing the limitations of existing solutions.
+Formulate the aim of your research to be achieved through the proposed solution.
+Specify at least four concrete tasks that must be completed to achieve the stated aim.
+Describe the specific set of methods that will be used to accomplish these tasks.)
+Paragraph. Expected results and target audience. (Describe the qualitative and, where
+possible, quantitative results expected from completing the specified tasks. Identify the
+potential users of your research results. Explain what advantages and benefits the results
+of your work will provide to these users.)
+Paragraph. Further development. (Explain whether the results of your work are expected to
+solve the identified problem completely. What are the limitations of your proposed
+solution? What further improvements and directions for future research could be pursued?)
+References
+(In conformity with APA 7 rules and formatting).
+
+
+Note. Generative AI tools were used for information retrieval and formatting the reference
+list: __________ (indicate the tools used, if applicable).
+
+
+The assignment must be submitted as a PDF file named FirstNameLastName-PR1.pdf by
+the end of the class at 18:05 and sent to the specified email address egils.ginters@rtu.lv.
+

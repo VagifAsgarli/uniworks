@@ -1,0 +1,20 @@
+=== Slide 1 ===
+RIGA TECHNICAL UNIVERSITYFaculty of Computer Science, Information Technology and EnergyInstitute of Information Technology
+Sociotechnical systems modelling
+T4L: System Dynamics Simulation in STELLA
+Name Surname
+RTU 2026
+1
+=== Slide 2 ===
+Content
+Brief description of Yellowstone CLD functionality (T4Lprim)
+
+       Stocks and flows Yellowstone SD model in STELLA environment 		(MODEL and INTERFACE view)
+
+       Stock/resources Wolves, Deers curve changes in time (with explanations)
+
+       Conclusions
+
+       Yellowstone SD model demonstration in STELLA environment during defence session
+2
+RTU 2026

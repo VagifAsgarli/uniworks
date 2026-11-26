@@ -1,0 +1,998 @@
+=== Slide 1 ===
+Egils Ginters
+IEEE Senior Member
+E-mail: egils.ginters@rtu.lv
+T2. Modelling and Simulation Techniques
+RTU, 2026
+1
+=== Slide 2 ===
+Rationale
+The content is based on previous research and projects related to Sociotechnical Systems (STS) design, as well as third-party research and presentations.
+2
+RTU, 2026
+=== Slide 3 ===
+Sociotechnical System
+3
+RTU, 2026
+=== Slide 4 ===
+System: Definition
+”A system is defined as group of objects that are joined together in some regular interaction or interdependence towards the accomplishment of some purpose.”
+
+Banks, J., S. Carson II, and B. L. Nelson (1996). Discrete-Event System Simulation, 2nd ed., Prentice Hall, Upper Saddle River, N.J.
+
+     “A system is defined as a collection of interacting components that receives input and provides output for some purpose.”
+
+Chang, Chris (2004). Simulation modeling handbook: a practical approach, CRC Press LLC, ISBN 0-8493-1241-8.
+4
+RTU, 2026
+=== Slide 5 ===
+System: Organization
+E1
+E2
+Ei+1
+Ei
+Ei+3
+Ei+2
+Ei+n
+System
+Subsystem
+System environment
+Organization (architecture) Org(Z) = (E, L)
+Entities (objects) (E)
+L1,2
+Attributes (state etc.) (A), where     (Ai)      (Ei)
+∩
+E
+Links (flows) L
+5
+RTU, 2026
+=== Slide 6 ===
+Sociotechnical system: Properties
+Any System has their own Concept (goal, objective) and Constraints
+
+     Organizational structure involves Objects and Links
+
+     Each Object (entity) has Attributes
+
+     Interaction and Interdependence among Objects and between System and its Environment and among different systems
+
+     A System can be Closed or mostly stay relatively Open
+
+     Systems are tended to Self-organization, Cognition and continual Evolution
+6
+RTU, 2026
+=== Slide 7 ===
+Some event is always occurring
+     Water treatment plants, oil pipelines
+The system events occurred according to discrete jumps in the time clock 
+      Stores, warehouse, car manufacturing
+Ei+1
+O(Ei+1) = f(I(Ei+1), AEi+1, t)
+I(Ei+1)=I(Ei+1)(t)
+I(Ei+1)
+t
+t - continous
+I(Ei+1)
+t
+t - discrete
+Sociotechnical system: Continuing or Discrete
+7
+RTU, 2026
+=== Slide 8 ===
+Derivation is zero
+     Simple
+O(Ei+1)(t)
+I(Ei+1)(t)
+V(t)
+volume
+t
+dV
+dt
+= 0 (static)
+dV
+dt
+= const (stationary)
+t
+dV
+dt
+= var (dynamic)
+t
+Derivation is variable
+     Complex
+Water tank Ei+1
+dV
+dt
+= I(Ei+1)(t) - O(Ei+1)(t)
+Sociotechnical system: Static or Dynamic
+8
+RTU, 2026
+=== Slide 9 ===
+The next state of the system is always known and total set of the states is finite
+     (AE, p: p=1) → (AE+1), where p is probability that system will take the next state, but 
+A = {Ai: i=1, N}
+     Finite-state automaton
+     Coffee machine
+The next state of the system is only predictable with appropriate probability 
+     (AE, p: p < 1) → (AE+1), where p is probability that system will take the next state
+     Stochastic automaton
+     Roulette, games automat
+Sociotechnical system: Deterministic or Stochastic
+9
+RTU, 2026
+=== Slide 10 ===
+System: Model
+”A model is an external and explicit representation of part of reality as seen by the people who wish to use that model to understand, to change, to manage and to control that part of reality.”
+
+Pidd ”Tools for thinking”, 1996
+
+     “Model is defined as a representation of a system for the purpose of studying the system.”
+
+Banks, J., S. Carson II, and B. L. Nelson (1996). Discrete-Event System Simulation, 2nd ed., Prentice Hall, Upper Saddle River, N.J.
+10
+RTU, 2026
+=== Slide 11 ===
+Sociotechnical system: Models classification
+Model
+Physical (Natural)
+Analytic
+Simulation
+(too much influencing factors)
+(limited amount of influencing factors)
+(high amount of influencing factors)
+Visual notations
+(deterministic)
+Data flow diagrams
+BPMN2/UML/SDL
+Concept maps
+Differential and partial equations
+Regressions
+Markov chains
+DEVS
+System Dynamics
+Agent-based models
+ANN (partially)
+Abstract
+11
+RTU, 2026
+=== Slide 12 ===
+Modelling steps*
+Microanalytical - NetLogo
+System Dynamics - STELLA
+Confidence assessment - PSPP
+Sustainability Assessment
+IASAM
+Bayesian Networks
+12
+RTU, 2026
+=== Slide 13 ===
+Modelling steps**
+Banks, Jerry (1998). Handbok of simulation. John Wiley & Sons, ISBN 0-471-13403-1.
+13
+RTU, 2026
+=== Slide 14 ===
+Generalization: Concept maps (MindMeister environment)
+14
+RTU, 2026
+=== Slide 15 ===
+Conceptual modelling (UML): Use Case Diagram
+15
+RTU, 2026
+=== Slide 16 ===
+Conceptual modelling (UML): Activity Diagram
+16
+RTU, 2026
+=== Slide 17 ===
+Conceptual modelling (UML): Data Flow Diagram
+17
+RTU, 2026
+=== Slide 18 ===
+Conceptual modelling (UML): Component Diagram
+18
+RTU, 2026
+=== Slide 19 ===
+Conceptual modelling (UML): Class Diagram
+19
+RTU, 2026
+=== Slide 20 ===
+Conceptual modelling (UML): E-R Diagram
+20
+RTU, 2026
+=== Slide 21 ===
+Conceptual modelling (UML): Sequence Diagram
+21
+RTU, 2026
+=== Slide 22 ===
+Conceptual modelling (BPMN2): Pool (swimlanes)
+22
+RTU, 2026
+=== Slide 23 ===
+Conceptual modelling (BPMN2): Choreographies
+23
+RTU, 2026
+=== Slide 24 ===
+Simulation*
+“Simulation is the imitation of the operation of a real-world process or system over time”.
+
+Banks, Jerry (1998). Handbok of simulation. John Wiley & Sons, ISBN 0-471-13403-1.
+
+     Simulation modeling and analysis is the process of creating and experimenting with a computerized mathematical model of a physical system”.
+
+Chang, Chris (2004). Simulation modeling handbook: a practical approach, CRC Press LLC, ISBN 0-8493-1241-8.
+24
+RTU, 2026
+=== Slide 25 ===
+Simulation**
+E1
+E2
+Ei+1
+Ei
+Goal System
+L1,2
+Operation algorithm in Simulation language
+Input I(t)
+Output I(t)
+Generation
+Observation
+(based on many iterations)
+25
+RTU, 2026
+=== Slide 26 ===
+Simulation** (EXTEND Suite environment)
+26
+RTU, 2026
+=== Slide 27 ===
+Simulation: Why?
+Forecast outcomes
+
+     Test alternatives
+
+     What-if analysis
+
+     Teaching and training
+
+     Edutainment
+27
+RTU, 2026
+=== Slide 28 ===
+Simulation: When?
+Analytical solution is impossible:
+	- Uncertainty (stochastic processes)
+	- Dynamics
+	- Complexity
+- Too much influencing factors
+
+     Real life experiments are impossible:
+	- The system does yet not exist
+	- There is too much risk
+	- The costs are too high
+28
+RTU, 2026
+=== Slide 29 ===
+Simulation: Benefits
+Cost
+– Simulation may often be cheaper alternative
+     Time
+– Simulation allows compress or expand time
+     Replication
+– Simulations are precisely repeatable
+     Safety
+– Simulation offers risk-free environment
+     Legality
+- Virtually everything can be done
+29
+RTU, 2026
+=== Slide 30 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+30
+RTU, 2026
+=== Slide 31 ===
+System Dynamics (SD) Models
+System dynamics is a methodology for studying of changes and managing complex feedback systems based on differential equations
+
+      DYNAMO™, Vensim™, POWERSIM, STELLA, Insight Maker
+Forrester, Jay. W. (1961) Industrial Dynamics. ISBN 978-0915299881, Productivity Press.
+Forrester, Jay. W. (1991) System Dynamics and the Lessons of 35 Years. In: The Systemic Basis of Policy Making in the 1990s. /Ed. by Kenyon B. De Greene.
+31
+RTU, 2026
+=== Slide 32 ===
+Cesis Municipality – North East of Latvia
+Cēsis (Wenden) was first mentioned in 1206. At the turn of the 14th-15th centuries, due to close proximity to the Gauja River, Cēsis got involved in trade and joined the Hanseatic League. One of the oldest breweries in Northern Europe – “Cēsus alus” still operates in Cēsis.
+32
+RTU, 2026
+=== Slide 33 ===
+Cesis: Perceptions of Tourism Agencies
+33
+RTU, 2026
+=== Slide 34 ===
+Cesis: Perceptions of Young tourists
+34
+RTU, 2026
+=== Slide 35 ===
+Cesis: Perceptions of Citizens
+35
+RTU, 2026
+=== Slide 36 ===
+Cesis: Some figures
+36
+RTU, 2026
+=== Slide 37 ===
+Cesis: Demographic perspectives (STELLA environment)
+What will our destiny be?
+What will our destiny be during next 50 years?
+
+(Demonstrations in STELLA environment)
+37
+RTU, 2026
+=== Slide 38 ===
+Cesis: Demographic perspectives (Model view)
+38
+RTU, 2026
+=== Slide 39 ===
+Cesis: Demographic perspectives (Interface view)
+39
+RTU, 2026
+=== Slide 40 ===
+Cesis: Demographic perspectives (Differential equations view)
+40
+RTU, 2026
+=== Slide 41 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation
+
+     Learning and evolutionary models
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+41
+RTU, 2026
+=== Slide 42 ===
+Microsimulation is a research area in applied econometrics. It tries to simulate the behaviour of individuals over time. It can either be dynamic or static. If it is dynamic the behaviour of people changes over time, whereas in the static case a constant behaviour is assumed. 
+System dynamics. (2007). http://en.wikipedia.org/wiki/Microsimulation
+
+      Microsimulation models are computer models that operate at the level of the individual behavioural entity, such as a person, family, or firm. Such models simulate large representative populations of these low-level entities in order to draw conclusions that apply to higher levels of aggregation such as an entire country. 
+
+Microsimulation models. (2007). http://www.statcan.ca/english/spsd/
+Micro analytical simulation models*
+42
+RTU, 2026
+=== Slide 43 ===
+Microsimulation (microanalytic simulation) is a modelling technique that operates at the level of individual units such as persons, households, vehicles or firms. Each unit is represented by a record containing a unique identifier and a set of associated attributes (list of persons with known age, sex, marital and employment status). A set of rules (transition probabilities) are then applied to these units leading to simulated changes in state and behaviour. These rules may be deterministic or stochastic. The result is an estimate of the outcomes of applying these rules.
+
+
+What is microsimulation? (2007). The International Microsimulation Association. http://www.microsimulation.org/IMA/What%20is%20microsimulation.htm
+Micro analytical simulation models**
+43
+RTU, 2026
+=== Slide 44 ===
+Micro analytical simulation models***
+Microsimulation model -  simulation model that describes the behaviour of individual micro units and permits analysis of the impacts of the environment.
+
+Lundgren, A. (2007). Micro-Simulation Modelling of Domestic Tourism in Sweden. Umea University. Spatial Modelling Centre.
+Microanalytical simulation models (MSM) features:
+
+- two levels of modelling – Individual and Aggregate;
+ objects or entities – Microunits with Associated attributes;
+ attributes determine the state of the microunit;
+- Set of rules (transition probabilities) – Deterministic or Stochastic;
+ next state of the microunit is determined by rules, Previous state and Probability.
+44
+RTU, 2026
+=== Slide 45 ===
+A = {Ai: i=1, NAi}, where NAi – total amount of attributes
+Ei+1(A1)
+Rules
+Region
+Aggregate
+p1
+pk
+p2
+Individual
+Household
+∏ ∑
+NAi
+RMi
+i=1
+j=1
+Mij
+Ei+1 (A), where A – set of attributes
+Ai = {Mij: j=1, RMi}, where RMi – total amount of states of attribute Mi
+Mij – set of states of attribute Mi
+Micro analytical simulation models****
+45
+RTU, 2026
+=== Slide 46 ===
+Micro analytical simulation models****
+Microanalytical simulation can be used for modelling:
+
+the impacts on social equity of fiscal and demographic changes;
+the distribution of traffic flows over a street network:
+
+Micro – crossroads;
+Mesocopic – crossroad with street;
+Macro – region, city.
+https://www.brennerplan.de/leistung/mikroskopische-simulation/
+46
+RTU, 2026
+=== Slide 47 ===
+Crossroads micro model (VISSIM environment)
+47
+RTU, 2026
+=== Slide 48 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models.
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+48
+RTU, 2026
+=== Slide 49 ===
+Queuing model is used to approximate a real queuing situation or system, so the queuing behaviour can be analysed mathematically. There analytic and simulation models can be used. Can be combined with micro anaytical modelling approach. Queuing models include following performance measures:
+
+- the average number in the queue, or the system; 
+- the average time spent in the queue, or the system; 
+- the statistical distribution of those numbers or times;
+- the probability the queue is full, or empty;
+- the probability of finding the system in a particular state.
+
+
+Queueing model. (2007). http://en.wikipedia.org/wiki/Queuing_model
+Gross, Donald; Carl M. Harris (1998). Fundamentals of Queueing Theory. Wiley.
+Queuing (DEVS) models*
+49
+RTU, 2026
+=== Slide 50 ===
+A queuing system is characterised by three components: 
+
+ Arrival process (generation the requests, customers etc. with appropriate distribution);
+ Queue discipline (FIFO, LIFO, priority etc.);
+ Service mechanism (processing the requests by server).
+Requests A
+E(t) - mean inter-arrival time between request Ai and Ai+1 
+λ = 1 / E(t) – frequency of arrival
+Queue Q
+Server S
+S(t) - mean processing time μ = 1 / S(t) – frequency of processing
+φ - delay
+Queuing (DEVS) models**
+50
+RTU, 2026
+=== Slide 51 ===
+10 | 10 | 10 | 10 | 10 | 10 | A(t)
+1 | 2 | 4 | 8 | 15 | 30 | A(t)
+30 | 15 | 8 | 4 | 2 | 1 | A(t)
+Uniform
+Exponential
+Exp.Decay
+Queuing (DEVS) models: Distributions
+51
+RTU, 2026
+=== Slide 52 ===
+Features:
+- discrete-event; 		- dynamic;
+- stochastic;			- queuing;
+- mostly technical.
+
+     Simulation tools:
+queuing models simulators DELSI 1.1., OMNET++, QSIM;
+general discrete-event systems simulators (EXTEND, SIMPLE++, ARENA, SIMUL8, AutoMod, WITNESS etc.)
+
+     Queuing models can be used for modelling:
+ check-in in the airport;
+ traffic systems;
+ call centres, hospital waiting lists etc.
+Queuing (DEVS) models: Simulation tools
+52
+RTU, 2026
+=== Slide 53 ===
+Queuing (DEVS) models: Passengers flows (AnyLogic environment)
+53
+RTU, 2026
+=== Slide 54 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models.
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+54
+RTU, 2026
+=== Slide 55 ===
+Multilevel simulation models are models with model parameters arranged in a hierarchical structure (the results of previous step are initial for current step) and observing dependent objects, mostly for analysing group effects and inference to a population of groups: 
+
+ education;
+ psychology.
+Individuals
+Neighbourhood
+District
+Student’s group
+Faculty
+University
+Locality impact
+Studies impact
+Multilevel simulation models*
+55
+RTU, 2026
+=== Slide 56 ===
+Tools for multilevel modelling:
+
+ HLM - Hierarchical Linear and Nonlinear Modelling (http://www.ssicentral.com/hlm/index.html#overview)
+
+ MIMOSE – Micro and Multilevel Modelling and Simulation Environment (http://www.uni-koblenz.de/~sozinf/projekte/mimose)
+
+ MLwiN - Software package for fitting multilevel models (Centre for Multilevel Modelling, University of Bristols)                   (http://www.cmm.bristol.ac.uk/MLwiN/index.shtml)
+
+ aML – (“applied Maximum Likelihood”) Statistical software for estimating multilevel, multiprocess models (http://www.applied-ml.com/product/index.html) (free of charge)
+Multilevel simulation models**
+56
+RTU, 2026
+=== Slide 57 ===
+Multilevel simulation models***: Sociotechnicality
+57
+RTU, 2026
+=== Slide 58 ===
+STS Modelling and Simulation techniques*
+THANK YOU FOR YOUR ATTENTION
+
+
+Testing: DE0796 STS Modelling and Simulation Techniques I
+58
+RTU, 2026
+=== Slide 59 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+59
+RTU, 2026
+=== Slide 60 ===
+Cellular automata*
+A cellular automaton (CA) is a discrete model consisting of an infinite, regular grid of cells, each in one of a finite number of binary states: 
+
+the grid can be in any finite number of dimensions (2D, 3D); 
+the state of a cell at time t is a function of the states of a finite number of cells (called its neighbourhood) at time t-1; 
+neighbours are a selection of cells relative to the specified cell;
+every cell has the same rule for updating, based on the values of her neighbourhood; 
+each time the rules are applied to the whole grid a new generation is created. 
+
+Worlfram, S. (2002). A New Kind of Science. "History of Cellular Automata". 
+Cellular Automaton. (2007). http://en.wikipedia.org/wiki/Cellular_automaton#References
+60
+RTU, 2026
+=== Slide 61 ===
+Cellular automata**
+The core concepts of CA were developed in the1960s by John von Neumann as a tool to formally model self-reproducing biological systems.
+Von Neumann J, Burks A W. Theory of self-reproducing automata. Urbana, University of Illinois Press, 1966.
+Oliver Ullrich, Daniel Lückerath (2020). Modeling and Simulation Using Cellular Automata. SNE Simulation Notes Europe 30(3):125-130. DOI: 10.11128/sne.30.en.10526
+61
+RTU, 2026
+=== Slide 62 ===
+Cellular automata: Basics (video)
+62
+RTU, 2026
+=== Slide 63 ===
+Cellular automata***
+A cellular automatons can be used for modelling: 
+
+fault-tolerant quantum computing, image encryption, epidemic spreading, object detection in computer vision, simulation of transportation networks, additive manufacturing, urban growth, climate change-related effects etc.
+
+     Tools for CA modelling:
+
+ CAFUN, LCAU, CASim, Trilife, JCASim, CellLab, CAGE, SITSIM etc.
+
+Cellular automata software. (2007). http://cafaq.com/soft/index.php
+63
+RTU, 2026
+=== Slide 64 ===
+Cellular automata: Fire spreading simulation (video)
+64
+RTU, 2026
+=== Slide 65 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models.
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+65
+RTU, 2026
+=== Slide 66 ===
+Agent-based models (ABM)*
+“An agent is an entity, such as an organism, person or a social organization whose activities (including movements, as well as interactions with the physical and social environment) are programmed as a set of behavioural rules. Each individual agent can have variables associated with it. These variables can change as the agents move and interact with their environment.”
+
+
+Wakeland W. (2007). SySc 525-625 Agent-Based Simulation. http://www.webct.pdx.edu/public/sysc610abs/
+66
+RTU, 2026
+=== Slide 67 ===
+Agent-based models (ABM)**
+“Agent-based simulations have two essential components, agents and environment. An agent’s behaviour is the result of simple rules based on local interactions. The environment has certain autonomy, i.e. it has a certain level of independence from what the agents do, but it can also be influenced by the agents’ behaviour. The interaction of agents among each other, as well as the interaction of agents with the surrounding environment is modelled.”
+
+
+
+Pfeifer R., Fend M., Krafft F.M. (2007). Artificial Life, Chapter 5: Agent-based simulation. http://www.ifi.unizh.ch/ailab/teaching/AL03/lecture/chap5.pdf
+67
+RTU, 2026
+=== Slide 68 ===
+Agent-based models (ABM)***
+Agent-based simulation (ABS) has the following advantages: 
+- distributed control, supporting parallel computations; 
+- supports simulation of pro-active behaviour;
+- ability to change (add/or delete) entities during a simulation;
+- easy to swap (exchange) an agent with other simulated entity, i.e., a real person or a physical machine, (even during a simulation);
+ facilitates simulation of group behaviour in highly dynamic situations allowing the study of "emergent behaviour“;
+ allows interactive or tactile programming.
+
+Davidson P., Carlsson B., Hägg S., Johansson S., Lindh J. (2007). Agent-Based Simulation. http://www.ide.hk-r.se/~pdv/abs.html
+68
+RTU, 2026
+=== Slide 69 ===
+Agent-based models (ABM)****
+Agent-based simulation (ABS) more features: 
+- simulation composed of one or more classes of agents;
+- agents can adapt (learn) dynamically;
+- agents can communicate with environment and with each other;
+- emergent behaviour results from nonlinear interactions of agents;
+- agents are mobile and have spatial explicitness;
+complexity emerges from simplicity;
+ can simulate heterogeneity.
+
+Davidson P., Carlsson B., Hägg S., Johansson S., Lindh J. (2007). Agent-Based Simulation. http://www.ide.hk-r.se/~pdv/abs.html
+69
+RTU, 2026
+=== Slide 70 ===
+Agent-based models (ABM)*****
+Agent-based simulation (ABS) can be used for simulation: 
+
+- the vehicles (and pedestrians) in traffic situations; 
+- actors in financial markets;
+- consumer behaviour; 
+- humans and machines in battle fields;
+- people in crowds;
+ animals and/or plants in eco-systems (environmental models);
+ biological and chemical systems;
+- artificial creatures in computer games;
+- public relations, group communications.
+
+Davidson P., Carlsson B., Hägg S., Johansson S., Lindh J. (2007). Agent-Based Simulation. http://www.ide.hk-r.se/~pdv/abs.html
+70
+RTU, 2026
+=== Slide 71 ===
+Agent-based models (ABM)******
+Agent-based simulation (ABS) simulation tools: 
+
+- AgentSheets – portable, tactile, simple; 
+- NetLogo, AnyLogic – real use, some skills in programming;
+- SWARM, RePast – wide use, powerful, strong object-oriented programming. 
+
+
+
+The Protest Project. Mrugala, S., Christensen, M. (2007). http://l3d.cs.colorado.edu/systems/agentsheets/New-Vista/protest-project/
+71
+RTU, 2026
+=== Slide 72 ===
+Agent-based models: Demonstration (AgentSheet environment)
+72
+RTU, 2026
+=== Slide 73 ===
+Agent-based models: Ecology (NetLogo environment)
+73
+RTU, 2026
+=== Slide 74 ===
+Agent-based models: Epidemiological modelling (Python environment)
+74
+RTU, 2026
+=== Slide 75 ===
+75
+=== Slide 76 ===
+Ginters, E., Dumpis, U., Liñán, L. C., Eroles, M. A. P., Nazemi, K., Matvejevs, A., & Estrada, M. A. R. (2025). A Paradigm for Modeling Infectious Diseases: Assessing Malware Spread in Early-Stage Outbreaks. Mathematics, 13(1), 91. https://doi.org/10.3390/math13010091
+Agent-based models: Epidemiological modelling (Python environment)
+RTU, 2026
+76
+=== Slide 77 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models.
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+77
+RTU, 2026
+=== Slide 78 ===
+Simulation Techniques: Distributed models
+Logistics Route (EXTEND Suite, DEVS)
+Resource Regeneration (NetLogo, ABM/MAS)
+78
+RTU, 2026
+=== Slide 79 ===
+Distributed models: High Level Architecture (HLA)*
+The High-Level Architecture (HLA) is a standard for distributed simulation combining (federating) several simulations. The standard was developed by the US Department of Defence and later transitioned to become an open international IEEE standard 1516-2010. Previous NATO standardisation agreement (STANAG 4482, Standardised Information Technology Protocols for Distributed Interactive Simulation (DIS), adopted in 1995). Today the HLA is used in defence, security and civilian applications simulation.
+"High Level Architecture STANAG 4603 Development (MSG-033)". Retrieved March 3, 2015.
+79
+RTU, 2026
+=== Slide 80 ===
+Distributed models: High Level Architecture (HLA)**
+80
+RTU, 2026
+=== Slide 81 ===
+Distributed models: HLA – NATO Missions simulation
+81
+RTU, 2026
+=== Slide 82 ===
+Distributed models: Easy Communication Environment (ECE)*
+82
+RTU, 2026
+=== Slide 83 ===
+Distributed models: Easy Communication Environment (ECE)**
+VeloRouter simulator is a multi-model simulation system designed in RePast Simphony, PostgreSQL;
+
+  Each sub-model is built with domain specific techniques and simulation approach (ABM, DEVS, SD)
+
+  VeloRouter simulation services communicate among each other and also provides information services through joint Easy Communication Environment (ECE) usable without specific knowledge in software engineering
+83
+RTU, 2026
+=== Slide 84 ===
+Distributed models: Easy Communication Environment (ECE)***
+JSON data format
+Advanced Message Queuing Protocol (AMQP)
+1
+2
+84
+RTU, 2026
+=== Slide 85 ===
+Distributed models: Easy Communication Environment (ECE)****
+85
+RTU, 2026
+=== Slide 86 ===
+Distributed models: Simulation frameworks
+86
+RTU, 2026
+=== Slide 87 ===
+Simulation Techniques
+System dynamics (SD) models;
+
+     Micro analytical simulation models;
+
+     Queuing (DEVS) models;
+
+     Multilevel simulation models;
+
+     Cellular automata;
+
+     Agent-based (ABM) models;
+
+     Distributed simulation;
+
+     Learning and evolutionary models.
+Gilbert, Nigel, Klaus G. Troitzsch (2006). Simulation for the Social Scientist. Second Edition. ISBN 139780335221493, Open University Press.
+87
+RTU, 2026
+=== Slide 88 ===
+Learning and evolutionary models*
+Learning - any change in a system that allows it to perform better the second time on repetition of the same task or on another task drawn from the same population;
+
+      Change occurs in the agent’s parameters (simplest) or in the form of the agent model (more complex);
+
+       Machine learning – right model identification;
+
+       Deep learning – selected model tuning. 
+
+
+Marks R.E. (2007). Learning. http://www.agsm.edu.au/~bobm/teaching/BtM/lect03pr-3.pdf
+88
+RTU, 2026
+=== Slide 89 ===
+Learning and evolutionary models**
+Several kinds of models of learning:
+
+- Artificial Neural Nets (ANNs) - from machine learning, from biological simplifications of the brain’s operation;
+
+Evolutionary models, such as Genetic Algorithms (GAs) and Genetic Programming (GP) - from natural evolution;
+
+ Models from psychology experiments, such as Reinforcement Learning (RL).
+
+
+Marks R.E. (2007). Learning. http://www.agsm.edu.au/~bobm/teaching/BtM/lect03pr-3.pdf
+89
+RTU, 2026
+=== Slide 90 ===
+Artificial Neural Networks (ANN)*
+Artificial Neural Nets (ANNs) – is an interconnected group of artificial neurons that uses a mathematical model or computational model for information processing based on a connectionist approach to computation. In most cases an ANN is an adaptive system that changes its structure based on external or internal information that flows through the network and can be used for modelling non-linear systems.
+
+
+
+Artificial Neural Network.(2007). Wikipedia. http://en.wikipedia.org/wiki/Artificial_neural_network
+90
+RTU, 2026
+=== Slide 91 ===
+Artificial Neural Networks (ANN)**
+Environment
+Signals
+Weighted links
+Calculations
+Environment
+ANN reaction
+Set of simple objects
+Connectionist approach
+Behaviour of difficult system
+91
+RTU, 2026
+=== Slide 92 ===
+Artificial Neural Networks (ANN)***: Essence
+92
+RTU, 2026
+=== Slide 93 ===
+Artificial Neural Networks (ANN)****
+Software tools are used to simulate, research, develop and apply ANN, biological neural networks and in some cases a wider array of adaptive systems:
+
+ Research simulators - Stuttgart Neural Network Simulator (SNNS), PDP++, JavaNNS, XNBC and the BNN Toolbox for MATLAB etc.;
+
+ Data analysis simlators - Alyuda NeuroIntelligence, BrainMaker, EasyNN-plus, MATLAB Neural Network Toolbox, NeuralTools, Netlab, Palisade etc.;
+
+ Component based development environments - JOONE, Peltarion Synapse and NeuroDimension, NeuroSolutions.
+93
+RTU, 2026
+=== Slide 94 ===
+Artificial Neural Networks (ANN)*****
+ANNs are used in/to:
+
+- artificial intelligence, cognitive psychology/cognitive science, neuroscience and philosophy of mind;
+- recognise handwritten digits;
+- recognise human speech;
+- select good credit risks for bank loans;
+- track stock-market trends;
+- recognise objects in video images;
+- explore the development of a shared lexicon (language).
+
+
+Artificial Neural Network.(2007). Wikipedia. http://en.wikipedia.org/wiki/Artificial_neural_network
+94
+RTU, 2026
+=== Slide 95 ===
+Artificial Neural Networks (ANN)******: Practice
+95
+RTU, 2026
+=== Slide 96 ===
+Genetic Algorithms (GA)*
+A genetic algorithm (GA) is a search technique used in computing to find true or approximate solutions to optimization and search problems.
+
+     Genetic algorithms are implemented as a computer simulation in which a population of abstract representations (called chromosomes or the genotype or the genome) of candidates (called individuals, creatures, or phenotypes) evolves toward better solutions of an development.
+
+
+Genetic algorithm.(2007). Wikipedia. http://en.wikipedia.org/wiki/Genetic_algorithms
+96
+RTU, 2026
+=== Slide 97 ===
+Genetic Algorithms (GA)**
+The evolution usually starts from a population of randomly generated individuals and happens in generations. In each generation, the fitness of every individual in the population is evaluated. Multiple individuals are stochastically selected from the current population (based on their fitness), and modified (recombined and possibly mutated) to form a new population. The new population is then used in the next iteration of the algorithm. The algorithm terminates when either a maximum number of generations has been produced, or a satisfactory fitness level has been reached for the population. 
+
+
+Genetic algorithm.(2007). Wikipedia. http://en.wikipedia.org/wiki/Genetic_algorithms
+97
+RTU, 2026
+=== Slide 98 ===
+Genetic Algorithms (GA)***: Essence
+98
+RTU, 2026
+=== Slide 99 ===
+Reinforcement learning*
+Reinforcement learning - what to do to maximize a numerical reward signal. The learner is not told which actions to take, but instead must discover which actions yield the most reward by trying them. Actions may affect not only the immediate reward but also the next situation and/or all subsequent rewards. These two characteristics “trial-and-error search” and “delayed reward” are the two most important distinguishing features of reinforcement learning. 
+
+
+
+Sutton R.S., Barto A.G. (2007). Reinforcement Learning: An Introduction. A Bradford Book. The MIT Press. http://www.cs.ualberta.ca/~sutton/book/ebook/the-book.html
+99
+RTU, 2026
+=== Slide 100 ===
+Reinforcement learning**: Essence
+100
+RTU, 2026
+=== Slide 101 ===
+Reinforcement learning***: Robotics
+101
+RTU, 2026
+=== Slide 102 ===
+STS Modelling and Simulation techniques
+Dual nature
+
+     Complex and stochastic structure
+
+     Distributed simulation
+
+     Different technologies in the same framework
+
+     Real systems
+“Use simulation to develop theories, not accurate models”
+102
+RTU, 2026
+=== Slide 103 ===
+STS Modelling and Simulation techniques*
+THANK YOU FOR YOUR ATTENTION
+
+
+Testing: DE0796 STS Modelling and Simulation Techniques II
+103
+RTU, 2026

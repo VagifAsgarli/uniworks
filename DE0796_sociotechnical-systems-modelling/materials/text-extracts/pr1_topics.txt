@@ -1,0 +1,21 @@
+DE0796 Sociotechnical Systems Modelling 2026 Autumn
+
+                                                 PR1 Summary design topics
+Identity                                                 16.09.
+
+251ADM053    Conceptual Modelling of Cybersecurity Activity Planning
+251ADM055    Application of UML in Cybersecurity Project Specification
+251ADM047    Application of BPMN 2.0 Diagrams in Modelling Cybersecurity Procedures
+251ADM054    Mathematical Modelling of Cyber Threat Propagation
+251ADM056    Analytical Models of Virus and Malware Propagation
+260RDB345    Application of Discrete-Event and Queueing Simulation in Cyber Threat Mitigation Modelling
+251ADM046    Application of Agent-Based Simulation in Cybersecurity Risk Analysis
+260ABG009    Application of Micro-Analytical Modelling in Cybersecurity Planning
+251ADM065    Application of Agent-Based Modelling (ABM) in DoS/DDoS Simulation
+251ADM049    Application of Cellular Automata in Cyber Threat Propagation Modelling
+251ADM050    Application of System Dynamics in Modelling Changes in the State of Cybersecurity Systems
+251ADM048    Application of the Multilevel Approach in Cybersecurity Modelling
+251ADM068    Genetic Algorithms in Cybersecurity
+251ADM051    Application of Reinforcement Learning in Cybersecurity
+251ADM052    Application of Neural Networks and Transformers in Intrusion Detection
+

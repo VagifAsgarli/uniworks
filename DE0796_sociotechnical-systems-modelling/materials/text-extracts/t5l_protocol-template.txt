@@ -1,0 +1,77 @@
+Sociotechnical systems modelling
+
+T5L: Conceptual modelling in BPMN2
+
+Students: (Name, Surname)
+
+Date: DD. MM. 2026
+
+Theoretical Rationale:
+
+(Please answer the following questions below)
+
+What is BPMN2?
+
+What are the differences between CLD and BPMN2 models?
+
+Task and work progress:
+
+1.  Brief summary of the Goal system (selected of your PR1 topic) CLD
+    diagramm
+
+    (Goal system Name)
+
+    (Description)
+
+    (CLD diagram drawing)
+
+    (Draw CLD marking reinforced and balanced flows.)
+
+2.  Design of BPMN2 model of Goal system operation
+
+a)  Transform the CLD of the goal system to BPMN2 notation. When drawing
+      a BPMN2 conceptual model, use the following mandatory notational
+      elements:
+
+-   At least 2 Pools where at least one of the Pools has multiple
+      Swimlanes;
+
+-   At least 4 different Events and/or Intermediate events;
+
+-   All recommended Gateways (OR, AND and XOR);
+
+-   Message and Data lines;
+
+-   Several Data objects.
+
+b)  A BPMN2 model should represent the interaction between Swimlanes and
+    different Pools, representing the operation of the goal system;
+
+c)  The BPMN2 model must be developed in the ArisExpress environment
+    (https://ariscommunity.com/aris-express/download) or
+    (https://ariscommunity.com/aris-express) and the figure of the
+    diagramm must be included in the lab protocol.
+
+3.  Conclusions
+
+    In the Conclusion part, present your opinions about the
+    convenience/difficulties of transforming the CLD to the BPMN2 model.
+    What were the main problems?
+
+4.  References
+
+    (Prepare reference list in APA7 format)
+
+5.  Presentation preparation
+
+  (Prepare the presentation in MS Power Point. Find the presentation
+  template on the ORTUS by given links. Be ready for defence.)
+
+  (T5L work protocol in pdf format name.surname-T5L.pdf, BPMN2 model in
+  ArisExpress format must be sent to egils.ginters@rtu.lv by November
+  22, 2026 24.00).
+
+(All figures must be numbered and have captions. The references must be
+involved in the text body.)
+
+Signature: ____________________________
