@@ -1,0 +1,50 @@
+{
+  "xlim": [0, 16], "ylim": [0, 9], "figsize": [12.8, 7.2], "fontsize": 12,
+  "nodes": {
+    "wolves":     [4.3, 5.2, "Wolves"],
+    "wolfbirths": [4.3, 7.9, "Wolf births"],
+    "strife":     [1.25, 5.0, "Fights between\npacks, diseases"],
+    "deers":      [8.9, 5.2, "Deers (elk)"],
+    "deerbirths": [13.0, 4.3, "Deer births"],
+    "veg":        [10.0, 2.5, "Vegetation\n(willow, aspen)"],
+    "beavers":    [14.5, 2.6, "Beavers"],
+    "ponds":      [12.3, 0.75, "Beaver ponds,\nwater table"],
+    "hunting":    [10.6, 8.2, "Hunting permits\n(people)"],
+    "winter":     [6.5, 3.5, "~Winter severity"],
+    "bears":      [7.5, 2.0, "~Bears, cougars"],
+    "carcass":    [4.6, 2.9, "Carcasses\n(wolf kills)"],
+    "scav":       [4.6, 0.8, "Scavengers (ravens,\neagles, bears)"],
+    "coyotes":    [1.9, 2.5, "Coyotes"]
+  },
+  "links": [
+    ["wolves", "wolfbirths", "+", -0.38],
+    ["wolfbirths", "wolves", "+", -0.38],
+    ["deers", "wolfbirths", "+", 0.22, {"delay": true}],
+    ["wolves", "deers", "-", -0.12],
+    ["wolves", "strife", "+", -0.3],
+    ["strife", "wolves", "-", -0.3],
+    ["deers", "deerbirths", "+", -0.3],
+    ["deerbirths", "deers", "+", -0.3],
+    ["deers", "veg", "-", 0.25],
+    ["veg", "deerbirths", "+", -0.15],
+    ["deers", "hunting", "+", -0.3],
+    ["hunting", "deers", "-", -0.3],
+    ["winter", "deers", "-", 0.0],
+    ["bears", "deers", "-", 0.0],
+    ["veg", "beavers", "+", -0.1, {"delay": true}],
+    ["beavers", "ponds", "+", -0.25],
+    ["ponds", "veg", "+", -0.25, {"delay": true}],
+    ["wolves", "carcass", "+", 0.0],
+    ["carcass", "scav", "+", 0.0],
+    ["wolves", "coyotes", "-", -0.15]
+  ],
+  "loops": [
+    ["R1", 4.3, 6.55, "cw"],
+    ["B1", 6.0, 6.3, "ccw"],
+    ["B2", 2.75, 5.1, "cw"],
+    ["R2", 10.95, 4.75, "cw"],
+    ["B3", 10.45, 3.6, "ccw"],
+    ["B4", 9.75, 6.75, "cw"],
+    ["R3", 12.3, 1.9, "cw"]
+  ]
+}

@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE">
+	<header>
+		<smile version="1.0" namespace="std, isee"/>
+		<name>Yellowstone</name>
+		<uuid>7d3f4b52-0796-4a4c-9e1b-251a0d047e01</uuid>
+		<vendor>RTU DE0796 T4L, Vagif Asgarli</vendor>
+		<product version="1.0" lang="en">yellowstone_model.py (XMILE 1.0 for STELLA)</product>
+	</header>
+	<sim_specs method="Euler" time_units="Years">
+		<start>1995</start>
+		<stop>2045</stop>
+		<dt>0.25</dt>
+	</sim_specs>
+	<model>
+		<variables>
+			<stock name="Wolves">
+				<doc>Wolves living in the park. The run starts in 1995 with the wolves that were released.</doc>
+				<eqn>Wolves_released</eqn>
+				<inflow>wolf_births</inflow>
+				<outflow>wolf_deaths</outflow>
+				<non_negative/>
+				<units>wolves</units>
+			</stock>
+			<stock name="Deers">
+				<doc>Deers (elk) of the northern Yellowstone herd, the main prey of the wolves.</doc>
+				<eqn>Initial_deers</eqn>
+				<inflow>deer_births</inflow>
+				<outflow>deer_deaths</outflow>
+				<outflow>predation</outflow>
+				<non_negative/>
+				<units>deers</units>
+			</stock>
+			<stock name="Vegetation">
+				<doc>Condition of the willow, aspen and cottonwood stands, in percent of what the land can carry (100 = full).</doc>
+				<eqn>Initial_vegetation</eqn>
+				<inflow>regrowth</inflow>
+				<outflow>browsing</outflow>
+				<non_negative/>
+				<units>percent</units>
+			</stock>
+			<stock name="Beavers">
+				<doc>Beaver colonies on the streams of the northern range.</doc>
+				<eqn>Initial_beaver_colonies</eqn>
+				<inflow>colony_growth</inflow>
+				<outflow>colony_loss</outflow>
+				<non_negative/>
+				<units>colonies</units>
+			</stock>
+			<flow name="wolf births">
+				<doc>Pups that survive their first year: the more deers the packs kill, the more pups they raise.</doc>
+				<eqn>Wolves_born_per_deer_eaten*predation</eqn>
+				<non_negative/>
+				<units>wolves/year</units>
+			</flow>
+			<flow name="wolf deaths">
+				<doc>Wolves dying of age, of fights between packs and diseases (more when the wolves are many) and shot by people.</doc>
+				<eqn>Wolves*(Wolf_death_rate+Fights_and_diseases+Wolf_hunting_rate)</eqn>
+				<non_negative/>
+				<units>wolves/year</units>
+			</flow>
+			<flow name="deer births">
+				<doc>Calves that survive: fewer when the herd is close to the number the land can feed.</doc>
+				<eqn>Deer_birth_rate*Deers*MAX(0, 1-Deers/Deer_capacity)</eqn>
+				<non_negative/>
+				<units>deers/year</units>
+			</flow>
+			<flow name="deer deaths">
+				<doc>Deers dying of age and hunger in winter, killed by bears and cougars, and shot by hunters.</doc>
+				<eqn>Deers*(Deer_death_rate*Winter_severity+Bears_and_cougars_rate+Deer_hunting_rate)</eqn>
+				<non_negative/>
+				<units>deers/year</units>
+			</flow>
+			<flow name="predation">
+				<doc>Deers killed by wolves in a year.</doc>
+				<eqn>Kill_coefficient*Wolves*Deers</eqn>
+				<non_negative/>
+				<units>deers/year</units>
+			</flow>
+			<flow name="regrowth">
+				<doc>New growth of willow and aspen: slows down near 100 percent, faster where beaver ponds raise the water table.</doc>
+				<eqn>Vegetation_growth_rate*Vegetation*MAX(0, 1-Vegetation/100)*Beaver_ponds_effect</eqn>
+				<non_negative/>
+				<units>percent/year</units>
+			</flow>
+			<flow name="browsing">
+				<doc>Young willow and aspen eaten by the deers.</doc>
+				<eqn>Browsing_per_1000_deers*Vegetation*Deers/1000</eqn>
+				<non_negative/>
+				<units>percent/year</units>
+			</flow>
+			<flow name="colony growth">
+				<doc>New beaver colonies: beavers settle where tall willow gives food and dam material and the stream is free.</doc>
+				<eqn>Beaver_growth_rate*Beavers*Free_habitat</eqn>
+				<non_negative/>
+				<units>colonies/year</units>
+			</flow>
+			<flow name="colony loss">
+				<doc>Colonies abandoned in a year.</doc>
+				<eqn>Beavers*Beaver_loss_rate</eqn>
+				<non_negative/>
+				<units>colonies/year</units>
+			</flow>
+			<aux name="Wolves released">
+				<doc>Wolves brought to the park at the start (31 were released in 1995-1996). 0 = no reintroduction.</doc>
+				<eqn>31</eqn>
+				<range min="0" max="100"/>
+				<units>wolves</units>
+			</aux>
+			<aux name="Wolves born per deer eaten">
+				<doc>Surviving pups per deer killed by the packs.</doc>
+				<eqn>0.032</eqn>
+				<units>wolves/deers</units>
+			</aux>
+			<aux name="Wolf death rate">
+				<doc>Share of the wolves dying in a year when the wolves are few.</doc>
+				<eqn>0.15</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Strife coefficient">
+				<doc>Extra death rate for every wolf living in the park.</doc>
+				<eqn>0.0012</eqn>
+				<units>1/wolves/year</units>
+			</aux>
+			<aux name="Fights and diseases">
+				<doc>Extra death rate from fights between packs and from diseases; grows with the number of wolves.</doc>
+				<eqn>Strife_coefficient*Wolves</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Wolf hunting rate">
+				<doc>Share of the wolves shot by people in a year (0 inside the park).</doc>
+				<eqn>0</eqn>
+				<range min="0" max="0.3"/>
+				<units>1/year</units>
+			</aux>
+			<aux name="Initial deers">
+				<doc>Deers at the start: about 17,000 were counted when the wolves came back in 1995.</doc>
+				<eqn>17000</eqn>
+				<units>deers</units>
+			</aux>
+			<aux name="Kill coefficient">
+				<doc>Share of the herd one wolf kills in a year (0.0012 of 17,000 deers = 20 deers per wolf per year).</doc>
+				<eqn>0.0012</eqn>
+				<units>1/wolves/year</units>
+			</aux>
+			<aux name="Deer birth rate">
+				<doc>Surviving calves per deer in a year when food is plentiful.</doc>
+				<eqn>0.3</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Deer capacity">
+				<doc>Deers the land can feed: the grassland plus the willow and aspen browse.</doc>
+				<eqn>Grassland_capacity+Browse_capacity_gain*Vegetation/100</eqn>
+				<units>deers</units>
+			</aux>
+			<aux name="Grassland capacity">
+				<doc>Deers the grassland alone can feed.</doc>
+				<eqn>25250</eqn>
+				<units>deers</units>
+			</aux>
+			<aux name="Browse capacity gain">
+				<doc>Extra deers fed when the willow and aspen stands are at 100 percent.</doc>
+				<eqn>8000</eqn>
+				<units>deers</units>
+			</aux>
+			<aux name="Deer death rate">
+				<doc>Share of the deers dying of age and hunger in a normal winter.</doc>
+				<eqn>0.04</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Winter severity">
+				<doc>1 = normal winter; 2 = twice as many deers die of cold and hunger.</doc>
+				<eqn>1</eqn>
+				<range min="0.5" max="3"/>
+				<units>1</units>
+			</aux>
+			<aux name="Bears and cougars rate">
+				<doc>Share of the deers killed by bears and cougars in a year.</doc>
+				<eqn>0.02</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Deer hunting rate">
+				<doc>Share of the herd shot by hunters outside the park in a year.</doc>
+				<eqn>0.05</eqn>
+				<range min="0" max="0.2"/>
+				<units>1/year</units>
+			</aux>
+			<aux name="Initial vegetation">
+				<doc>Condition of the willow and aspen stands at the start: heavily browsed.</doc>
+				<eqn>20</eqn>
+				<units>percent</units>
+			</aux>
+			<aux name="Vegetation growth rate">
+				<doc>Regrowth per year when the stands are far below 100 percent.</doc>
+				<eqn>0.35</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Browsing per 1000 deers">
+				<doc>Share of the vegetation eaten in a year by 1,000 deers.</doc>
+				<eqn>0.0165</eqn>
+				<units>1/deers/year</units>
+			</aux>
+			<aux name="Initial beaver colonies">
+				<doc>Beaver colonies at the start: one colony was found on the northern range in 1996.</doc>
+				<eqn>1</eqn>
+				<units>colonies</units>
+			</aux>
+			<aux name="Beaver growth rate">
+				<doc>New colonies per colony in a year where tall willow is everywhere and the streams are free.</doc>
+				<eqn>2</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Willow habitat">
+				<doc>Share of the streams with willow tall enough for beavers (0 to 1).</doc>
+				<eqn>MAX(0, (Vegetation-Willow_threshold)/(100-Willow_threshold))</eqn>
+				<units>1</units>
+			</aux>
+			<aux name="Willow threshold">
+				<doc>Vegetation condition below which no stream can hold a colony.</doc>
+				<eqn>15</eqn>
+				<units>percent</units>
+			</aux>
+			<aux name="Free habitat">
+				<doc>Share of the streams with tall willow that no colony occupies yet.</doc>
+				<eqn>MAX(0, Willow_habitat-Beavers/Beaver_capacity)</eqn>
+				<units>1</units>
+			</aux>
+			<aux name="Beaver capacity">
+				<doc>Colonies the streams of the northern range can hold.</doc>
+				<eqn>30</eqn>
+				<units>colonies</units>
+			</aux>
+			<aux name="Beaver loss rate">
+				<doc>Share of the colonies abandoned in a year.</doc>
+				<eqn>0.05</eqn>
+				<units>1/year</units>
+			</aux>
+			<aux name="Beaver ponds effect">
+				<doc>Faster regrowth where beaver ponds raise the water table (1 = no beavers).</doc>
+				<eqn>1+Beaver_effect*Beavers/Beaver_capacity</eqn>
+				<units>1</units>
+			</aux>
+			<aux name="Beaver effect">
+				<doc>Extra regrowth when the beavers are at their capacity.</doc>
+				<eqn>0.3</eqn>
+				<units>1</units>
+			</aux>
+		</variables>
+		<views>
+			<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
+				<text_box color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+				<numeric_display color="blue" background="white" font_size="9pt" isee:transparent="false"/>
+				<graph color="black" background="white" font_size="12pt" axis_color="#666666" grid_color="#C8C8C8" isee:graph_area_color="white" legend_position="bottom" isee:transparent="false" isee:hide_border="false"/>
+				<table color="black" background="#E0E0E0" text_align="right" font_size="12pt" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" isee:report_month_names="false" interval="1" report_balances="beginning" report_flows="instantaneous"/>
+				<button color="black" background="#E0E0E0" font_size="9pt" transparent="false" corner_radius="0" isee:flat="false" icon_side="top"/>
+				<slider color="black" background="white" num_ticks="3" label_side="top" wrap_title="true" input_expands="true" input_width="100"/>
+				<knob color="black" background="white" label_side="bottom" wrap_title="true"/>
+				<numeric_input color="black" background="white" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
+				<switch color="black" background="#E0E0E0" font_size="9pt" label_side="top" wrap_title="true" isee:appearance="switch"/>
+			</style>
+			<view isee:show_pages="false" page_width="1240" page_height="1250" type="stock_flow">
+				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="9pt" padding="2" border_color="black" border_width="thin" border_style="none">
+					<stock color="blue" background="white" font_color="blue" label_side="top">
+						<shape type="rectangle" width="45" height="35"/>
+					</stock>
+					<flow color="blue" background="white" font_color="blue" label_side="bottom"/>
+					<aux color="blue" background="white" font_color="blue" label_side="bottom">
+						<shape type="circle" radius="18"/>
+					</aux>
+					<connector color="#FF007F" background="white" font_color="#FF007F" isee:thickness="1"/>
+					<text_box color="black" background="white"/>
+					<numeric_display color="black" background="white" isee:transparent="false"/>
+					<graph color="black" background="white" font_size="12pt" axis_color="#666666" grid_color="#C8C8C8" isee:graph_area_color="white" legend_position="bottom" isee:transparent="false" isee:hide_border="false"/>
+					<table color="black" background="white" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" isee:report_month_names="false" interval="1" report_balances="beginning" report_flows="instantaneous"/>
+				</style>
+				<connector uid="1" angle="195.550">
+					<from>Wolves_born_per_deer_eaten</from>
+					<to>wolf_births</to>
+				</connector>
+				<connector uid="2" angle="162.722">
+					<from>predation</from>
+					<to>wolf_births</to>
+				</connector>
+				<connector uid="3" angle="180.000">
+					<from>Wolves</from>
+					<to>wolf_deaths</to>
+				</connector>
+				<connector uid="4" angle="47.060">
+					<from>Wolf_death_rate</from>
+					<to>wolf_deaths</to>
+				</connector>
+				<connector uid="5" angle="99.230">
+					<from>Fights_and_diseases</from>
+					<to>wolf_deaths</to>
+				</connector>
+				<connector uid="6" angle="19.051">
+					<from>Wolf_hunting_rate</from>
+					<to>wolf_deaths</to>
+				</connector>
+				<connector uid="7" angle="47.060">
+					<from>Deer_birth_rate</from>
+					<to>deer_births</to>
+				</connector>
+				<connector uid="8" angle="180.000">
+					<from>Deers</from>
+					<to>deer_births</to>
+				</connector>
+				<connector uid="9" angle="90.110">
+					<from>Deer_capacity</from>
+					<to>deer_births</to>
+				</connector>
+				<connector uid="10" angle="0.000">
+					<from>Deers</from>
+					<to>deer_deaths</to>
+				</connector>
+				<connector uid="11" angle="89.795">
+					<from>Deer_death_rate</from>
+					<to>deer_deaths</to>
+				</connector>
+				<connector uid="12" angle="129.946">
+					<from>Winter_severity</from>
+					<to>deer_deaths</to>
+				</connector>
+				<connector uid="13" angle="158.057">
+					<from>Bears_and_cougars_rate</from>
+					<to>deer_deaths</to>
+				</connector>
+				<connector uid="14" angle="195.222">
+					<from>Deer_hunting_rate</from>
+					<to>deer_deaths</to>
+				</connector>
+				<connector uid="15" angle="1.790">
+					<from>Kill_coefficient</from>
+					<to>predation</to>
+				</connector>
+				<connector uid="16" angle="345.817">
+					<from>Wolves</from>
+					<to>predation</to>
+				</connector>
+				<connector uid="17" angle="90.000">
+					<from>Deers</from>
+					<to>predation</to>
+				</connector>
+				<connector uid="18" angle="269.523">
+					<from>Vegetation_growth_rate</from>
+					<to>regrowth</to>
+				</connector>
+				<connector uid="19" angle="180.000">
+					<from>Vegetation</from>
+					<to>regrowth</to>
+				</connector>
+				<connector uid="20" angle="343.127">
+					<from>Beaver_ponds_effect</from>
+					<to>regrowth</to>
+				</connector>
+				<connector uid="21" angle="160.292">
+					<from>Browsing_per_1000_deers</from>
+					<to>browsing</to>
+				</connector>
+				<connector uid="22" angle="0.000">
+					<from>Vegetation</from>
+					<to>browsing</to>
+				</connector>
+				<connector uid="23" angle="284.581">
+					<from>Deers</from>
+					<to>browsing</to>
+				</connector>
+				<connector uid="24" angle="73.740">
+					<from>Beaver_growth_rate</from>
+					<to>colony_growth</to>
+				</connector>
+				<connector uid="25" angle="0.000">
+					<from>Beavers</from>
+					<to>colony_growth</to>
+				</connector>
+				<connector uid="26" angle="140.870">
+					<from>Free_habitat</from>
+					<to>colony_growth</to>
+				</connector>
+				<connector uid="27" angle="180.000">
+					<from>Beavers</from>
+					<to>colony_loss</to>
+				</connector>
+				<connector uid="28" angle="54.689">
+					<from>Beaver_loss_rate</from>
+					<to>colony_loss</to>
+				</connector>
+				<connector uid="29" angle="172.875">
+					<from>Strife_coefficient</from>
+					<to>Fights_and_diseases</to>
+				</connector>
+				<connector uid="30" angle="231.340">
+					<from>Wolves</from>
+					<to>Fights_and_diseases</to>
+				</connector>
+				<connector uid="31" angle="21.038">
+					<from>Grassland_capacity</from>
+					<to>Deer_capacity</to>
+				</connector>
+				<connector uid="32" angle="55.008">
+					<from>Browse_capacity_gain</from>
+					<to>Deer_capacity</to>
+				</connector>
+				<connector uid="33" angle="111.801">
+					<from>Vegetation</from>
+					<to>Deer_capacity</to>
+				</connector>
+				<connector uid="34" angle="215.538">
+					<from>Vegetation</from>
+					<to>Willow_habitat</to>
+				</connector>
+				<connector uid="35" angle="163.301">
+					<from>Willow_threshold</from>
+					<to>Willow_habitat</to>
+				</connector>
+				<connector uid="36" angle="165.964">
+					<from>Willow_habitat</from>
+					<to>Free_habitat</to>
+				</connector>
+				<connector uid="37" angle="339.444">
+					<from>Beavers</from>
+					<to>Free_habitat</to>
+				</connector>
+				<connector uid="38" angle="213.690">
+					<from>Beaver_capacity</from>
+					<to>Free_habitat</to>
+				</connector>
+				<connector uid="39" angle="219.806">
+					<from>Beaver_effect</from>
+					<to>Beaver_ponds_effect</to>
+				</connector>
+				<connector uid="40" angle="38.660">
+					<from>Beavers</from>
+					<to>Beaver_ponds_effect</to>
+				</connector>
+				<connector uid="41" angle="140.194">
+					<from>Beaver_capacity</from>
+					<to>Beaver_ponds_effect</to>
+				</connector>
+				<stock label_side="top" x="360" y="170" name="Wolves"/>
+				<stock label_side="center" x="820" y="350" name="Deers"/>
+				<stock label_side="top" x="820" y="720" name="Vegetation"/>
+				<stock label_side="top" x="360" y="720" name="Beavers"/>
+				<flow label_side="top" x="446.25" y="170" name="wolf births">
+					<pts>
+						<pt x="510" y="170"/>
+						<pt x="382.5" y="170"/>
+					</pts>
+				</flow>
+				<flow label_side="top" x="263.75" y="170" name="wolf deaths">
+					<pts>
+						<pt x="337.5" y="170"/>
+						<pt x="190" y="170"/>
+					</pts>
+				</flow>
+				<flow label_side="top" x="723.75" y="350" name="deer births">
+					<pts>
+						<pt x="650" y="350"/>
+						<pt x="797.5" y="350"/>
+					</pts>
+				</flow>
+				<flow label_side="top" x="916.25" y="350" name="deer deaths">
+					<pts>
+						<pt x="842.5" y="350"/>
+						<pt x="990" y="350"/>
+					</pts>
+				</flow>
+				<flow label_side="right" x="820" y="286.25" name="predation">
+					<pts>
+						<pt x="820" y="332.5"/>
+						<pt x="820" y="240"/>
+					</pts>
+				</flow>
+				<flow label_side="bottom" x="723.75" y="720" name="regrowth">
+					<pts>
+						<pt x="650" y="720"/>
+						<pt x="797.5" y="720"/>
+					</pts>
+				</flow>
+				<flow label_side="bottom" x="916.25" y="720" name="browsing">
+					<pts>
+						<pt x="842.5" y="720"/>
+						<pt x="990" y="720"/>
+					</pts>
+				</flow>
+				<flow label_side="top" x="446.25" y="720" name="colony growth">
+					<pts>
+						<pt x="510" y="720"/>
+						<pt x="382.5" y="720"/>
+					</pts>
+				</flow>
+				<flow label_side="top" x="263.75" y="720" name="colony loss">
+					<pts>
+						<pt x="337.5" y="720"/>
+						<pt x="190" y="720"/>
+					</pts>
+				</flow>
+				<aux label_side="bottom" x="360" y="80" name="Wolves released"/>
+				<aux label_side="top" x="590" y="130" name="Wolves born per deer eaten"/>
+				<aux label_side="bottom" x="180" y="260" name="Wolf death rate"/>
+				<aux label_side="top" x="360" y="280" name="Strife coefficient"/>
+				<aux label_side="bottom" x="280" y="270" name="Fights and diseases"/>
+				<aux label_side="bottom" x="90" y="230" name="Wolf hunting rate"/>
+				<aux label_side="top" x="900" y="260" name="Initial deers"/>
+				<aux label_side="left" x="700" y="290" name="Kill coefficient"/>
+				<aux label_side="bottom" x="640" y="440" name="Deer birth rate"/>
+				<aux label_side="right" x="724" y="480" name="Deer capacity"/>
+				<aux label_side="left" x="620" y="520" name="Grassland capacity"/>
+				<aux label_side="bottom" x="640" y="600" name="Browse capacity gain"/>
+				<aux label_side="bottom" x="916" y="420" name="Deer death rate"/>
+				<aux label_side="bottom" x="1000" y="450" name="Winter severity"/>
+				<aux label_side="bottom" x="1090" y="420" name="Bears and cougars rate"/>
+				<aux label_side="top" x="1100" y="300" name="Deer hunting rate"/>
+				<aux label_side="right" x="920" y="640" name="Initial vegetation"/>
+				<aux label_side="top" x="724" y="690" name="Vegetation growth rate"/>
+				<aux label_side="bottom" x="1000" y="750" name="Browsing per 1000 deers"/>
+				<aux label_side="bottom" x="290" y="640" name="Initial beaver colonies"/>
+				<aux label_side="bottom" x="420" y="810" name="Beaver growth rate"/>
+				<aux label_side="bottom" x="680" y="820" name="Willow habitat"/>
+				<aux label_side="bottom" x="780" y="850" name="Willow threshold"/>
+				<aux label_side="bottom" x="520" y="780" name="Free habitat"/>
+				<aux label_side="right" x="580" y="740" name="Beaver capacity"/>
+				<aux label_side="bottom" x="200" y="810" name="Beaver loss rate"/>
+				<aux label_side="left" x="460" y="640" name="Beaver ponds effect"/>
+				<aux label_side="top" x="520" y="590" name="Beaver effect"/>
+				<stacked_container uid="42" x="60" y="840" width="540" height="330">
+					<graph background="white" font_family="Arial" axis_label_font_size="9pt" x="330" y="1005" type="time_series" isee:time_precision="1" isee:time_scale_by="1" show_grid="true" include_units_in_legend="false" plot_numbers="true" num_x_grid_lines="5" num_y_grid_lines="5" num_x_labels="6" num_y_labels="3" title="Wolves and Deers" left_axis_multi_scale="true" left_axis_auto_scale="true" right_axis_multi_scale="true" right_axis_auto_scale="true">
+						<plot color="blue" pen_width="1" index="0" show_y_axis="true">
+							<format precision="1" scale_by="1"/>
+							<entity name="Wolves"/>
+						</plot>
+						<plot color="red" pen_width="1" index="1" show_y_axis="true">
+							<format precision="1" scale_by="1"/>
+							<entity name="Deers"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<stacked_container uid="43" x="640" y="840" width="540" height="330">
+					<graph background="white" font_family="Arial" axis_label_font_size="9pt" x="910" y="1005" type="time_series" isee:time_precision="1" isee:time_scale_by="1" show_grid="true" include_units_in_legend="false" plot_numbers="true" num_x_grid_lines="5" num_y_grid_lines="5" num_x_labels="6" num_y_labels="3" title="Vegetation and Beavers" left_axis_multi_scale="true" left_axis_auto_scale="true" right_axis_multi_scale="true" right_axis_auto_scale="true">
+						<plot color="blue" pen_width="1" index="0" show_y_axis="true">
+							<format precision="1" scale_by="1"/>
+							<entity name="Vegetation"/>
+						</plot>
+						<plot color="red" pen_width="1" index="1" show_y_axis="true">
+							<format precision="1" scale_by="1"/>
+							<entity name="Beavers"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<stacked_container uid="44" x="60" y="1190" width="520" height="300">
+					<table background="#E0E0E0" font_family="Arial" font_size="9pt" orientation="vertical" column_width="80" interval="5" report_balances="beginning" report_flows="instantaneous" header_text_align="center" header_font_size="9pt" x="60" y="1190" width="520" height="300" title="Stocks every 5 years">
+						<item type="time"/>
+						<item>
+							<format precision="0.1" scale_by="1" delimit_000s="true"/>
+							<entity name="Wolves"/>
+						</item>
+						<item>
+							<format precision="0.1" scale_by="1" delimit_000s="true"/>
+							<entity name="Deers"/>
+						</item>
+						<item>
+							<format precision="0.1" scale_by="1" delimit_000s="true"/>
+							<entity name="Vegetation"/>
+						</item>
+						<item>
+							<format precision="0.1" scale_by="1" delimit_000s="true"/>
+							<entity name="Beavers"/>
+						</item>
+					</table>
+				</stacked_container>
+			</view>
+			<view isee:show_pages="false" background="white" page_width="1066" page_height="600" home_view="true" type="interface">
+				<style/>
+			</view>
+		</views>
+	</model>
+</xmile>
