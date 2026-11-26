@@ -319,6 +319,8 @@ def build(out, bpmn_figure, draft, date):
     text_after(at(62, "(T5L work protocol"), doc, C.PRESENTATION_NOTE, before=6, indent=False).paragraph_format.left_indent = Cm(1.75)
 
     at(69, "Signature:")
+    doc.core_properties.last_modified_by = C.NAME
+    doc.core_properties.title = "T5L: Conceptual modelling in BPMN2"
     doc.save(out)
     print(f"written {out} ({'DRAFT, ' if draft else ''}BPMN2 figure: {os.path.basename(bpmn_figure)}, {w} x {h} px)")
 

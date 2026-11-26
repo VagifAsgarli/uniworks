@@ -349,6 +349,8 @@ def build(out=OUT):
     stability_slide(deck)
     reference_slides(deck)
     os.makedirs(os.path.dirname(out), exist_ok=True)
+    prs.core_properties.last_modified_by = NAME.split(",")[0]
+    prs.core_properties.title = "T4LPrim: Causal Loops Diagram Design"
     prs.save(out)
     print(f"written {os.path.normpath(out)}: {len(prs.slides)} slides")
 

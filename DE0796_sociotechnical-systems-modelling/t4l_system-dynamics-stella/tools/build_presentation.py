@@ -276,6 +276,8 @@ def build(out, shots):
     if draft and not out.endswith("_DRAFT.pptx"):
         out = out[:-5] + "_DRAFT.pptx"
     os.makedirs(os.path.dirname(out), exist_ok=True)
+    deck.prs.core_properties.last_modified_by = C.NAME
+    deck.prs.core_properties.title = "T4L: System Dynamics Simulation in STELLA"
     deck.prs.save(out)
     print(f"written {os.path.normpath(out)}: {len(deck.prs.slides)} slides" + ("  (DRAFT: STELLA screenshots missing)" if draft else ""))
 

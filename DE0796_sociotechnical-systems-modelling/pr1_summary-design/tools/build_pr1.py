@@ -186,6 +186,8 @@ def build(out):
         add(doc, ref, align=WD_ALIGN_PARAGRAPH.LEFT, after=4, hanging=1.27)
     add(doc, "", after=4)
     add(doc, AI_NOTE, align=WD_ALIGN_PARAGRAPH.LEFT, after=0)
+    doc.core_properties.author = doc.core_properties.last_modified_by = NAME
+    doc.core_properties.title = TITLE
     doc.save(out)
     words = sum(len(t.split()) for t in PARAGRAPHS)
     print(f"written {out}: {words} words in the five paragraphs, {len(REFERENCES)} references")

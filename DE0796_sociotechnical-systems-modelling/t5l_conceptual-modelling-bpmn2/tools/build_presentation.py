@@ -281,6 +281,8 @@ def build(out, bpmn_figure, draft, detail_figures=None):
     add_text(s, [[(ref.replace("*", ""), "")] for ref in C.REFERENCES] +
              [[(C.AI_NOTE.replace("drafting the text", "drafting the text and the slides"), "i")]], size=10, gap=5)
 
+    prs.core_properties.last_modified_by = C.NAME
+    prs.core_properties.title = "T5L: Conceptual Modelling in BPMN2"
     prs.save(out)
     print(f"written {out}: {len(prs.slides)} slides ({'DRAFT' if draft else 'final'}, BPMN2 figure "
           f"{os.path.basename(bpmn_figure)})")

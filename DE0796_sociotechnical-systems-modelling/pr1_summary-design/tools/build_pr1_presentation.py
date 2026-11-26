@@ -596,6 +596,8 @@ def build(template=TEMPLATE, out=OUT):
     further_slide(deck)
     reference_slides(deck)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
+    deck.prs.core_properties.last_modified_by = NAME.split(",")[0]
+    deck.prs.core_properties.title = WORK + ": " + " ".join(TOPIC)
     deck.prs.save(out)
     print(f"written {out}: {len(deck.prs.slides)} slides")
 

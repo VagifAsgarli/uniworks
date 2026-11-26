@@ -202,6 +202,8 @@ def build(out, shots, date):
     if draft and not out.endswith("_DRAFT.docx"):
         out = out[:-5] + "_DRAFT.docx"
     os.makedirs(os.path.dirname(out), exist_ok=True)
+    doc.core_properties.last_modified_by = C.NAME
+    doc.core_properties.title = "T4L: System Dynamics Simulation in STELLA environment"
     doc.save(out)
     missing = [C.SHOTS[k] for k, (_, real) in pics.items() if not real]
     print(f"written {os.path.normpath(out)}" + (f"  DRAFT, missing STELLA screenshots: {', '.join(missing)}" if draft else
