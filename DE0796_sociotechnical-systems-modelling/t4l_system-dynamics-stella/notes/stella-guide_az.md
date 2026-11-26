@@ -1,6 +1,7 @@
 # T4L: Yellowstone modelini STELLA-da necə qurmalı, işlətməli və şəkillərini çəkməli
 
-Bu təlimat iki yol üçün yazılıb. Hansı STELLA səndədirsə, o yolu seç:
+Bu təlimat iki yol üçün yazılıb. Müəllim köhnə STELLA ilə işləyir (tapşırıqda "STM format", öz
+modeli `.STM` faylıdır), ona görə **A yolu əsasdır**; B yolu yalnız 9.0.4 tapılmasa:
 
 | Səndə olan proqram | Yol | Vaxt |
 |---|---|---|

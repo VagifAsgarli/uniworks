@@ -36,13 +36,20 @@ Sənin işin: izahı oxu. Xülasənin tarixi 30 noyabr 2026 yazılıb; başqa ta
 
 ## 3. T4L: STELLA
 
-Müəllimin slaydlarındakı STELLA köhnə versiyadır (9, fayl `.STM`). İki yol var:
+**Hansı versiya: STELLA 9.0.4** (qrup yoldaşının dediyi). Səbəbi slaydlarda görünür: müəllim özü
+köhnə STELLA ilə işləyir. Tapşırıqda "STM format" yazılıb, slaydlardakı şəkillər köhnə
+STELLA-dandır, T2 mühazirəsində isə müəllimin öz modelinə keçid `CesDem2017.STM` faylına gedir.
+Köhnə STELLA yeni versiyanın `.stmx` faylını aça bilmir, ona görə müəllim yalnız `.STM` aça bilər.
+(Mühazirələrdəki videolarda STELLA yoxdur; onu dərsdə canlı göstərir.)
 
-- **STELLA 9.0.4 quraşdırıcısı səndə və ya qrup yoldaşlarında varsa**: onu quraşdır. Modeli
-  təlimatla əl ilə qurursan (1,5–2 saat). Fayl `.STM` olur, müəllimin istədiyi kimi.
-- **Yoxdursa**: `https://www.iseesystems.com/store/products/stella-architect.aspx` səhifəsindən
-  Stella Architect-in 30 günlük sınaq versiyasını quraşdır. Hazır faylı açırsan (30–40 dəqiqə).
-  Fayl `.stmx` olur.
+- **Əsas yol: STELLA 9.0.4.** Qrup yoldaşından soruş: quraşdırıcını haradan götürüblər (müəllim
+  veribsə və ya universitetin kompüter otağında varsa, ən yaxşısı odur) və onların versiyası
+  modeli `.STM` kimi **saxlaya bilirmi** (köhnə sınaq versiyaları saxlamır). Kompüterin Windows-dur,
+  STELLA 9 orada işləyir. Modeli təlimatın A yolu ilə əl ilə qurursan (1,5–2 saat).
+- **Ehtiyat yol: Stella Architect** (yalnız 9.0.4 tapılmasa). 30 günlük sınaq versiyası:
+  `https://www.iseesystems.com/store/products/stella-architect.aspx`. Hazır faylı açırsan
+  (30–40 dəqiqə), fayl `.stmx` olur və müəllimə məktubda bunu yazırıq. Riski: müəllim bu faylı
+  öz STELLA-sında aça bilməyəcək.
 
 Addımlar:
 
@@ -124,7 +131,5 @@ deyil, mənim nümunə çəkilişimdir və "DRAFT" yazılıb. **Qaralamanı mü�
 
 ## 6. Mənə yazmalı olduqların
 
-- STELLA 9.0.4 quraşdırıcısı səndə və ya yoldaşlarında varmı? (Yoxdursa, Stella Architect ilə
-  gedirik.)
-- Kompüterin Windows-dur, yoxsa Mac?
+- STELLA 9.0.4-ü qrup yoldaşından ala bildinmi və o, modeli `.STM` kimi saxlayırmı?
 - T4L şəkilləri və model faylı; T5L üçün `.adf` və `.pdf`.

@@ -68,7 +68,7 @@ annotations): none found.
 
 | Tool | Used for | Notes |
 |---|---|---|
-| STELLA (isee systems) | T4L model and its demonstration | the lab deck shows classic STELLA with Map, Model, Interface and Equation layers (version 9; file format STM). The current version, Stella Architect, has a 30-day evaluation and saves STMX; it cannot save STM. Both routes are prepared in the T4L folder |
+| STELLA (isee systems) | T4L model and its demonstration | the lecturer works in classic STELLA 9 (Map, Model, Interface and Equation layers; file format STM; his own demo model is `CesDem2017.STM`, linked from T2 slide 37). The current version, Stella Architect, has a 30-day evaluation and saves STMX, which STELLA 9 cannot open. Both routes are prepared in the T4L folder; STELLA 9.0.4 is the recommended one |
 | ARIS Express 2.4 | T5L BPMN2 model | free download from ariscommunity.com (registration); saves `.adf`, exports PDF. The `.adf` format is closed, so the diagram has to be drawn in ARIS Express itself; the program asks for the user's ARIS Community login at first start, so the student draws it on their own computer |
 | MS PowerPoint | every presentation | the lecturer's templates are in the assignment folders |
 

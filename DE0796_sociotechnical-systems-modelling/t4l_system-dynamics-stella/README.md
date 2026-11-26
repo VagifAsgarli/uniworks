@@ -44,17 +44,28 @@
 
 ## Which STELLA
 
-The lab deck shows classic STELLA (Map, Model, Interface and Equation layers) and asks for the
-model "in STM format", which is the format of STELLA 9. Two routes are prepared:
+The lecturer works in classic STELLA, version 9 (file format STM); a classmate names the version
+as 9.0.4. The course materials say so in three places:
+
+- the task asks for the model "in STM format" (lab deck, slide 15; protocol template);
+- the lab deck describes the four tabbed layers Map, Model, Interface and Equation, cites Fisher's
+  textbook for STELLA 9 (2nd edition, 2007), and its screenshots show the classic graph pad and
+  equation listing;
+- in the T2 lecture the link "Demonstrations in STELLA environment" (slide 37) points to the
+  lecturer's own model `CesDem2017.STM`.
+
+None of the videos embedded in the lectures shows STELLA (they cover other topics and tools); the
+lecturer demonstrates STELLA live. STELLA 9 cannot open the STMX files of the current version, so
+the first route below is the one that follows the lecturer's rules.
 
 | Route | Model file handed in | Work for the student |
 |---|---|---|
-| STELLA 9.0.4, if the installer is available from the lecturer or a classmate | `VagifAsgarli-T4L.STM` | build the model by hand with the guide (1.5–2 hours); STELLA 9 cannot open `.stmx` |
-| Stella Architect (current version, 30-day evaluation) | `VagifAsgarli-T4L.stmx` | open the prepared file, check it, take the screenshots (30–40 minutes) |
+| **STELLA 9.0.4** (recommended; the installer the classmates use, or a computer of the university lab) | `VagifAsgarli-T4L.STM` | build the model by hand with the guide (1.5–2 hours) |
+| Stella Architect (current version, 30-day evaluation), only if STELLA 9 cannot be obtained | `VagifAsgarli-T4L.stmx` | open the prepared file, check it, take the screenshots (30–40 minutes) |
 
-Stella Architect cannot save the old STM format. If that route is used, the e-mail to the lecturer
-says so in one sentence: "The model was built in Stella Architect, the current version of STELLA,
-which saves in STMX format."
+Stella Architect cannot save the old STM format, and the lecturer's STELLA cannot open STMX. If the
+second route is used, the e-mail to the lecturer says so in one sentence: "The model was built in
+Stella Architect, the current version of STELLA, which saves in STMX format."
 
 ## The model in short
 
