@@ -15,11 +15,27 @@ Hazır nümunə şəkil (buna baxaraq çək):
 - modelin özü BPMN 2.0 faylı kimi: [`tools/cyberflow_incident-handling.bpmn`](../tools/cyberflow_incident-handling.bpmn).
   Bu fayl ArisExpress üçün deyil, yalnız nümunədir.
 
-> **Vacib qeyd.** ArisExpress bu mühitdə quraşdırılmayıb, ona görə proqramdakı düymə və menyu
-> adlarını özüm yoxlaya bilmədim. Aşağıda yazdığım simvol və menyu adları bir az fərqli ola
-> bilər. Simvolu adına görə yox, **şəklinə görə** seç. Müəllimin öz nümunə faylı
-> (`materials/t5l_lecturer-demo_restaurant-visit.adf`) ArisExpress-də açılır: orada Pool, Task,
-> Gateway, Message, Data object və Data store simvollarının necə göründüyünü görə bilərsən.
+> **Vacib qeyd: nə yoxlanılıb, nə yox.** ARIS Express 2.4j (sənin göndərdiyin `express.jnlp`)
+> burada işə salındı, amma ilk açılışda **Activation Wizard** ARIS Community istifadəçi adını və
+> parolunu tələb edir. Sənin hesabın məndə yoxdur və olmamalıdır, ona görə proqramın içinə
+> girib diaqramı özüm çəkə bilmədim: **diaqramı sən çəkirsən**. Aşağıdakı adlar isə artıq
+> təxmin deyil: simvol adlarını, menyu və pəncərə adlarını proqramın öz fayllarından və
+> daxili köməyindən (Help) götürmüşəm. Yoxlaya bilmədiyim tək şey budur: hər düymə pəncərənin
+> harasında durur və simvol panelində hansı simvollar ilk baxışda görünür. Tapmasan, 8-ci
+> bölməyə bax. Müəllimin nümunə faylı (`materials/t5l_lecturer-demo_restaurant-visit.adf`)
+> ArisExpress-də açılır: orada Pool, Task, Gateway, Message, Data object və Data store
+> simvollarının necə göründüyünü görə bilərsən.
+
+### İlk açılış (bir dəfə)
+
+Proqram ilk dəfə açılanda **Activation Wizard** dörd addım göstərir:
+
+1. **Welcome to ARIS Express**: `Next`.
+2. **License agreement**: «I have read and accept the license agreement» işarəsini qoy, `Next`.
+3. **Enter login data**: `User` və `Password` xanalarına ARIS Community hesabının (qeydiyyatdan
+   keçdiyin `ariscommunity.com`) adını və parolunu yaz. İnternet lazımdır: məlumat HTTPS ilə
+   ARIS Community-də yoxlanılır. Hesabın yoxdursa, eyni pəncərədə `Register now.` keçidi var.
+4. **Select language**: `English` seç (bu təlimatdakı adlar ingiliscədir).
 
 ## 1. Diaqramda nə olmalıdır (müəllimin məcburi elementləri)
 
@@ -35,7 +51,7 @@ Cəmi: 19 Task, 11 Event, 5 Gateway, 37 Sequence flow, 4 Message flow, 8 Data x�
 
 ## 2. Simvollar (ArisExpress, model tipi «BPMN diagram»)
 
-| Cədvəldəki tip | Görünüşü | ArisExpress-də təxmini adı |
+| Cədvəldəki tip | Görünüşü | ArisExpress-də adı (proqramın fayllarından yoxlanıb) |
 |---|---|---|
 | Pool | böyük düzbucaqlı, solda şaquli ad | Pool |
 | Swimlane | Pool-un içində üfüqi zolaq | Lane |
@@ -54,16 +70,26 @@ Cəmi: 19 Task, 11 Event, 5 Gateway, 37 Sequence flow, 4 Message flow, 8 Data x�
 | Message flow | qırıq xətt, başında kiçik dairə, ucunda boş ox | iki Pool arasında birləşdirəndə proqram özü seçir |
 | Data xətti (data association) | nöqtəli xətt, ucunda açıq ox | Task ilə Data object arasında birləşdirəndə proqram özü seçir |
 
-Hadisənin növünü (Timer, Message) adətən simvol panelində ayrıca simvol kimi, ya da simvolun
-üzərində sağ düymə ilə seçirlər. Tapmasan, adi Intermediate event qoy və adını cədvəldəki kimi
-yaz: ad «Time limit: ...» olduğu üçün mənası aydındır, amma düzgün simvol daha yaxşıdır.
+Bu simvolların hamısı «BPMN diagram» model tipində icazə verilən simvollar siyahısında var:
+növlü hadisələr ayrıca simvoldur (`Message start event`, `Timer intermediate event`,
+`Message intermediate event (catch)`), üç Gateway də ayrıca simvoldur (`Exclusive gateway`,
+`Parallel gateway`, `Inclusive gateway`). Simvol panelində (**Symbols** bar) hamısı ilk
+baxışda görünməyə bilər. Obyektin yanında çıxan kiçik alətlər zolağına (mini toolbar) simvol
+əlavə etmək üçün **Add symbols** pəncərəsi var: «Available symbols» siyahısında lazım olanı
+iki dəfə bas və ya seçib `Add` bas. Heç cür tapmasan, adi `Intermediate event` qoy və adını
+cədvəldəki kimi yaz: ad «Time limit: ...» olduğu üçün mənası aydındır, amma düzgün simvol
+daha yaxşıdır.
 
 ## 3. Çəkmə ardıcıllığı
 
-1. **Yeni model.** ArisExpress-i aç, yeni model yarat, tip kimi «BPMN diagram» seç.
+1. **Yeni model.** ArisExpress-i aç. **Home** səhifəsində «Model types» altında
+   **BPMN diagram** seç (və ya əsas menyuda `New...`, açılan **New model** pəncərəsində
+   «BPMN diagram»).
 2. **Pool və Swimlane-lər.** Əvvəl böyük Pool qoy, adını yaz: `Organisation (essential entity)`.
    İçinə dörd Lane qoy, yuxarıdan aşağı bu ardıcıllıqla: `Employee`, `IT operations`,
-   `SOC analyst`, `Cybersecurity manager (CISO)`. Altına ikinci Pool qoy:
+   `SOC analyst`, `Cybersecurity manager (CISO)`. Zolaq əlavə etmək üçün proqramda **Add new
+   lanes** pəncərəsi var: «Number of lanes» xanasında say, sonra «Add lanes below» (aşağıya)
+   və ya «Add lanes above» (yuxarıya). Altına ikinci Pool qoy:
    `CSIRT (CERT.LV)` (zolaqsız). İki Pool arasında bir az boş yer saxla: Message flow-ların
    adları ora yazılır. IT operations zolağını digərlərindən hündür et (üç Task alt-alta durur).
 3. **Elementlər.** 4-cü bölmədəki cədvəllə soldan sağa get, hər elementi öz zolağına qoy və
@@ -211,11 +237,16 @@ Xətlərin elementə hansı tərəfdən girdiyini nümunə şəkildən götür. 
 
 ## 7. Saxlamaq və göndərmək
 
-1. **ADF.** File → Save as: fayl adı `vagif.asgarli-T5L.adf` (ArisExpress-in öz formatı).
-2. **PDF.** File menyusunda PDF yaratmaq əmrini tap (adı «Export», «Save as PDF» və ya «Print»
-   pəncərəsində «PDF» ola bilər). Tapmasan: File → Print, printer kimi «Microsoft Print to PDF»
-   seç. Diaqram **bir səhifəyə** sığmalıdır (landscape, «fit to page»). Fayl adı:
-   `vagif.asgarli-T5L-model.pdf`.
+1. **ADF.** Əsas menyuda `Save as...`: fayl adı `vagif.asgarli-T5L.adf` (ArisExpress-in öz
+   formatı). Sonrakı dəyişikliklər üçün `Save`.
+2. **PDF.** Əsas menyuda `Export` altında **`Graphic as PDF...`** əmri var (izahı: «Export
+   graphic as PDF»). Fayl adı: `vagif.asgarli-T5L-model.pdf`. Eyni yerdə «Model information
+   as PDF» də var, o bizə lazım deyil. PDF-i açıb yoxla: bütün diaqram görünməlidir. Əmri
+   tapmasan: `Print...`, printer kimi «Microsoft Print to PDF», diaqram **bir səhifəyə**
+   sığsın (landscape).
+   Əlavə imkan: **Export graphic** pəncərəsi şəkli `PNG`, `JPG` və ya `EMF` kimi saxlayır;
+   orada «Export entire graphic» seçimini et. PNG təqdimat üçün yaxşıdır, amma müəllimin
+   istədiyi format PDF-dir.
 3. Bu iki faylı mənə göndər (və ya Drive qovluğuna at). Mən PDF-dən şəkli çıxarıb protokola və
    təqdimata qoyacam, yekun `vagif.asgarli-T5L.pdf` protokolunu hazırlayacam.
 4. İstəsən, təqdimat üçün diaqramın üç böyüdülmüş ekran şəklini də çək (sol hissə: aşkarlama;
@@ -230,9 +261,13 @@ kompüterində aç, böyütmə (zoom) ilə soldan sağa keçməyi məşq et.
 
 ## 8. Çətinlik olsa
 
-- **Timer və ya Message simvolunu tapmırsan.** Simvol panelinin aşağısında «daha çox simvol»
-  düyməsi və ya simvolun üzərində sağ düymə menyusu ola bilər. Olmasa, adi Intermediate event
-  qoy, adını yaz və mənə de: protokolda bunu qeyd edərik.
+- **Timer və ya Message simvolunu tapmırsan.** Simvol «BPMN diagram» tipində var (2-ci bölmə).
+  **Symbols** panelini sona qədər sürüşdür; yoxdursa, **Add symbols** pəncərəsindən əlavə et.
+  Alınmasa, adi `Intermediate event` qoy, adını yaz və mənə de: protokolda bunu qeyd edərik.
+- **«BPMN modeling constraints» pəncərəsi çıxır.** Bu, elementi başqa Pool-a daşıyanda və ya
+  xətt qaydanı pozanda görünür (Sequence flow Pool sərhədini keçə bilməz, Message flow isə
+  yalnız müxtəlif Pool-lar arasında olur). `Cancel` bas (element yerinə qayıdır) və səhvi
+  düzəlt. `Ignore constraints` basma: model BPMN qaydalarına uyğun olmaz.
 - **Data store-u eyni adla ikinci dəfə qoymaq istəmir.** Birincini kopyala və yapışdır (Ctrl+C,
   Ctrl+V); adətən proqram eyni obyektin ikinci görünüşünü yaradır. Bu bizə lazım olandır: bir
   anbar, iki yerdə göstərilir. Alınmasa, eyni adla ikinci Data store qoymaq da olar.

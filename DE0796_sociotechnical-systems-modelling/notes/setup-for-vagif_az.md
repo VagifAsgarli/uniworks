@@ -10,7 +10,7 @@ Müəllim dörd işi istəyir: **PR1**, **T4LPrim**, **T4L**, **T5L**. Hamısı
 | PR1 (xülasə + təqdimat) | **hazırdır** | oxu, göndər |
 | T4LPrim (Yellowstone CLD təqdimatı) | **hazırdır** | oxu, göndər |
 | T4L (STELLA modeli, protokol, təqdimat) | model, təlimat və qaralamalar hazırdır | STELLA-da modeli aç/qur, 9 ekran şəkli çək, mənə göndər |
-| T5L (BPMN2 modeli, protokol, təqdimat) | dizayn, təlimat və qaralamalar hazırdır | diaqram ARIS Express-də olmalıdır (`.adf` + `.pdf`), mənə göndər |
+| T5L (BPMN2 modeli, protokol, təqdimat) | dizayn, təlimat və qaralamalar hazırdır | diaqramı ARIS Express-də təlimatla çək (`.adf` + `.pdf`), mənə göndər |
 
 T4L və T5L-də son fayllar sənin şəkillərindən və ARIS faylından sonra yığılır. Buna görə
 **bu iki işi 30 noyabra qədər** et ki, son variantı yığmağa vaxt qalsın.
@@ -64,17 +64,24 @@ yazılıb. **Qaralamanı müəllimə göndərmə.**
 Müəllim BPMN2 diaqramının ARIS Express-də çəkilməsini və `.adf` + `.pdf` kimi saxlanmasını
 istəyir. `.adf` formatı bağlıdır, onu yalnız ARIS Express özü yaradır.
 
-1. Öz kompüterində ARIS Express-i quraşdır (`https://ariscommunity.com/aris-express/download`,
-   Windows variantı). Müdafiədə faylı açıb göstərmək üçün lazımdır.
-2. Göndərdiyin `express.jnlp` faylı ilə mən proqramı burada işə salıb diaqramı çəkməyə
-   çalışıram. Nəticəni ayrıca yazacam:
-   - **Alınsa**: sənə hazır `vagif.asgarli-T5L-model.adf` və `.pdf` verirəm; sən faylı ARIS-də
-     açıb düzgün göründüyünü yoxlayırsan.
-   - **Alınmasa**: diaqramı təlimatla özün çəkirsən (təxminən 2 saat):
-     `t5l_conceptual-modelling-bpmn2/notes/aris-express-build-guide_az.md`. Nümunə şəkil:
-     `t5l_conceptual-modelling-bpmn2/outputs/figures/fig2_cyberflow_bpmn2_reference.png`.
-     Sonra `.adf` və `.pdf` fayllarını mənə göndərirsən.
-3. İzahı oxu: `t5l_conceptual-modelling-bpmn2/notes/defence-prep_az.md`.
+Göndərdiyin `express.jnlp` ilə proqramı burada işə saldım, amma ilk açılışda o, **sənin ARIS
+Community istifadəçi adını və parolunu** tələb edir. Parolunu mənə yazma: hesab sənindir və
+proqram onu internetdə yoxlayır. Ona görə **diaqramı sən öz kompüterində çəkirsən** (təxminən
+2 saat). Proqramın öz fayllarından simvol və menyu adlarını yoxlayıb təlimata yazmışam.
+
+1. Öz kompüterində ARIS Express-i quraşdır və ya `express.jnlp` ilə aç
+   (`https://ariscommunity.com/aris-express/download`). İlk açılışda dörd addım: Welcome,
+   lisenziya razılığı, istifadəçi adı və parol, dil (English seç).
+2. Təlimatı aç: `t5l_conceptual-modelling-bpmn2/notes/aris-express-build-guide_az.md`.
+   Nümunə şəkil (buna baxaraq çək):
+   `t5l_conceptual-modelling-bpmn2/outputs/figures/fig2_cyberflow_bpmn2_reference.png`.
+3. Diaqramı çək: 2 Pool, 4 Swimlane, 19 Task, 11 Event, 5 Gateway, 4 Message flow,
+   4 Data object və 1 Data store. Təlimatda hər elementin və hər xəttin cədvəli var.
+4. Saxla: `Save as...` → `vagif.asgarli-T5L.adf`; `Export` → `Graphic as PDF...` →
+   `vagif.asgarli-T5L-model.pdf`.
+5. Bu iki faylı mənə göndər. Mən PDF-dəki şəkli protokola və təqdimata qoyub son variantı
+   yığıram.
+6. İzahı oxu: `t5l_conceptual-modelling-bpmn2/notes/defence-prep_az.md`.
 
 Qaralamalar: `t5l_conceptual-modelling-bpmn2/outputs/draft/`. Onlardakı BPMN2 şəkli ARIS-dən
 deyil, mənim nümunə çəkilişimdir və "DRAFT" yazılıb. **Qaralamanı müəllimə göndərmə.**
@@ -92,7 +99,7 @@ deyil, mənim nümunə çəkilişimdir və "DRAFT" yazılıb. **Qaralamanı mü�
    | PR1 | `VagifAsgarli-PR1.pdf`, `VagifAsgarli-PR1-presentation.pptx` |
    | T4LPrim | `VagifAsgarli-T4LPrim.pptx` |
    | T4L | `VagifAsgarli-T4L.pdf`, `VagifAsgarli-T4L.STM` (və ya `.stmx`), `VagifAsgarli-T4L-presentation.pptx` |
-   | T5L | `vagif.asgarli-T5L.pdf`, `vagif.asgarli-T5L-model.adf`, `vagif.asgarli-T5L-model.pdf`, `vagif.asgarli-T5L-presentation.pptx` |
+   | T5L | `vagif.asgarli-T5L.pdf`, `vagif.asgarli-T5L.adf`, `vagif.asgarli-T5L-model.pdf`, `vagif.asgarli-T5L-presentation.pptx` |
 
 3. **Süni intellekt qeydi.** Hər işin sonunda "Note. Generative AI tools were used..." sətri
    var. Müəllim PR1-də bu qeydi özü tələb edir və sənə AI ilə işləməyə icazə verib; qeyd
@@ -120,4 +127,4 @@ deyil, mənim nümunə çəkilişimdir və "DRAFT" yazılıb. **Qaralamanı mü�
 - STELLA 9.0.4 quraşdırıcısı səndə və ya yoldaşlarında varmı? (Yoxdursa, Stella Architect ilə
   gedirik.)
 - Kompüterin Windows-dur, yoxsa Mac?
-- T4L şəkilləri və model faylı; T5L üçün (lazım olsa) `.adf` və `.pdf`.
+- T4L şəkilləri və model faylı; T5L üçün `.adf` və `.pdf`.
