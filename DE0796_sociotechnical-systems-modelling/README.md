@@ -31,12 +31,19 @@ give 72; 85 and 95 give 90).
 
 ## Assignments
 
-| # | Assignment | Original deadline | What is handed in | Status |
+The lecturer accepts the four works late: he asked for them **by 2 December 2026** and allowed them
+to be prepared with full AI support (the student's account of the conversation, 26.11.2026). Each
+work is sent to `egils.ginters@rtu.lv` and then defended.
+
+| # | Assignment | Original deadline | What is handed in | Status (26.11.2026) |
 |---|---|---|---|---|
-| PR1 | [Summary design](pr1_summary-design/): one A4 page on "Application of BPMN 2.0 Diagrams in Modelling Cybersecurity Procedures" with APA 7 references, then a presentation | in class 16.09 (summary), 23.09 (presentation) | `VagifAsgarli-PR1.pdf` by e-mail; presentation | see the folder |
-| T4LPrim | [Causal loop diagram of Yellowstone](t4lprim_causal-loop-diagram-yellowstone/): CLD with reinforcing and balancing loops, opinion on the stability of the ecosystem | 07.10 | presentation on the lecturer's template | see the folder |
-| T4L | [System dynamics simulation in STELLA](t4l_system-dynamics-stella/): stocks-and-flows model of Yellowstone with sliders and buttons | 24.10 (e-mail), defence 28.10 | protocol (PDF), model (STM), presentation (PPT/PPTX); the model is run during the defence | see the folder |
-| T5L | [Conceptual modelling in BPMN2](t5l_conceptual-modelling-bpmn2/): CLD of the goal system of the PR1 topic and its BPMN2 model in ARIS Express | 22.11, 24:00 (e-mail), defence 25.11 | protocol `vagif.asgarli-T5L.pdf`, model (ADF, PDF), presentation (PPT) | see the folder |
+| PR1 | [Summary design](pr1_summary-design/): one A4 page on "Application of BPMN 2.0 Diagrams in Modelling Cybersecurity Procedures" with APA 7 references, then a presentation | in class 16.09 (summary), 23.09 (presentation) | `VagifAsgarli-PR1.pdf`; presentation | **ready**: summary (PDF) and presentation (12 slides) |
+| T4LPrim | [Causal loop diagram of Yellowstone](t4lprim_causal-loop-diagram-yellowstone/): CLD with reinforced and balanced feedbacks, opinion on the stability of the ecosystem | 07.10 | presentation on the lecturer's template | **ready**: CLD and presentation (10 slides) |
+| T4L | [System dynamics simulation in STELLA](t4l_system-dynamics-stella/): stocks-and-flows model of Yellowstone with sliders and buttons | 24.10 (e-mail), defence 28.10 | protocol (PDF), model (STM), presentation (PPT/PPTX); the model is run during the defence | model, guide and **drafts** ready; the student builds or opens the model in STELLA and takes the screenshots, then the final files are built |
+| T5L | [Conceptual modelling in BPMN2](t5l_conceptual-modelling-bpmn2/): CLD of the goal system of the PR1 topic and its BPMN2 model in ARIS Express | 22.11, 24:00 (e-mail), defence 25.11 | protocol `vagif.asgarli-T5L.pdf`, model (ADF, PDF), presentation (PPT) | CLD, BPMN2 design, guide and **drafts** ready; the diagram must exist in ARIS Express (ADF and PDF), then the final files are built |
+
+What the student still has to do, step by step, is in
+[`notes/setup-for-vagif_az.md`](notes/setup-for-vagif_az.md) (Azerbaijani).
 
 The four works build on each other: PR1 defines the topic and the goal system; T4LPrim and T4L
 are the Yellowstone exercise (CLD, then stocks and flows); T5L returns to the goal system of
@@ -61,6 +68,14 @@ annotations): none found.
 
 | Tool | Used for | Notes |
 |---|---|---|
-| STELLA (isee systems) | T4L model and its demonstration | commercial; the lab deck shows the classic interface with Map, Model, Interface and Equation layers; the model file is asked for in STM format |
-| ARIS Express 2.4 | T5L BPMN2 model | free download from ariscommunity.com (registration); saves `.adf`, exports PDF |
+| STELLA (isee systems) | T4L model and its demonstration | the lab deck shows classic STELLA with Map, Model, Interface and Equation layers (version 9; file format STM). The current version, Stella Architect, has a 30-day evaluation and saves STMX; it cannot save STM. Both routes are prepared in the T4L folder |
+| ARIS Express 2.4 | T5L BPMN2 model | free download from ariscommunity.com (registration); saves `.adf`, exports PDF. The `.adf` format is closed, so the diagram has to be drawn in ARIS Express itself |
 | MS PowerPoint | every presentation | the lecturer's templates are in the assignment folders |
+
+## Shared tools in this folder
+
+| File | What it does |
+|---|---|
+| [`tools/cld_draw.py`](tools/cld_draw.py) | draws a Causal Loops Diagram from a JSON description in the notation of the lecture and of the T4LPrim template (blue "+" links, red "−" links, delay marks, R and B loop marks) |
+| [`tools/lecturer_deck.py`](tools/lecturer_deck.py) | builds presentations on the lecturer's slide templates (his title slide, heading, footer and slide number are kept) |
+| [`tools/lecturer_protocol.py`](tools/lecturer_protocol.py) | fills the lecturer's protocol templates (his lines are kept, the answers are written under them) |
