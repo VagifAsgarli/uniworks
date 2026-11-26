@@ -55,7 +55,7 @@
 			</flow>
 			<flow name="wolf deaths">
 				<doc>Wolves dying of age, of fights between packs and diseases (more when the wolves are many) and shot by people.</doc>
-				<eqn>Wolves*(Wolf_death_rate+Fights_and_diseases+Wolf_hunting_rate)</eqn>
+				<eqn>Wolves*(Wolf_death_rate+Pack_fights_and_diseases+Wolf_hunting_rate)</eqn>
 				<non_negative/>
 				<units>wolves/year</units>
 			</flow>
@@ -122,7 +122,7 @@
 				<eqn>0.0012</eqn>
 				<units>1/wolves/year</units>
 			</aux>
-			<aux name="Fights and diseases">
+			<aux name="Pack fights and diseases">
 				<doc>Extra death rate from fights between packs and from diseases; grows with the number of wolves.</doc>
 				<eqn>Strife_coefficient*Wolves</eqn>
 				<units>1/year</units>
@@ -285,12 +285,12 @@
 					<from>Wolves</from>
 					<to>wolf_deaths</to>
 				</connector>
-				<connector uid="4" angle="47.060">
+				<connector uid="4" angle="42.813">
 					<from>Wolf_death_rate</from>
 					<to>wolf_deaths</to>
 				</connector>
-				<connector uid="5" angle="99.230">
-					<from>Fights_and_diseases</from>
+				<connector uid="5" angle="106.574">
+					<from>Pack_fights_and_diseases</from>
 					<to>wolf_deaths</to>
 				</connector>
 				<connector uid="6" angle="19.051">
@@ -385,13 +385,13 @@
 					<from>Beaver_loss_rate</from>
 					<to>colony_loss</to>
 				</connector>
-				<connector uid="29" angle="172.875">
+				<connector uid="29" angle="172.569">
 					<from>Strife_coefficient</from>
-					<to>Fights_and_diseases</to>
+					<to>Pack_fights_and_diseases</to>
 				</connector>
-				<connector uid="30" angle="231.340">
+				<connector uid="30" angle="238.241">
 					<from>Wolves</from>
-					<to>Fights_and_diseases</to>
+					<to>Pack_fights_and_diseases</to>
 				</connector>
 				<connector uid="31" angle="21.038">
 					<from>Grassland_capacity</from>
@@ -497,9 +497,9 @@
 				</flow>
 				<aux label_side="bottom" x="360" y="80" name="Wolves released"/>
 				<aux label_side="top" x="590" y="130" name="Wolves born per deer eaten"/>
-				<aux label_side="bottom" x="180" y="260" name="Wolf death rate"/>
-				<aux label_side="top" x="360" y="280" name="Strife coefficient"/>
-				<aux label_side="bottom" x="280" y="270" name="Fights and diseases"/>
+				<aux label_side="bottom" x="172" y="255" name="Wolf death rate"/>
+				<aux label_side="top" x="410" y="290" name="Strife coefficient"/>
+				<aux label_side="bottom" x="295" y="275" name="Pack fights and diseases"/>
 				<aux label_side="bottom" x="90" y="230" name="Wolf hunting rate"/>
 				<aux label_side="top" x="900" y="260" name="Initial deers"/>
 				<aux label_side="left" x="700" y="290" name="Kill coefficient"/>

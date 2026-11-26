@@ -50,7 +50,9 @@ STOCKS_AND_FLOWS = [
 DIFFERENCES_INTRO = (
     "Both models describe the same feedback system, but at different levels (Table 1). The CLD is the conceptual "
     "model of systems thinking: it shows the cause and effect relationships between the variables and the "
-    "balancing and reinforcing loops (Ginters, 2026a). The Stocks and Flows model is built from it for simulation.")
+    "balancing and reinforcing loops (Ginters, 2026a). The Stocks and Flows model is built from it for simulation. "
+    "The lecture puts the difference in one line: the design of a CLD is systems thinking based on imagination, "
+    "the design of a stocks and flows diagram is engineering based on experience (Ginters, 2026a).")
 
 TABLE1_CAPTION = "Table 1. Differences between a Causal Loops Diagram and a Stocks and Flows model"
 TABLE1 = [
@@ -101,7 +103,7 @@ TABLE2 = [
     ("Wolves, Deers (elk), Vegetation, Beavers", "the four stocks"),
     ("Wolf births (R1); Deers → Wolf births (B1)", "flow *wolf births* = Wolves born per deer eaten × predation"),
     ("Wolves → Deers (B1)", "flow *predation* = Kill coefficient × Wolves × Deers"),
-    ("Pack fights, diseases (B2)", "converter *Fights and diseases* = Strife coefficient × Wolves, in the flow "
+    ("Pack fights, diseases (B2)", "converter *Pack fights and diseases* = Strife coefficient × Wolves, in the flow "
                                    "*wolf deaths*"),
     ("Deer births (R2); Vegetation → Deer births (B3)", "flow *deer births*, limited by the converter *Deer "
                                                         "capacity*, which grows with Vegetation"),
@@ -172,9 +174,17 @@ INTERFACE_TEXT = (
 FIG_INTERFACE_CAPTION = "Figure 2. Interface layer of the model in STELLA after the base run (E1)"
 FIG_TABLE_CAPTION = "Figure 3. Table of the stocks in STELLA, base run (E1)"
 FIG_MODEL_CAPTION = "Figure 4. MODEL layer of the Yellowstone Stocks and Flows model in STELLA"
+FIG_EQUATIONS_CAPTION = "Figure 5. Equation layer of the model in STELLA"
+VERIFICATION_TEXT = (
+    "**Verification and validation.** The steps of SD modelling in the lecture were followed (Ginters, 2026a). "
+    "The model was first verified: the equations that STELLA generated on the Equation layer (Figure 5) were "
+    "reviewed against Table 3; a boundary condition was tested (with Wolves released = 0 the stocks must stay at "
+    "their initial values, experiment E2); and the trend and the visual shape of the curves were checked on a test "
+    "run. It was then validated by comparing the base run with the counts in the park (above).")
 MODEL_LAYER_TEXT = (
     "Figure 4 is the MODEL layer. Each stock has its flows; the converters around a flow are the parameters of "
-    "its equation, and every action connector corresponds to a variable used in an equation (Table 3).")
+    "its equation, and every action connector corresponds to a variable used in an equation (Table 3). Figure 5 "
+    "is the Equation layer, the list of equations that STELLA generated from the model.")
 
 BASE_TEXT = [
     f"**Base run (E1): 31 wolves released.** The wolves grow fast while the deers are plentiful (R1): "
@@ -240,11 +250,11 @@ EXPERIMENT_TEXT = {
           f"wolves, which is what stability means.",
 }
 EXPERIMENT_FIG = {
-    "E2": "Figure 5. Experiment E2 in STELLA: no wolves (Wolves released = 0)",
-    "E3": "Figure 6. Experiment E3 in STELLA: no deer hunting (Deer hunting rate = 0)",
-    "E4": "Figure 7. Experiment E4 in STELLA: wolves hunted (Wolf hunting rate = 0.15)",
-    "E5": "Figure 8. Experiment E5 in STELLA: severe winters (Winter severity = 2)",
-    "E6": "Figure 9. Experiment E6 in STELLA: 100 wolves released",
+    "E2": "Figure 6. Experiment E2 in STELLA: no wolves (Wolves released = 0)",
+    "E3": "Figure 7. Experiment E3 in STELLA: no deer hunting (Deer hunting rate = 0)",
+    "E4": "Figure 8. Experiment E4 in STELLA: wolves hunted (Wolf hunting rate = 0.15)",
+    "E5": "Figure 9. Experiment E5 in STELLA: severe winters (Winter severity = 2)",
+    "E6": "Figure 10. Experiment E6 in STELLA: 100 wolves released",
 }
 EXPERIMENTS_INTRO = (
     "Six experiments were run from the Interface layer; before each one the Restore button returned the sliders "
@@ -276,7 +286,10 @@ CONCLUSIONS = [
     "no bison, no random weather and no stream hydrology, which can keep willow from recovering (Hobbs et al., "
     "2024). The results show directions and delays, not forecasts.",
     "**CLD and Stocks and Flows.** The CLD named the loops; the Stocks and Flows model showed which of them "
-    "dominates and when: B1 sets the level of wolves and deers within about 15 years, R3 answers a decade later.",
+    "dominates and when: B1 sets the level of wolves and deers within about 15 years, R3 answers a decade later. "
+    "The transition between the two, the systemic gap of the lecture (Ginters, 2026a), was the hardest step: the "
+    "CLD does not say which variables accumulate, in which units, or with which rates, and tuning the rates took "
+    "most of the time.",
 ]
 
 PRESENTATION_NOTE = (
@@ -327,4 +340,5 @@ SHOTS = {
     "E4": "06_interface_E4.png",
     "E5": "07_interface_E5.png",
     "E6": "08_interface_E6.png",
+    "equations": "09_equations.png",
 }

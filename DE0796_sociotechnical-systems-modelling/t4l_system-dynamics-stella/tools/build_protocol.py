@@ -60,6 +60,22 @@ def placeholder(text, path, size=(1500, 420)):
     return path
 
 
+def listing_image(text_path, path):
+    """The expected Equation-layer listing as a picture (stands in for the screenshot in a draft)."""
+    lines = open(text_path, encoding="utf-8").read().rstrip("\n").split("\n")
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf", 22)
+    except OSError:
+        font = ImageFont.load_default()
+    width = int(max(font.getlength(line) for line in lines)) + 60
+    im = Image.new("RGB", (width, 28 * len(lines) + 50), "white")
+    d = ImageDraw.Draw(im)
+    for i, line in enumerate(lines):
+        d.text((30, 25 + 28 * i), line, fill="#1a1a1a", font=font)
+    im.save(path)
+    return path
+
+
 def figure(key, shots, tmp):
     """Returns (path of the picture, True if it is the real STELLA screenshot)."""
     name = C.SHOTS[key]
@@ -67,6 +83,9 @@ def figure(key, shots, tmp):
         return os.path.join(shots, name), True
     if key == "model":
         return EXPECTED_MODEL, False
+    if key == "equations":
+        return listing_image(os.path.join(HERE, "..", "outputs", "model", "equations_expected.txt"),
+                             os.path.join(tmp, "equations.png")), False
     if key == "table":
         return placeholder(f"STELLA screenshot to be inserted here:\n{name}\n(Table of the stocks after the base run)",
                            os.path.join(tmp, "table.png")), False
@@ -141,7 +160,16 @@ def build(out, shots, date):
     last = at(36, "(Include the MODEL layer screenshot)")
     last = text_after(last, doc, C.MODEL_LAYER_TEXT, before=6)
     last = picture_after(last, doc, pics["model"][0], width_cm=pic_width("model", max_h=12.5))
-    caption_after(last, doc, cap(C.FIG_MODEL_CAPTION, "model"))
+    last = caption_after(last, doc, cap(C.FIG_MODEL_CAPTION, "model"))
+    last = picture_after(last, doc, pics["equations"][0], width_cm=pic_width("equations", max_h=17.0))
+    last = caption_after(last, doc, cap(C.FIG_EQUATIONS_CAPTION, "equations"))
+    for part in range(2, 6):                 # a long listing may need more screenshots: 09_equations_2.png, ...
+        extra = os.path.join(shots or "", C.SHOTS["equations"].replace(".png", f"_{part}.png"))
+        if pics["equations"][1] and os.path.exists(extra):
+            w, h = Image.open(extra).size
+            last = picture_after(last, doc, extra, width_cm=min(BODY_WIDTH_CM, 17.0 * w / h))
+            last = caption_after(last, doc, C.FIG_EQUATIONS_CAPTION + f" (continued, part {part})")
+    text_after(last, doc, C.VERIFICATION_TEXT)
 
     # experiments
     last = at(38, "(Carry out experiments")

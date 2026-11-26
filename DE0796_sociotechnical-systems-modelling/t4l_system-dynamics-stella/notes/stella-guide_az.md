@@ -74,7 +74,7 @@ Converter alətini seç və aşağıdakı 28 dairəni qoy. Sabit ədədi olanlar
 | `Bears and cougars rate` | 0.02 | | | |
 
 Tənliyi olan beş converter (qiymətini hələ yazma, əvvəlcə connector-ları çək):
-`Fights and diseases`, `Deer capacity`, `Willow habitat`, `Free habitat`, `Beaver ponds effect`.
+`Pack fights and diseases`, `Deer capacity`, `Willow habitat`, `Free habitat`, `Beaver ponds effect`.
 
 ### A4. Action connector-lər (41 ədəd)
 
@@ -86,10 +86,10 @@ olanda oxu flow-un ortasındakı dairəyə (klapana) apar. Siyahı "haradan → 
 - `predation` → `wolf births`
 - `Wolves` → `wolf deaths`
 - `Wolf death rate` → `wolf deaths`
-- `Fights and diseases` → `wolf deaths`
+- `Pack fights and diseases` → `wolf deaths`
 - `Wolf hunting rate` → `wolf deaths`
-- `Strife coefficient` → `Fights and diseases`
-- `Wolves` → `Fights and diseases`
+- `Strife coefficient` → `Pack fights and diseases`
+- `Wolves` → `Pack fights and diseases`
 
 **Deers bölməsi**
 - `Deer birth rate` → `deer births`
@@ -159,7 +159,7 @@ qatında `Wolves` stock-una **Knob** bağlayacaqsan (A7-də qeyd var).
 | Flow | Tənlik |
 |---|---|
 | `wolf births` | `Wolves_born_per_deer_eaten*predation` |
-| `wolf deaths` | `Wolves*(Wolf_death_rate+Fights_and_diseases+Wolf_hunting_rate)` |
+| `wolf deaths` | `Wolves*(Wolf_death_rate+Pack_fights_and_diseases+Wolf_hunting_rate)` |
 | `deer births` | `Deer_birth_rate*Deers*MAX(0, 1-Deers/Deer_capacity)` |
 | `deer deaths` | `Deers*(Deer_death_rate*Winter_severity+Bears_and_cougars_rate+Deer_hunting_rate)` |
 | `predation` | `Kill_coefficient*Wolves*Deers` |
@@ -172,7 +172,7 @@ qatında `Wolves` stock-una **Knob** bağlayacaqsan (A7-də qeyd var).
 
 | Converter | Tənlik |
 |---|---|
-| `Fights and diseases` | `Strife_coefficient*Wolves` |
+| `Pack fights and diseases` | `Strife_coefficient*Wolves` |
 | `Deer capacity` | `Grassland_capacity+Browse_capacity_gain*Vegetation/100` |
 | `Willow habitat` | `MAX(0, (Vegetation-Willow_threshold)/(100-Willow_threshold))` |
 | `Free habitat` | `MAX(0, Willow_habitat-Beavers/Beaver_capacity)` |
@@ -205,6 +205,9 @@ Sol kənardakı yuxarı oxla **Interface** qatına keç.
 
    (A5-də stock-a ədəd yazmalı oldunsa: `Wolves released` slider-i əvəzinə **Knob** alətini qoy
    və `Wolves` stock-una bağla, 0–100.)
+
+   Müəllimin öz nümunəsində (T4 mühazirəsi, slayd 38) Interface məhz belədir: yuxarıda
+   slider-lər, altında qrafik. Slider-in üstündəki **U** düyməsi onu başlanğıc qiymətə qaytarır.
 2. **Button** alətini seç, üç düymə qoy. Hər birinə iki dəfə bas, **Menu** seçimini et və
    əməliyyatı seç:
    - `Run` (Run menyusu: Run)
@@ -276,9 +279,14 @@ Standart qiymətlərlə (31 wolves) **Run** edəndən sonra cədvəl bu rəqəml
 | 2040 | 103.0 | 7049 | 71.9 | 19.3 |
 | 2045 | 101.6 | 7022 | 72.2 | 19.4 |
 
-Rəqəmlər fərqlidirsə: (1) Run Specs-də DT 0.25 və Euler olduğunu yoxla; (2) fərqlənən stock-un
-flow tənliklərini A5 cədvəli ilə hərf-hərf tutuşdur; (3) düzəlməsə, Equation qatının şəklini
-mənə göndər.
+Rəqəmlər fərqlidirsə: (1) Run Specs-də DT 0.25 və Euler olduğunu yoxla; (2) **Equation** qatına
+keç və oradakı siyahını [`../outputs/model/equations_expected.txt`](../outputs/model/equations_expected.txt)
+faylı ilə sətir-sətir tutuşdur (STELLA siyahını məhz bu formada göstərir); (3) düzəlməsə, Equation
+qatının şəklini mənə göndər.
+
+Müəllim mühazirədə bunu **verification** adlandırır: tənliklərə baxmaq, sərhəd şərtini yoxlamaq
+(canavarsız heç nə dəyişməməlidir) və əyrinin formasına baxmaq. Sayımlarla müqayisə isə
+**validation**-dır. Protokolda hər ikisi yazılıb.
 
 ## D. Təcrübələr və ekran şəkilləri
 
@@ -306,7 +314,7 @@ qatının şəklini çək (slider-lər və qrafiklər bir şəkildə görünsün
 | `06_interface_E4.png` | Interface qatı, E4-dən sonra |
 | `07_interface_E5.png` | Interface qatı, E5-dən sonra |
 | `08_interface_E6.png` | Interface qatı, E6-dan sonra |
-| `09_equations.png` | Equation qatı (tənliklərin siyahısı; bir neçə şəkil ola bilər) |
+| `09_equations.png` | Equation qatı (tənliklərin siyahısı). Bir ekrana sığmasa, davamını `09_equations_2.png`, `09_equations_3.png` adı ilə çək |
 
 Şəkilləri alan kimi protokolu və təqdimatı son variantda yığıram (qaralamada onların yerində
 qırmızı çərçivəli qeyd var).

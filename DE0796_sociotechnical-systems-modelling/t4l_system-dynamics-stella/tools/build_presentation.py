@@ -129,7 +129,7 @@ def build(out, shots):
             ("Wolves, Deers, Vegetation, Beavers", "stocks"),
             ("Wolf births (R1), Deers → Wolf births (B1)", "flow wolf births = Wolves born per deer eaten × predation"),
             ("Wolves → Deers (B1)", "flow predation = Kill coefficient × Wolves × Deers"),
-            ("Pack fights, diseases (B2)", "converter Fights and diseases in the flow wolf deaths"),
+            ("Pack fights, diseases (B2)", "converter Pack fights and diseases in the flow wolf deaths"),
             ("Vegetation → Deer births (B3)", "converter Deer capacity in the flow deer births"),
             ("Deers → Vegetation (B3)", "flow browsing"),
             ("Hunting permits (B4), Winter severity", "sliders Deer hunting rate and Winter severity"),

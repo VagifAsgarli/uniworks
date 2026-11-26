@@ -20,7 +20,7 @@ Each stock follows `Stock(t) = Stock(t - dt) + (inflows - outflows) * dt`.
 | Flow | Equation | Unit | Meaning |
 |---|---|---|---|
 | wolf births | `Wolves_born_per_deer_eaten*predation` | wolves/year | Pups that survive their first year: the more deers the packs kill, the more pups they raise. |
-| wolf deaths | `Wolves*(Wolf_death_rate+Fights_and_diseases+Wolf_hunting_rate)` | wolves/year | Wolves dying of age, of fights between packs and diseases (more when the wolves are many) and shot by people. |
+| wolf deaths | `Wolves*(Wolf_death_rate+Pack_fights_and_diseases+Wolf_hunting_rate)` | wolves/year | Wolves dying of age, of fights between packs and diseases (more when the wolves are many) and shot by people. |
 | deer births | `Deer_birth_rate*Deers*MAX(0, 1-Deers/Deer_capacity)` | deers/year | Calves that survive: fewer when the herd is close to the number the land can feed. |
 | deer deaths | `Deers*(Deer_death_rate*Winter_severity+Bears_and_cougars_rate+Deer_hunting_rate)` | deers/year | Deers dying of age and hunger in winter, killed by bears and cougars, and shot by hunters. |
 | predation | `Kill_coefficient*Wolves*Deers` | deers/year | Deers killed by wolves in a year. |
@@ -39,7 +39,7 @@ Converters with a slider range are the ones placed on the Interface layer.
 | Wolves born per deer eaten | `0.032` |  | wolves/deers | Surviving pups per deer killed by the packs. |
 | Wolf death rate | `0.15` |  | 1/year | Share of the wolves dying in a year when the wolves are few. |
 | Strife coefficient | `0.0012` |  | 1/wolves/year | Extra death rate for every wolf living in the park. |
-| Fights and diseases | `Strife_coefficient*Wolves` |  | 1/year | Extra death rate from fights between packs and from diseases; grows with the number of wolves. |
+| Pack fights and diseases | `Strife_coefficient*Wolves` |  | 1/year | Extra death rate from fights between packs and from diseases; grows with the number of wolves. |
 | Wolf hunting rate | `0` | 0, 0.3, 0.01 | 1/year | Share of the wolves shot by people in a year (0 inside the park). |
 | Initial deers | `17000` |  | deers | Deers at the start: about 17,000 were counted when the wolves came back in 1995. |
 | Kill coefficient | `0.0012` |  | 1/wolves/year | Share of the herd one wolf kills in a year (0.0012 of 17,000 deers = 20 deers per wolf per year). |
@@ -74,7 +74,7 @@ Converters with a slider range are the ones placed on the Interface layer.
 | predation | wolf births |
 | Wolves | wolf deaths |
 | Wolf death rate | wolf deaths |
-| Fights and diseases | wolf deaths |
+| Pack fights and diseases | wolf deaths |
 | Wolf hunting rate | wolf deaths |
 | Deer birth rate | deer births |
 | Deers | deer births |
@@ -98,8 +98,8 @@ Converters with a slider range are the ones placed on the Interface layer.
 | Free habitat | colony growth |
 | Beavers | colony loss |
 | Beaver loss rate | colony loss |
-| Strife coefficient | Fights and diseases |
-| Wolves | Fights and diseases |
+| Strife coefficient | Pack fights and diseases |
+| Wolves | Pack fights and diseases |
 | Grassland capacity | Deer capacity |
 | Browse capacity gain | Deer capacity |
 | Vegetation | Deer capacity |

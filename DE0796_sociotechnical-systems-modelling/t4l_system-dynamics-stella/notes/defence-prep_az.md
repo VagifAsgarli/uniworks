@@ -33,7 +33,7 @@ CLD-də dövrələri daşıyan dörd dəyişən **stock** oldu, oxlar isə **flo
 | Wolves, Deers, Vegetation, Beavers | dörd stock |
 | Wolf births (R1), Deers → Wolf births (B1) | flow `wolf births` = Wolves born per deer eaten × predation |
 | Wolves → Deers (B1) | flow `predation` = Kill coefficient × Wolves × Deers |
-| Pack fights, diseases (B2) | converter `Fights and diseases` (flow `wolf deaths`-in içində) |
+| Pack fights, diseases (B2) | converter `Pack fights and diseases` (flow `wolf deaths`-in içində) |
 | Vegetation → Deer births (B3) | converter `Deer capacity` (flow `deer births`-i məhdudlaşdırır) |
 | Deers → Vegetation (B3) | flow `browsing` |
 | Hunting permits (B4) | slider `Deer hunting rate` |
@@ -47,7 +47,7 @@ CLD-də dövrələri daşıyan dörd dəyişən **stock** oldu, oxlar isə **flo
 **Wolves.**
 - `wolf births = Wolves born per deer eaten × predation`: canavar nə qədər çox maral ovlasa, o
   qədər çox bala sağ qalır (0.032 bala hər ovlanan marala).
-- `wolf deaths = Wolves × (Wolf death rate + Fights and diseases + Wolf hunting rate)`: təbii ölüm
+- `wolf deaths = Wolves × (Wolf death rate + Pack fights and diseases + Wolf hunting rate)`: təbii ölüm
   (0.15), sıxlıqdan asılı əlavə ölüm (`Strife coefficient × Wolves`: canavar çox olanda dalaşma və
   xəstəlik artır) və insan ovu (slider, standart 0).
 

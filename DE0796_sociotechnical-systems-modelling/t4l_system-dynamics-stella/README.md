@@ -33,7 +33,7 @@
       identical numbers in all six experiments
 - [x] Step-by-step guide for STELLA 9.0.4 (build by hand) and for Stella Architect (open the file),
       in Azerbaijani
-- [x] Protocol on the lecturer's template: **draft** (12 pages); the figures that must be STELLA
+- [x] Protocol on the lecturer's template: **draft** (14 pages); the figures that must be STELLA
       screenshots are marked
 - [x] Presentation on the lecturer's template: **draft** (12 slides, speaker notes)
 - [x] Explanation and likely questions for the student, in Azerbaijani
@@ -109,7 +109,7 @@ t4l_system-dynamics-stella/
 │   └── build_presentation.py                fills the lecturer's presentation template
 └── outputs/
     ├── model/                               Yellowstone.stmx, Yellowstone_with-interface.stmx, model-specification.md,
-    │                                        model-layer_expected.png
+    │                                        equations_expected.txt, model-layer_expected.png
     ├── reference-simulation/                expected tables (CSV) and graphs (PNG) of the six experiments
     ├── stella-screenshots/                  the screenshots taken in STELLA (to be added by the student)
     ├── draft/                               protocol and presentation drafts (expected pictures stand in for screenshots)

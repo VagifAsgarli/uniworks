@@ -1,0 +1,53 @@
+Beavers(t) = Beavers(t - dt) + (colony_growth - colony_loss) * dt
+INIT Beavers = Initial_beaver_colonies
+INFLOWS:
+    colony_growth = Beaver_growth_rate*Beavers*Free_habitat
+OUTFLOWS:
+    colony_loss = Beavers*Beaver_loss_rate
+Deers(t) = Deers(t - dt) + (deer_births - deer_deaths - predation) * dt
+INIT Deers = Initial_deers
+INFLOWS:
+    deer_births = Deer_birth_rate*Deers*MAX(0, 1-Deers/Deer_capacity)
+OUTFLOWS:
+    deer_deaths = Deers*(Deer_death_rate*Winter_severity+Bears_and_cougars_rate+Deer_hunting_rate)
+    predation = Kill_coefficient*Wolves*Deers
+Vegetation(t) = Vegetation(t - dt) + (regrowth - browsing) * dt
+INIT Vegetation = Initial_vegetation
+INFLOWS:
+    regrowth = Vegetation_growth_rate*Vegetation*MAX(0, 1-Vegetation/100)*Beaver_ponds_effect
+OUTFLOWS:
+    browsing = Browsing_per_1000_deers*Vegetation*Deers/1000
+Wolves(t) = Wolves(t - dt) + (wolf_births - wolf_deaths) * dt
+INIT Wolves = Wolves_released
+INFLOWS:
+    wolf_births = Wolves_born_per_deer_eaten*predation
+OUTFLOWS:
+    wolf_deaths = Wolves*(Wolf_death_rate+Pack_fights_and_diseases+Wolf_hunting_rate)
+Bears_and_cougars_rate = 0.02
+Beaver_capacity = 30
+Beaver_effect = 0.3
+Beaver_growth_rate = 2
+Beaver_loss_rate = 0.05
+Beaver_ponds_effect = 1+Beaver_effect*Beavers/Beaver_capacity
+Browse_capacity_gain = 8000
+Browsing_per_1000_deers = 0.0165
+Deer_birth_rate = 0.3
+Deer_capacity = Grassland_capacity+Browse_capacity_gain*Vegetation/100
+Deer_death_rate = 0.04
+Deer_hunting_rate = 0.05
+Free_habitat = MAX(0, Willow_habitat-Beavers/Beaver_capacity)
+Grassland_capacity = 25250
+Initial_beaver_colonies = 1
+Initial_deers = 17000
+Initial_vegetation = 20
+Kill_coefficient = 0.0012
+Pack_fights_and_diseases = Strife_coefficient*Wolves
+Strife_coefficient = 0.0012
+Vegetation_growth_rate = 0.35
+Willow_habitat = MAX(0, (Vegetation-Willow_threshold)/(100-Willow_threshold))
+Willow_threshold = 15
+Winter_severity = 1
+Wolf_death_rate = 0.15
+Wolf_hunting_rate = 0
+Wolves_born_per_deer_eaten = 0.032
+Wolves_released = 31

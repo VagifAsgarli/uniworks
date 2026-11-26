@@ -11,6 +11,7 @@ writes
                                        STELLA does not show them, use the first file)
     model-layer_expected.png           a drawing of how the MODEL layer should look after opening
     model-specification.md             every stock, flow and converter with its equation, unit and meaning
+    equations_expected.txt             the listing the Equation layer of STELLA should show for this model
 
 The file format is XMILE 1.0 (OASIS standard), which STELLA reads and writes as .stmx.  The element
 names and attributes of the diagram, graphs and table follow model files saved by STELLA itself.
@@ -395,6 +396,25 @@ def specification() -> str:
     return "\n".join(out) + "\n"
 
 
+def equations_listing() -> str:
+    """What the Equation layer of classic STELLA lists for this model (stocks with their flows, then converters)."""
+    out = []
+    flow = {f["name"]: f for f in m.FLOWS}
+    for s in sorted(m.STOCKS, key=lambda v: v["name"].lower()):
+        name = m.ident(s["name"])
+        ins = " + ".join(m.ident(f) for f in s["inflows"])
+        outs = "".join(" - " + m.ident(f) for f in s["outflows"])
+        out.append(f"{name}(t) = {name}(t - dt) + ({ins}{outs}) * dt")
+        out.append(f"INIT {name} = {s['init']}")
+        out.append("INFLOWS:")
+        out += [f"    {m.ident(f)} = {flow[f]['eqn']}" for f in s["inflows"]]
+        out.append("OUTFLOWS:")
+        out += [f"    {m.ident(f)} = {flow[f]['eqn']}" for f in s["outflows"]]
+    for c in sorted(m.CONVERTERS, key=lambda v: v["name"].lower()):
+        out.append(f"{m.ident(c['name'])} = {c['eqn']}")
+    return "\n".join(out) + "\n"
+
+
 def main():
     out_dir = sys.argv[1] if len(sys.argv) > 1 else "."
     os.makedirs(out_dir, exist_ok=True)
@@ -403,6 +423,8 @@ def main():
             f.write(build(flag))
     with open(os.path.join(out_dir, "model-specification.md"), "w", encoding="utf-8") as f:
         f.write(specification())
+    with open(os.path.join(out_dir, "equations_expected.txt"), "w", encoding="utf-8") as f:
+        f.write(equations_listing())
     draw_preview(os.path.join(out_dir, "model-layer_expected.png"))
     for problem in check_layout():
         print("layout:", problem)

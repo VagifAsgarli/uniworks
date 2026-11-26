@@ -222,7 +222,7 @@ def balanced_slide(deck):
         ("B1", "Deers (+) Wolf births (+) Wolves (-) Deers",
          "Predator and prey. A wolf kills 18–22 deers a year (NPS, 2026); when the deers fell, the wolves fell "
          "43% from 2007 to 2010 (Smith et al., 2011). The delay makes both go up and down."),
-        ("B2", "Wolves (+) Fights between packs, diseases (-) Wolves",
+        ("B2", "Wolves (+) Pack fights, diseases (-) Wolves",
          "Crowded packs fight: 42% of adult wolf deaths in the park are caused by other wolves (NPS, 2026; "
          "Cubaynes et al., 2014)."),
         ("B3", "Deers (-) Vegetation (+) Deer births (+) Deers",
