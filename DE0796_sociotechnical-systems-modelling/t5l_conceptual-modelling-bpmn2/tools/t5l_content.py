@@ -269,6 +269,9 @@ CONCLUSIONS = [
 ]
 
 # ----------------------------------------------------------------------------- 4. references (APA 7, alphabetical)
+AI_NOTE = ("Note. Generative AI tools were used for information retrieval, for designing and checking the models, "
+           "for drafting the text and for formatting the reference list: Claude (Anthropic).")
+
 REFERENCES = [
     "CERT.LV. (2026). *Latvijas kiberdrošības un CERT.LV tehnisko aktivitāšu 2025. gada pārskats* [Report on "
     "Latvian cybersecurity and CERT.LV technical activities in 2025]. "

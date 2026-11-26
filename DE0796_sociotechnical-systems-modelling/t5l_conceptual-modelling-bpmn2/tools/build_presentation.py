@@ -278,7 +278,8 @@ def build(out, bpmn_figure, draft, detail_figures=None):
     ], size=16, gap=9)
 
     s = slide("References")
-    add_text(s, [[(ref.replace("*", ""), "")] for ref in C.REFERENCES], size=10, gap=5)
+    add_text(s, [[(ref.replace("*", ""), "")] for ref in C.REFERENCES] +
+             [[(C.AI_NOTE.replace("drafting the text", "drafting the text and the slides"), "i")]], size=10, gap=5)
 
     prs.save(out)
     print(f"written {out}: {len(prs.slides)} slides ({'DRAFT' if draft else 'final'}, BPMN2 figure "

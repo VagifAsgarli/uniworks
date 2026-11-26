@@ -313,6 +313,7 @@ def build(out, bpmn_figure, draft, date):
     last = r
     for ref in rest:
         last = text_after(last, doc, ref, align=WD_ALIGN_PARAGRAPH.LEFT, hanging_cm=1.27, after=4)
+    text_after(last, doc, C.AI_NOTE, italic=True, size=11, align=WD_ALIGN_PARAGRAPH.LEFT, before=8)
 
     # 5. presentation
     text_after(at(62, "(T5L work protocol"), doc, C.PRESENTATION_NOTE, before=6, indent=False).paragraph_format.left_indent = Cm(1.75)
