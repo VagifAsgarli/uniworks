@@ -1,0 +1,49 @@
+{
+  "xlim": [0, 16],
+  "ylim": [0, 9],
+  "figsize": [9.6, 5.4],
+  "fontsize": 12,
+  "nodes": {
+    "nis2": [1.5, 7.5, "~NIS2 and national law\n(24 h, 72 h, one month)"],
+    "threats": [1.4, 0.9, "~Cyber threats"],
+    "mgmt": [2.6, 5.2, "Management support\n(budget, attention)"],
+    "models": [6.6, 6.3, "Procedure models in BPMN 2.0\n(coverage, up to date)"],
+    "underst": [11.6, 5.9, "Staff understanding\nof roles and steps"],
+    "errors": [12.3, 3.9, "Procedural errors"],
+    "resp": [8.0, 2.2, "Response time"],
+    "losses": [3.6, 2.5, "Incident losses"],
+    "maint": [6.6, 3.85, "Maintenance workload"],
+    "use": [10.4, 8.2, "Use of the models\nin real incidents"],
+    "lessons": [4.6, 8.3, "Lessons learned\n(incident reviews)"],
+    "workload": [14.9, 5.2, "Analyst\nworkload"],
+    "notif": [10.6, 0.65, "Timely notification\nof the CSIRT"],
+    "guidance": [14.3, 2.3, "CSIRT guidance\nand support"]
+  },
+  "links": [
+    ["nis2", "mgmt", "+", 0.0],
+    ["threats", "losses", "+", 0.0],
+    ["losses", "mgmt", "+", -0.2],
+    ["mgmt", "models", "+", -0.15],
+    ["models", "underst", "+", -0.15],
+    ["underst", "errors", "-", -0.2],
+    ["errors", "resp", "+", 0.12],
+    ["resp", "losses", "+", -0.15, {"delay": true}],
+    ["models", "maint", "+", -0.55],
+    ["maint", "models", "-", -0.55],
+    ["models", "use", "+", -0.2],
+    ["use", "lessons", "+", 0.12],
+    ["lessons", "models", "+", -0.2, {"delay": true}],
+    ["errors", "workload", "+", -0.35],
+    ["workload", "errors", "+", -0.35],
+    ["resp", "notif", "-", 0.2],
+    ["notif", "guidance", "+", 0.2],
+    ["guidance", "resp", "-", -0.04]
+  ],
+  "loops": [
+    ["B1", 9.4, 4.3, "cw"],
+    ["B2", 6.6, 5.0, "cw"],
+    ["R1", 7.1, 7.55, "ccw"],
+    ["R2", 13.6, 4.55, "cw"],
+    ["R3", 11.4, 1.55, "ccw"]
+  ]
+}

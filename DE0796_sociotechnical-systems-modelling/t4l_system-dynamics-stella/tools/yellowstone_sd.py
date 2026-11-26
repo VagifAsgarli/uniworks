@@ -85,8 +85,10 @@ def write_csv(path, rows, cols):
 
 
 def slug(name: str) -> str:
-    return "".join(ch if ch.isalnum() else "_" for ch in name.split(":")[0].strip()) + "_" + \
-        "-".join("".join(ch for ch in w if ch.isalnum()) for w in name.split(":")[-1].lower().split())[:40]
+    """'E2 no wolves' -> 'E2_no-wolves'."""
+    import re
+    code, _, rest = name.partition(" ")
+    return code + "_" + re.sub(r"[^a-z0-9]+", "-", rest.lower()).strip("-")
 
 
 def main():
