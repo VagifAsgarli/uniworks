@@ -286,7 +286,7 @@ def main():
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     have_all = all(os.path.exists(os.path.join(args.shots, n)) for n in C.SHOTS.values())
-    out = args.out or os.path.join(HERE, "..", "outputs", "submission" if have_all else "draft", "VagifAsgarli-T4L.pptx")
+    out = args.out or os.path.join(HERE, "..", "outputs", "submission" if have_all else "draft", "VagifAsgarli-T4L-presentation.pptx")
     build(out, args.shots)
 
 

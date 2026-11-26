@@ -91,7 +91,7 @@ deyil, mənim nümunə çəkilişimdir və "DRAFT" yazılıb. **Qaralamanı mü�
    |---|---|
    | PR1 | `VagifAsgarli-PR1.pdf`, `VagifAsgarli-PR1-presentation.pptx` |
    | T4LPrim | `VagifAsgarli-T4LPrim.pptx` |
-   | T4L | `VagifAsgarli-T4L.pdf`, `VagifAsgarli-T4L.STM` (və ya `.stmx`), `VagifAsgarli-T4L.pptx` |
+   | T4L | `VagifAsgarli-T4L.pdf`, `VagifAsgarli-T4L.STM` (və ya `.stmx`), `VagifAsgarli-T4L-presentation.pptx` |
    | T5L | `vagif.asgarli-T5L.pdf`, `vagif.asgarli-T5L-model.adf`, `vagif.asgarli-T5L-model.pdf`, `vagif.asgarli-T5L-presentation.pptx` |
 
 3. **Süni intellekt qeydi.** Hər işin sonunda "Note. Generative AI tools were used..." sətri

@@ -315,7 +315,7 @@ qırmızı çərçivəli qeyd var).
 1. Protokol: `VagifAsgarli-T4L.pdf` (çap edib imzalayırsan, skan edib PDF kimi göndərirsən və ya
    PDF-ə imza şəklini qoyursan).
 2. Model: `VagifAsgarli-T4L.STM` (9.0.4) və ya `VagifAsgarli-T4L.stmx` (Stella Architect).
-3. Təqdimat: `VagifAsgarli-T4L.pptx`.
+3. Təqdimat: `VagifAsgarli-T4L-presentation.pptx`.
 
 Ünvan: `egils.ginters@rtu.lv`. Müdafiədə modeli öz kompüterində STELLA-da açıb işlədirsən:
 slider-i dəyişirsən, **Run** basırsan, qrafiki izah edirsən.

@@ -148,7 +148,7 @@ def build(out, shots, date):
     last = text_after(last, doc, C.EXPERIMENTS_INTRO, before=6)
     last = text_after(last, doc, C.TABLE5_CAPTION, size=10, indent=False, align=WD_ALIGN_PARAGRAPH.LEFT, after=3,
                       keep_next=True)
-    last = table_after(last, doc, C.table5(), (2.9, 2.8, 1.4, 1.3, 1.6, 1.5, 1.5, 1.66), size=8)
+    last = table_after(last, doc, C.table5(), (2.8, 2.7, 1.3, 1.3, 1.9, 1.5, 1.5, 1.66), size=8)
     for k, key in enumerate(("E2", "E3", "E4", "E5", "E6")):
         last = text_after(last, doc, C.EXPERIMENT_TEXT[key], before=8 if k == 0 else 4, keep_next=True)
         last = picture_after(last, doc, pics[key][0], width_cm=pic_width(key, max_h=8.5))
